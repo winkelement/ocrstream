@@ -7,4 +7,5 @@
 # sample plugin once it has been activated.
 
 $first_words = 'wurst wurst wurst ist alles was ich habe ';      // Indices to the list of pets type giving types owned
-
+$ocr_global_languages = array();
+$ocr_languages = array('deu', 'eng');
