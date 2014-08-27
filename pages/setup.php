@@ -23,6 +23,7 @@ $page_intro = '<p>' . $lang['ocrstream_intro'] . '</p>';
 // descriptions in include/plugin_functions for more information.
 
 $page_def[] = config_add_text_input('first_words', $lang['ocrstream_test_input']);
+$page_def[] = config_add_multi_select ('ocr_global_languages', $lang['ocrstream_language_select'], $ocr_languages);
 // $page_def[] = config_add_yyyy(....);
 
 // Do the page generation ritual -- don't change this section.
