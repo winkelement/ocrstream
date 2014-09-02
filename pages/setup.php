@@ -16,6 +16,10 @@ include '../../../include/general.php';
 $plugin_name = 'ocrstream';
 $page_heading = $lang['ocrstream_title'];
 $page_intro = '<p>' . $lang['ocrstream_intro'] . '</p>';
+if (PHP_OS=='WINNT')
+    {$tesseract_version = shell_exec($tesseract_path . '\tesseract.exe -v 2>&1');}
+else 
+    {$tesseract_version = shell_exec($tesseract_path . '\tesseract -v 2>&1');}
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 // Each element of $page_def describes one configuration variable. Each description is
@@ -23,6 +27,7 @@ $page_intro = '<p>' . $lang['ocrstream_intro'] . '</p>';
 // descriptions in include/plugin_functions for more information.
 
 $page_def[] = config_add_text_input('tesseract_path', $lang['tesseract_path_info']);
+$page_def[] = config_add_section_header($lang['tesseract_version_info'], $tesseract_version);
 $page_def[] = config_add_multi_select ('ocr_global_languages', $lang['ocrstream_language_select'], $ocr_languages);
 // $page_def[] = config_add_yyyy(....);
 
