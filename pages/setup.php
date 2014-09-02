@@ -17,12 +17,20 @@ $plugin_name = 'ocrstream';
 $page_heading = $lang['ocrstream_title'];
 $page_intro = '<p>' . $lang['ocrstream_intro'] . '</p>';
 if (PHP_OS=='WINNT')
-    {$tesseract_version_command = shell_exec($tesseract_path . '\tesseract.exe -v 2>&1');}
+    {
+    $tesseract_version_command = shell_exec($tesseract_path . '\tesseract.exe -v 2>&1');
+    $tesseract_version_output = explode("\n", $tesseract_version_command);
+    $tesseract_version = $tesseract_version_output[0];
+    $leptonica_version = $tesseract_version_output[1];
+    }
 else 
-    {$tesseract_version_command = shell_exec($tesseract_path . '\tesseract -v 2>&1');}
-$tesseract_version_output = explode("\n", $tesseract_version_command);
-$tesseract_version = $tesseract_version_output[0];
-$leptonica_version = $tesseract_version_output[1];
+    {
+    $tesseract_version_command = shell_exec($tesseract_path . '/tesseract -v 2>&1');
+    $tesseract_version_output = explode("\n", $tesseract_version_command);
+    $tesseract_version = $tesseract_version_output[1];
+    $leptonica_version = $tesseract_version_output[2];
+    }
+
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 // Each element of $page_def describes one configuration variable. Each description is
