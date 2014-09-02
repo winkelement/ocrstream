@@ -22,7 +22,7 @@ $page_intro = '<p>' . $lang['ocrstream_intro'] . '</p>';
 // created by one of the config_add_xxxx helper functions. See their definitions and
 // descriptions in include/plugin_functions for more information.
 
-$page_def[] = config_add_text_input('first_words', $lang['ocrstream_test_input']);
+$page_def[] = config_add_text_input('tesseract_path', $lang['tesseract_path_info']);
 $page_def[] = config_add_multi_select ('ocr_global_languages', $lang['ocrstream_language_select'], $ocr_languages);
 // $page_def[] = config_add_yyyy(....);
 

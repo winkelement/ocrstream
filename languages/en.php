@@ -8,5 +8,6 @@ $lang['ocrstream_intro']='This is a sample configuration page for a plugin. It d
         'Using this page you can set the values of the configuration variables. To do so, make the ' .
         'desired adjustments and click \'Save Configuration\'.';
 $lang['ocrstream_test_input']='Bring it on.';
-$lang['ocrstream_language_select'] = 'Standard language for text recognition'
+$lang['ocrstream_language_select'] = 'Standard language for text recognition';
+$lang['tesseract_path_info'] = 'Path to tesseract-ocr';
 ?>
