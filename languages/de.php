@@ -4,7 +4,6 @@
 #
 $lang['ocrstream_title'] = 'OCR Stream';
 $lang['ocrstream_intro']='Die Beschreibung für das OCR Stream Plugin';
-$lang['ocrstream_language_select'] = 'Standardsprache für Texterkennung';
-$lang['tesseract_path_info'] = 'Pfad zu tesseract-ocr';
-$lang['tesseract_version_info'] = 'Tesseract Versionsprüfung:';
+$lang['ocrstream_language_select'] = 'Standardsprachen für Texterkennung (nur installierte Sprachen werden angezeigt). Mehrfachauswahl möglich.';
+$lang['tesseract_path_info'] = 'Pfad zu tesseract-ocr:';
 ?>

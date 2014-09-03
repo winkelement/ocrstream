@@ -1,9 +1,4 @@
 <?php
-#
-# Setup page
-#
-# You can 'crib' from this code to easily create a setup.php file for a new plugin.
-#
 
 // Do the include and authorization checking ritual -- don't change this section.
 include '../../../include/db.php';
@@ -19,9 +14,19 @@ $page_intro = '<p>' . $lang['ocrstream_intro'] . '</p>';
 if (PHP_OS=='WINNT')
     {
     $tesseract_version_command = shell_exec($tesseract_path . '\tesseract.exe -v 2>&1');
+    $tesseract_language_command = shell_exec($tesseract_path . '\tesseract.exe --list-langs 2>&1');
     $tesseract_version_output = explode("\n", $tesseract_version_command);
+    $tesseract_language_output = explode("\n", $tesseract_language_command);
     $tesseract_version = $tesseract_version_output[0];
     $leptonica_version = $tesseract_version_output[1];
+    $i = 1;
+    $n = 0;
+    while($i < count($tesseract_language_output))
+    {
+    $tesseract_languages[$n] = $tesseract_language_output[$i];
+    $n++;
+    $i++;
+    }
     }
 else 
     {
@@ -31,18 +36,14 @@ else
     $leptonica_version = $tesseract_version_output[2];
     }
 
-
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 // Each element of $page_def describes one configuration variable. Each description is
 // created by one of the config_add_xxxx helper functions. See their definitions and
 // descriptions in include/plugin_functions for more information.
 
 $page_def[] = config_add_text_input('tesseract_path', $lang['tesseract_path_info']);
-$page_def[] = config_add_multi_select ('ocr_global_languages', $lang['ocrstream_language_select'], $ocr_languages);
-$page_def[] = config_add_section_header($lang['tesseract_version_info']);
-$page_def[] = config_add_html ("<p style=font-size:14px;>$tesseract_version<br>$leptonica_version</p>");
-
-// $page_def[] = config_add_yyyy(....);
+$page_def[] = config_add_html("<p style=font-size:14px;>$tesseract_version<br>$leptonica_version</p>");
+$page_def[] = config_add_multi_select('ocr_global_languages', $lang['ocrstream_language_select'], $tesseract_languages, $usekeys = false);
 
 // Do the page generation ritual -- don't change this section.
 $upload_status = config_gen_setup_post($page_def, $plugin_name);
