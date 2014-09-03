@@ -31,9 +31,19 @@ if (PHP_OS=='WINNT')
 else 
     {
     $tesseract_version_command = shell_exec($tesseract_path . '/tesseract -v 2>&1');
+    $tesseract_language_command = shell_exec($tesseract_path . '/tesseract --list-langs 2>&1');
     $tesseract_version_output = explode("\n", $tesseract_version_command);
+    $tesseract_language_output = explode("\n", $tesseract_language_command);
     $tesseract_version = $tesseract_version_output[1];
     $leptonica_version = $tesseract_version_output[2];
+    $i = 2;
+    $n = 0;
+    while($i < count($tesseract_language_output))
+    {
+    $tesseract_languages[$n] = $tesseract_language_output[$i];
+    $n++;
+    $i++;
+    }
     }
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
