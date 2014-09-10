@@ -9,3 +9,4 @@
 $first_words = 'wurst wurst wurst ist alles was ich habe ';      // Indices to the list of pets type giving types owned
 $ocr_global_languages = array();
 $tesseract_path = '/usr/bin';
+//$tesseract_version = string();
