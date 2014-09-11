@@ -9,7 +9,7 @@ function get_tesseract_fullpath ()
     }
  else 
     {
-    $tesseract_fullpath = $tesseract_path . '\tesseract';    
+    $tesseract_fullpath = $tesseract_path . '/tesseract';    
     }
     return $tesseract_fullpath;
 }
@@ -78,10 +78,10 @@ else
 
 function ocr_test ($ocrtestfile)
 {
-    global $ocr_global_languages;
+    global $ocr_global_language;
     $tesseract_fullpath = get_tesseract_fullpath();
-    $tess_cmd = ($tesseract_fullpath . ' ' . $ocrtestfile . ' C:\test -l ' . $ocr_global_languages[0]);
+    $tess_cmd = ($tesseract_fullpath . ' ' . $ocrtestfile . ' /home/robert/web/test -l ' . $ocr_global_language);
     shell_exec($tess_cmd);
-    $tess_content = file_get_contents('C:\test.txt');
+    $tess_content = file_get_contents('/home/robert/web/test.txt');
     return $tess_content;
 }
