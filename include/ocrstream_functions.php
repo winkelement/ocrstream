@@ -6,8 +6,8 @@ function get_tesseract_fullpath ()
     if (PHP_OS=='WINNT')
     {
     $tesseract_fullpath = $tesseract_path . '\tesseract.exe';
-    }
- else 
+    }   
+    else 
     {
     $tesseract_fullpath = $tesseract_path . '/tesseract';    
     }
@@ -23,7 +23,7 @@ function get_tesseract_version ()
     {
     $tesseract_version = $tesseract_version_output[0];
     }
-else 
+    else 
     {
     $tesseract_version = $tesseract_version_output[1];
     }
@@ -39,7 +39,7 @@ function get_leptonica_version ()
     {
     $leptonica_version = $tesseract_version_output[1];
     }
-else 
+    else 
     {
     $leptonica_version = $tesseract_version_output[2];
     }
@@ -62,7 +62,7 @@ function get_tesseract_languages ()
     $i++;
     }
     }
-else 
+    else 
     {
     $i = 2;
     $n = 0;
@@ -76,12 +76,12 @@ else
     return $tesseract_languages;
 }
 
-function ocr_test ($ocrtestfile)
-{
-    global $ocr_global_language;
-    $tesseract_fullpath = get_tesseract_fullpath();
-    $tess_cmd = ($tesseract_fullpath . ' ' . $ocrtestfile . ' /home/robert/web/test -l ' . $ocr_global_language);
-    shell_exec($tess_cmd);
-    $tess_content = file_get_contents('/home/robert/web/test.txt');
-    return $tess_content;
-}
+//function ocr_test ($ocrtestfile)
+//{
+//    global $ocr_global_language;
+//    $tesseract_fullpath = get_tesseract_fullpath();
+//    $tess_cmd = ($tesseract_fullpath . ' ' . $ocrtestfile . ' /home/robert/web/test -l ' . $ocr_global_language);
+//    shell_exec($tess_cmd);
+//    $tess_content = file_get_contents('/home/robert/web/test.txt');
+//    return $tess_content;
+//}
