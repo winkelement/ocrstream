@@ -78,10 +78,10 @@ else
 
 function ocr_test ($ocrtestfile)
 {
-    global $ocr_global_languages;
+    global $ocr_global_language;
     $tesseract_fullpath = get_tesseract_fullpath();
-    $tess_cmd = ($tesseract_fullpath . ' ' . $ocrtestfile . ' C:\test -l ' . $ocr_global_languages[0]);
+    $tess_cmd = ($tesseract_fullpath . ' ' . $ocrtestfile . ' D:\test -l ' . $ocr_global_language);
     shell_exec($tess_cmd);
-    $tess_content = file_get_contents('C:\test.txt');
+    $tess_content = file_get_contents('D:\test.txt');
     return $tess_content;
 }

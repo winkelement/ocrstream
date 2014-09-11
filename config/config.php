@@ -6,5 +6,5 @@
 # which is invoked by choosing Team Centre > Manage Plugins and then clicking on Options for the
 # sample plugin once it has been activated.
 
-$ocr_global_languages = array();
+$ocr_global_language = '';
 $tesseract_path = '/usr/bin';
