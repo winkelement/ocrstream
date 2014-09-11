@@ -17,7 +17,7 @@ $page_intro = '<p>' . $lang['ocrstream_intro'] . '</p>';
 $tesseract_version = get_tesseract_version();
 $leptonica_version = get_leptonica_version();
 $tesseract_languages = get_tesseract_languages();
-$tess_content = ocr_test('D:\eurotext.tif');
+$tess_content = ocr_test('/home/robert/web/eurotext.tif');
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 // Each element of $page_def describes one configuration variable. Each description is
