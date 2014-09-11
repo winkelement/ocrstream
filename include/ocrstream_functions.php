@@ -84,3 +84,4 @@ function ocr_test ($ocrtestfile)
     shell_exec($tess_cmd);
     $tess_content = file_get_contents('/home/robert/web/test.txt');
     return $tess_content;
+}
