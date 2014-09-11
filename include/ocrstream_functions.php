@@ -75,3 +75,13 @@ else
     }
     return $tesseract_languages;
 }
+
+function ocr_test ($ocrtestfile)
+{
+    global $ocr_global_languages;
+    $tesseract_fullpath = get_tesseract_fullpath();
+    $tess_cmd = ($tesseract_fullpath . ' ' . $ocrtestfile . ' C:\test -l ' . $ocr_global_languages[0]);
+    shell_exec($tess_cmd);
+    $tess_content = file_get_contents('C:\test.txt');
+    return $tess_content;
+}

@@ -17,6 +17,7 @@ $page_intro = '<p>' . $lang['ocrstream_intro'] . '</p>';
 $tesseract_version = get_tesseract_version();
 $leptonica_version = get_leptonica_version();
 $tesseract_languages = get_tesseract_languages();
+$tess_content = ocr_test('C:\eurotext.tif');
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 // Each element of $page_def describes one configuration variable. Each description is
@@ -25,8 +26,8 @@ $tesseract_languages = get_tesseract_languages();
 
 $page_def[] = config_add_text_input('tesseract_path', $lang['tesseract_path_info']);
 $page_def[] = config_add_html("<p style=font-size:14px;>$tesseract_version<br>$leptonica_version</p>");
-$page_def[] = config_add_multi_select('ocr_global_languages', $lang['ocrstream_language_select'], $tesseract_languages, $usekeys = false);
-
+$page_def[] = config_add_single_select('ocr_global_languages', $lang['ocrstream_language_select'], $tesseract_languages, $usekeys = false);
+$page_def[] = config_add_html("<p style=font-size:14px;><br>$tess_content</p>");
 // Do the page generation ritual -- don't change this section.
 $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
