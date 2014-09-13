@@ -2,12 +2,13 @@
 
 function is_windows ()
 {   
-    $win_pattern = '/(WIN)(Win)(win)/';
-    
-    preg_match($win_pattern, php_uname("s"), $hits);
-    
-    (count($hits) > 0) ? $is_windows = true : $is_windows = false;
-    
+    $os = php_uname('s');
+    if(stristr($os, 'win')){
+    $is_windows = true;
+    }
+    else {
+    $is_windows = false;    
+    }
     return $is_windows;
 }
 
@@ -28,20 +29,25 @@ function get_tesseract_fullpath ()
 function is_tesseract_installed ()
 {
     $tesseract_fullpath = get_tesseract_fullpath();
-    $tesseract_lookup = shell_exec($tesseract_fullpath . ' -v 2>&1');
 
-    if (PHP_OS=='WINNT'){
+    if (is_windows())
+    {
+        if (file_exists ($tesseract_fullpath))
+        {
         $tesseract_installed = true;
-    }
-    else {
-        $not_found_pattern = '/not found/';
-
-        preg_match($not_found_pattern, $tesseract_lookup, $hits);
-        if (count($hits) > 0) {
-            $tesseract_installed = false;
         }
         else {
-            $tesseract_installed = true;
+        $tesseract_installed = false;    
+        }
+    }
+    else
+    {
+        if (file_exists ($tesseract_fullpath))
+        {
+        $tesseract_installed = true;
+        }
+        else {
+        $tesseract_installed = false;    
         }
     }
     return $tesseract_installed;
@@ -71,7 +77,7 @@ function get_leptonica_version ()
     $tesseract_version_output = explode("\n", $tesseract_version_command);
     if (is_windows())
     {
-    $leptonica_version = $tesseract_version_output[0];
+    $leptonica_version = $tesseract_version_output[1];
     }
     else
     {
