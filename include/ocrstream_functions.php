@@ -6,13 +6,36 @@ function get_tesseract_fullpath ()
     if (PHP_OS=='WINNT')
     {
     $tesseract_fullpath = $tesseract_path . '\tesseract.exe';
-    }   
-    else 
+    }
+    else
     {
-    $tesseract_fullpath = $tesseract_path . '/tesseract';    
+    $tesseract_fullpath = $tesseract_path . '/tesseract';
     }
     return $tesseract_fullpath;
 }
+
+function is_tesseract_installed ()
+{
+    $tesseract_fullpath = get_tesseract_fullpath();
+    $tesseract_lookup = shell_exec($tesseract_fullpath . ' -v 2>&1');
+
+    if (PHP_OS=='WINNT'){
+        $tesseract_installed = true;
+    }
+    else {
+        $not_found_pattern = '/not found/';
+
+        preg_match($not_found_pattern, $tesseract_lookup, $hits);
+        if (count($hits) > 0) {
+            $tesseract_installed = false;
+        }
+        else {
+            $tesseract_installed = true;
+        }
+    }
+    return $tesseract_installed;
+}
+
 
 function get_tesseract_version ()
 {
@@ -23,9 +46,9 @@ function get_tesseract_version ()
     {
     $tesseract_version = $tesseract_version_output[0];
     }
-    else 
+    else
     {
-    $tesseract_version = $tesseract_version_output[1];
+    $tesseract_version = $tesseract_version_output[0];
     }
     return $tesseract_version;
 }
@@ -37,11 +60,11 @@ function get_leptonica_version ()
     $tesseract_version_output = explode("\n", $tesseract_version_command);
     if (PHP_OS=='WINNT')
     {
-    $leptonica_version = $tesseract_version_output[1];
+    $leptonica_version = $tesseract_version_output[0];
     }
-    else 
+    else
     {
-    $leptonica_version = $tesseract_version_output[2];
+    $leptonica_version = $tesseract_version_output[1];
     }
     return $leptonica_version;
 }
@@ -62,7 +85,7 @@ function get_tesseract_languages ()
     $i++;
     }
     }
-    else 
+    else
     {
     $i = 2;
     $n = 0;
