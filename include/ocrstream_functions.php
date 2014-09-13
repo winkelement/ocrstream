@@ -1,9 +1,20 @@
 <?php
 
+function is_windows ()
+{   
+    $win_pattern = '/(WIN)(Win)(win)/';
+    
+    preg_match($win_pattern, php_uname("s"), $hits);
+    
+    (count($hits) > 0) ? $is_windows = true : $is_windows = false;
+    
+    return $is_windows;
+}
+
 function get_tesseract_fullpath ()
 {
     global $tesseract_path;
-    if (PHP_OS=='WINNT')
+    if (is_windows())
     {
     $tesseract_fullpath = $tesseract_path . '\tesseract.exe';
     }
@@ -42,7 +53,7 @@ function get_tesseract_version ()
     $tesseract_fullpath = get_tesseract_fullpath();
     $tesseract_version_command = shell_exec($tesseract_fullpath . ' -v 2>&1');
     $tesseract_version_output = explode("\n", $tesseract_version_command);
-    if (PHP_OS=='WINNT')
+    if (is_windows())
     {
     $tesseract_version = $tesseract_version_output[0];
     }
@@ -58,7 +69,7 @@ function get_leptonica_version ()
     $tesseract_fullpath = get_tesseract_fullpath();
     $tesseract_version_command = shell_exec($tesseract_fullpath . ' -v 2>&1');
     $tesseract_version_output = explode("\n", $tesseract_version_command);
-    if (PHP_OS=='WINNT')
+    if (is_windows())
     {
     $leptonica_version = $tesseract_version_output[0];
     }
@@ -74,7 +85,7 @@ function get_tesseract_languages ()
     $tesseract_fullpath = get_tesseract_fullpath();
     $tesseract_language_command = shell_exec($tesseract_fullpath . ' --list-langs 2>&1');
     $tesseract_language_output = explode("\n", $tesseract_language_command);
-    if (PHP_OS=='WINNT')
+    if (is_windows())
     {
     $i = 1;
     $n = 0;
