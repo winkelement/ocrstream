@@ -59,14 +59,12 @@ function get_tesseract_version ()
     $tesseract_fullpath = get_tesseract_fullpath();
     $tesseract_version_command = shell_exec($tesseract_fullpath . ' -v 2>&1');
     $tesseract_version_output = explode("\n", $tesseract_version_command);
-    if (is_windows())
-    {
-    $tesseract_version = $tesseract_version_output[0];
-    }
-    else
-    {
-    $tesseract_version = $tesseract_version_output[0];
-    }
+    if (stristr($tesseract_version_output [0],'libtiff.so.5')){ // Skipping error output in first line when libftiff version does not match liblept version
+        $tesseract_version = $tesseract_version_output[1];         
+        }
+        else {
+        $tesseract_version = $tesseract_version_output[0];
+        }
     return $tesseract_version;
 }
 
@@ -75,14 +73,12 @@ function get_leptonica_version ()
     $tesseract_fullpath = get_tesseract_fullpath();
     $tesseract_version_command = shell_exec($tesseract_fullpath . ' -v 2>&1');
     $tesseract_version_output = explode("\n", $tesseract_version_command);
-    if (is_windows())
-    {
-    $leptonica_version = $tesseract_version_output[1];
-    }
-    else
-    {
-    $leptonica_version = $tesseract_version_output[1];
-    }
+    if (stristr($tesseract_version_output [0],'libtiff.so.5')){ // Skipping error output in first line when libftiff version does not match liblept version
+        $leptonica_version = $tesseract_version_output[2];         
+        }
+        else {
+        $leptonica_version = $tesseract_version_output[1];
+        }
     return $leptonica_version;
 }
 
@@ -91,9 +87,8 @@ function get_tesseract_languages ()
     $tesseract_fullpath = get_tesseract_fullpath();
     $tesseract_language_command = shell_exec($tesseract_fullpath . ' --list-langs 2>&1');
     $tesseract_language_output = explode("\n", $tesseract_language_command);
-    if (is_windows())
-    {
-    $i = 1;
+    if (stristr($tesseract_language_output [0],'libtiff.so.5')){ // Skipping error output in first line when libftiff version does not match liblept version
+    $i = 2;
     $n = 0;
     while($i < count($tesseract_language_output))
     {
@@ -104,7 +99,7 @@ function get_tesseract_languages ()
     }
     else
     {
-    $i = 2;
+    $i = 1;
     $n = 0;
     while($i < count($tesseract_language_output))
     {
