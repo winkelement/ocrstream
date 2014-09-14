@@ -26,7 +26,7 @@ if (is_tesseract_installed()) {
     //$page_def[] = config_add_html("<p style=font-size:14px;><br>$tess_content</p>");
 }
 else {
-    $page_def[] = config_add_text_input('tesseract_path', $lang['tesseract_path_quesion']);
+    $page_def[] = config_add_text_input('tesseract_path', $lang['tesseract_path_input']);
 }
 
 

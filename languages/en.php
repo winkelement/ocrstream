@@ -8,5 +8,5 @@ $lang['ocrstream_language_select'] = 'Standard language for text recognition (on
 $lang['tesseract_path_info'] = 'Path to tesseract-ocr:';
 $lang['ocr_single_resource'] = 'OCR processing';
 $lang['ocr_start'] = 'Start OCR';
-$lang['tesseract_path_quesion'] = 'Where is the OCR located?'
+$lang['tesseract_path_input'] = 'Tesseract-ocr not found, please specify path to tesseract-ocr:'
 ?>
