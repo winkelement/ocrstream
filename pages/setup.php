@@ -17,7 +17,6 @@ $page_def = array();
 
 if (is_tesseract_installed()) {
     $tesseract_version = get_tesseract_version();
-    $bla = tesseract_version_is_old();
     $leptonica_version = get_leptonica_version();
     $tesseract_languages = get_tesseract_languages();
     //$tess_content = ocr_test('/home/robert/web/eurotext.tif');
