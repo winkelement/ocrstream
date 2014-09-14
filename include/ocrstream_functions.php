@@ -111,6 +111,25 @@ function get_tesseract_languages ()
     return $tesseract_languages;
 }
 
+function tesseract_version_is_old ()
+{
+    $tesseract_version = get_tesseract_version();
+    if (substr($tesseract_version, 10, 1) < 3)
+    {
+       $tesseract_version_is_old = true; 
+    }
+    else {
+        if (substr($tesseract_version, 13, 1) < 3)
+            {
+            $tesseract_version_is_old = true; 
+            }
+        else {
+            $tesseract_version_is_old = false;
+        }
+    }
+    return $tesseract_version_is_old;
+}
+
 //function ocr_test ($ocrtestfile)
 //{
 //    global $ocr_global_language;

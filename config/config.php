@@ -8,3 +8,4 @@
 
 $ocr_global_language = '';
 $tesseract_path = '/usr/bin';
+$ocr_allowed_extensions = array('TIF','TIFF','JPG','JPEG','PNG','GIF','BMP');
