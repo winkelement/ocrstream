@@ -1,5 +1,5 @@
 <?php
-function HookOcrstreamEditCustompermshowfile (){ // Hook for OCR on single resource (resource edit)
+function HookOcrstreamEditAfterfileoptions (){ // Hook for OCR on single resource (resource edit)
     
     global $ref;
     global $lang;
