@@ -1,13 +1,13 @@
 <?php
 
 function is_windows ()
-{   
+{
     $os = php_uname('s');
     if(stristr($os, 'win')){
     $is_windows = true;
     }
     else {
-    $is_windows = false;    
+    $is_windows = false;
     }
     return $is_windows;
 }
@@ -37,7 +37,7 @@ function is_tesseract_installed ()
         $tesseract_installed = true;
         }
         else {
-        $tesseract_installed = false;    
+        $tesseract_installed = false;
         }
     }
     else
@@ -47,7 +47,7 @@ function is_tesseract_installed ()
         $tesseract_installed = true;
         }
         else {
-        $tesseract_installed = false;    
+        $tesseract_installed = false;
         }
     }
     return $tesseract_installed;
@@ -59,12 +59,14 @@ function get_tesseract_version ()
     $tesseract_fullpath = get_tesseract_fullpath();
     $tesseract_version_command = shell_exec($tesseract_fullpath . ' -v 2>&1');
     $tesseract_version_output = explode("\n", $tesseract_version_command);
+
     if (stristr($tesseract_version_output [0],'libtiff.so.5')){ // Skipping error output in first line when libftiff version does not match liblept version
-        $tesseract_version = $tesseract_version_output[1];         
-        }
-        else {
+        $tesseract_version = $tesseract_version_output[1];
+    }
+    else {
         $tesseract_version = $tesseract_version_output[0];
-        }
+    }
+
     return $tesseract_version;
 }
 
@@ -74,7 +76,7 @@ function get_leptonica_version ()
     $tesseract_version_command = shell_exec($tesseract_fullpath . ' -v 2>&1');
     $tesseract_version_output = explode("\n", $tesseract_version_command);
     if (stristr($tesseract_version_output [0],'libtiff.so.5')){ // Skipping error output in first line when libftiff version does not match liblept version
-        $leptonica_version = $tesseract_version_output[2];         
+        $leptonica_version = $tesseract_version_output[2];
         }
         else {
         $leptonica_version = $tesseract_version_output[1];
@@ -116,12 +118,12 @@ function tesseract_version_is_old ()
     $tesseract_version = get_tesseract_version();
     if (substr($tesseract_version, 10, 1) < 3)
     {
-       $tesseract_version_is_old = true; 
+       $tesseract_version_is_old = true;
     }
     else {
         if (substr($tesseract_version, 13, 1) < 3)
             {
-            $tesseract_version_is_old = true; 
+            $tesseract_version_is_old = true;
             }
         else {
             $tesseract_version_is_old = false;
