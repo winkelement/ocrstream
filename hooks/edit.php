@@ -3,7 +3,8 @@ function HookOcrstreamEditAfterfileoptions (){ // Hook for OCR on single resourc
 
     global $ref;
     global $lang;
-
+    global $baseurl;
+    
     ?>
     <div class="Question" id="question_ocr">
     <label for="ocr_single_resource"><?php echo $lang["ocr_single_resource"]?></label>
@@ -13,9 +14,9 @@ function HookOcrstreamEditAfterfileoptions (){ // Hook for OCR on single resourc
     <script>
         jQuery('[name="ocr_start"]').click(function(){
 
-            jQuery.get('http://192.168.1.110/rsam/plugins/ocrstream/pages/scan.php?ref=5',function(data){
+            jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/pages/scan.php', { ref: '<?php echo $ref ?>', param1 : 'X'}, function(data){
                 console.log(JSON.parse(data));
-            })
+            });
 
         });
     </script>
