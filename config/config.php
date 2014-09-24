@@ -9,4 +9,5 @@
 $ocr_global_language = '';
 $tesseract_path = '/usr/bin';
 $ocr_allowed_extensions = array('tif','tiff','jpg','jpeg','png','gif','bmp','pdf');
-$ocr_min_density = '600';
+$ocr_min_density = '300';
+$ocr_max_density = '600';
