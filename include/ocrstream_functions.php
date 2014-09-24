@@ -56,7 +56,6 @@ function is_tesseract_installed()
         return $tesseract_installed;
         }
 
-
 function get_tesseract_version()
         {
         $tesseract_fullpath = get_tesseract_fullpath();
