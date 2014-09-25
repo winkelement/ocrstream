@@ -37,7 +37,7 @@ if (intval($density) > $ocr_max_density)
 # Do OCR and read the textfile 
 $tesseract_fullpath = get_tesseract_fullpath();
 $ocr_temp_dir = get_temp_dir();
-$tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . $ocr_temp_dir . '\ocr_'.$ref.' -l ' . $lang);
+$tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . $ocr_temp_dir . '\ocrtempfile_'.$ref.' -l ' . $lang);
 shell_exec($tess_cmd);
 $ocr_temp_file = ($ocr_temp_dir . '\ocrtempfile_'.$ref.'.txt');
 $tess_content = file_get_contents($ocr_temp_file);
