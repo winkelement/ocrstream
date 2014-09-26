@@ -92,28 +92,17 @@ function get_tesseract_languages()
         {
         $tesseract_fullpath = get_tesseract_fullpath();
         $tesseract_language_command = shell_exec($tesseract_fullpath . ' --list-langs 2>&1');
-        $tesseract_language_output = explode("\n", $tesseract_language_command);
-        if (stristr($tesseract_language_output [0],'libtiff.so.5'))
-                { // Skipping error output in first line when libftiff version does not match liblept version
-                $i = 2;
-                $n = 0;
-                while($i < count($tesseract_language_output))
-                        {
-                        $tesseract_languages[$n] = $tesseract_language_output[$i];
-                        $n++;
-                        $i++;
-                        }
+        $tesseract_languages = explode("\n", $tesseract_language_command);
+        if (stristr($tesseract_languages [0],'libtiff.so.5')) // Skipping additional line if libftiff version does not match liblept version
+                { 
+                array_shift($tesseract_languages);
+                array_shift($tesseract_languages);
+                array_pop($tesseract_languages);
                 }
-        else
+        else // Skipping first line output
                 {
-                $i = 1;
-                $n = 0;
-                while($i < count($tesseract_language_output))
-                        {
-                        $tesseract_languages[$n] = $tesseract_language_output[$i];
-                        $n++;
-                        $i++;
-                        }
+                array_shift($tesseract_languages); // Skipping first line output ("Available languages...")
+                array_pop($tesseract_languages); // Skipping last line (empty)
                 }
         return $tesseract_languages;
         }
