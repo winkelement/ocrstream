@@ -29,7 +29,7 @@ $resource_path = get_resource_path($ref, true, "", false, $ext);
 $density = shell_exec($imagemagick_path.'/identify -format "%y" '.''.$resource_path.' 2>&1');
 if (intval($density) < $ocr_min_density)
         {
-        echo json_encode("Error: Image density (dpi/ppi) too low for OCR processing '$density'");  
+        echo json_encode("Error: Image density (dpi/ppi) too low ($density) for OCR processing. Minumum density is $ocr_min_density dpi/ppi.");  
         exit();
         }        
 if (intval($density) > $ocr_max_density)
