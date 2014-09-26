@@ -5,7 +5,8 @@ function HookOcrstreamEditAfterfileoptions()
 //        $ref = 500; // testing inavlid values
         global $lang;
         global $baseurl;
-        global $ocr_global_language;    
+//        global $ocr_global_language;    
+        $ocr_lang = 'fra'; // testing inavlid values
         $param_1 = 'X'; // placeholder for optional processing parameter for tesseract    
         ?>
         <div class="Question" id="question_ocr">
@@ -15,7 +16,7 @@ function HookOcrstreamEditAfterfileoptions()
         <script>
         jQuery('[name="ocr_start"]').click(function()
                 {
-                jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/pages/scan.php', { ref: '<?php echo $ref ?>', ocr_lang : '<?php echo $ocr_global_language ?>', param_1 : '<?php echo $param_1 ?>'}, function(data)
+                jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/pages/scan.php', { ref: '<?php echo $ref ?>', ocr_lang : '<?php echo $ocr_lang ?>', param_1 : '<?php echo $param_1 ?>'}, function(data)
                         {
                         var1 = data;
                         console.log(JSON.parse(var1)); // debug
