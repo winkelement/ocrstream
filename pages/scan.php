@@ -6,6 +6,7 @@ include_once "../../../include/resource_functions.php";
 include_once "../include/ocrstream_functions.php";
 
 global $imagemagick_path;
+
 # Checking if Resource ID is valid INTEGER and exists in database
 $ref = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
 if ($ref == NULL || $ref < 1 || $ref > sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1",''))
@@ -13,7 +14,14 @@ if ($ref == NULL || $ref < 1 || $ref > sql_value("SELECT ref value FROM resource
         echo json_encode('Error: No valid Resource ID!');  
         exit();
         }
+        
+# If language is not valid, choose global setting
 $ocr_lang = filter_input(INPUT_GET, 'ocr_lang');
+$tesseract_languages = get_tesseract_languages();
+if (array_search($ocr_lang, $tesseract_languages) == FALSE)
+        {
+        $ocr_lang = $ocr_global_language;  
+        }
 $param_1 = filter_input(INPUT_GET, 'param_1');
 
 # Check if file extension is allowed for ocr processing
@@ -27,9 +35,10 @@ if (!in_array($ext, $ocr_allowed_extensions))
 # Check if density (dpi) is in margin for ocr processing 
 $resource_path = get_resource_path($ref, true, "", false, $ext);
 $density = shell_exec($imagemagick_path.'/identify -format "%y" '.''.$resource_path.' 2>&1');
+$density = trim($density);
 if (intval($density) < $ocr_min_density)
         {
-        echo json_encode("Error: Image density (dpi/ppi) too low ($density) for OCR processing. Minumum density is $ocr_min_density dpi/ppi.");  
+        echo json_encode("Error: Image density (dpi/ppi) too low for OCR processing ($density). Minumum density is $ocr_min_density dpi/ppi.");  
         exit();
         }        
 if (intval($density) > $ocr_max_density)
