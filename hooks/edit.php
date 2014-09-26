@@ -2,6 +2,7 @@
 function HookOcrstreamEditAfterfileoptions()
         { // Hook for OCR on single resource (resource edit)
         global $ref;
+//        $ref = 500; // testing inavlid values
         global $lang;
         global $baseurl;
         global $ocr_global_language;    
@@ -14,7 +15,7 @@ function HookOcrstreamEditAfterfileoptions()
         <script>
         jQuery('[name="ocr_start"]').click(function()
                 {
-                jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/pages/scan.php', { ref: '<?php echo $ref ?>', lang : '<?php echo $ocr_global_language ?>', param_1 : '<?php echo $param_1 ?>'}, function(data)
+                jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/pages/scan.php', { ref: '<?php echo $ref ?>', ocr_lang : '<?php echo $ocr_global_language ?>', param_1 : '<?php echo $param_1 ?>'}, function(data)
                         {
                         var1 = data;
                         console.log(JSON.parse(var1)); // debug
