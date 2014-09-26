@@ -29,7 +29,7 @@ $resource_path = get_resource_path($ref, true, "", false, $ext);
 $density = shell_exec($imagemagick_path.'/identify -format "%y" '.''.$resource_path.' 2>&1');
 if (intval($density) < $ocr_min_density)
         {
-        echo json_encode('Error: Image density (dpi/ppi) too low for OCR processing');  
+        echo json_encode("Error: Image density (dpi/ppi) too low for OCR processing '$density'");  
         exit();
         }        
 if (intval($density) > $ocr_max_density)
@@ -41,9 +41,9 @@ if (intval($density) > $ocr_max_density)
 # Do OCR and read the textfile 
 $tesseract_fullpath = get_tesseract_fullpath();
 $ocr_temp_dir = get_temp_dir();
-$tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . $ocr_temp_dir . '\ocrtempfile_'.$ref.' -l ' . $ocr_lang);
+$tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . escapeshellarg($ocr_temp_dir . '/ocrtempfile_'.$ref).' -l ' . $ocr_lang);
 shell_exec($tess_cmd);
-$ocr_temp_file = ($ocr_temp_dir . '\ocrtempfile_'.$ref.'.txt');
+$ocr_temp_file = ($ocr_temp_dir . '/ocrtempfile_'.$ref.'.txt');
 $tess_content = trim(file_get_contents($ocr_temp_file));
 //$test_output = ("Resource ID:".' '.$ref.' '."\nOCR-Language:".' '.$lang.' '."\nParameter:".' '.$param_1.''."\nPath to resource:".' '.$resource_path.''."\nDensity:".' '.$density);
 update_field($ref, 72 , $tess_content); // write output text (string) to database (metadata field 72)
