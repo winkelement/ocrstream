@@ -54,7 +54,7 @@ $tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . escapeshellarg($
 shell_exec($tess_cmd);
 $ocr_temp_file = ($ocr_temp_dir . '/ocrtempfile_'.$ref.'.txt');
 $tess_content = trim(file_get_contents($ocr_temp_file));
-//$test_output = ("Resource ID:".' '.$ref.' '."\nOCR-Language:".' '.$lang.' '."\nParameter:".' '.$param_1.''."\nPath to resource:".' '.$resource_path.''."\nDensity:".' '.$density);
+//$test_output = ("Resource ID:".' '.$ref.' '."\nOCR-Language:".' '.$ocr_lang.' '."\nParameter:".' '.$param_1.''."\nPath to resource:".' '.$resource_path.''."\nDensity:".' '.$density);
 update_field($ref, 72 , $tess_content); // write output text (string) to database (metadata field 72)
 update_xml_metadump($ref);
 unlink($ocr_temp_file);
