@@ -14,4 +14,5 @@ $lang['ocr_input_formats'] = 'Allowed filetypes:';
 $lang['ocr_min_density'] = 'Minimum image density for OCR processing (dpi/ppi)';
 $lang['ocr_max_density'] = 'Maximum image density for OCR processing (dpi/ppi)';
 $lang["ocr_language_select"] = 'Language for text recognition';
+$lang["ocr_parameter_select"] = 'Parameter 1';
 ?>

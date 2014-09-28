@@ -59,6 +59,7 @@ update_field($ref, 72 , $tess_content); // write output text (string) to databas
 update_xml_metadump($ref);
 unlink($ocr_temp_file);
 echo json_encode($tess_content);
+exit();
 
 //$dim = sql_query("select width, height from resource_dimensions where resource='$ref'");
 //$image_dimensions = $dim[0];
