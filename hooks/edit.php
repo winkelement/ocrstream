@@ -79,7 +79,3 @@ function HookOcrstreamEditAfterfileoptions()
         </div>
         <?php
         }
-
-function HookOcrstreamEditBeforeaccessselector () {
-    echo 'blubbblibubbli';
-}

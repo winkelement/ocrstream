@@ -27,7 +27,7 @@ if (is_tesseract_installed())
                 $page_def[] = config_add_html($lang['tesseract_old_version_info']);
                 $page_def[] = config_add_html("<p<br></p>");
                 }
-        $page_def[] = config_add_single_select('ocr_global_language', $lang['ocrstream_language_select'], $tesseract_languages, $usekeys = false);
+        $page_def[] = config_add_single_select('ocr_global_language', $lang['ocrstream_language_select'], $tesseract_languages, false, 90);
         $page_def[] = config_add_text_list_input('ocr_allowed_extensions', $lang['ocr_input_formats']);
         $page_def[] = config_add_text_input('ocr_min_density', $lang['ocr_min_density'], false, 45);
         $page_def[] = config_add_text_input('ocr_max_density', $lang['ocr_max_density'], false, 45);
