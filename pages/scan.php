@@ -11,26 +11,17 @@ global $imagemagick_path;
 $ref = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
 if ($ref == NULL || $ref < 1 || $ref > sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1",''))
         {
-        echo json_encode('Error: No valid Resource ID!');  
+        echo json_encode('ocr_error_1');  
         exit();
         }
-        
-# If language is not valid, choose global setting
-$ocr_lang = filter_input(INPUT_GET, 'ocr_lang');
-$tesseract_languages = get_tesseract_languages();
-if (array_search($ocr_lang, $tesseract_languages) == FALSE)
-        {
-        $ocr_lang = $ocr_global_language;  
-        }
-$param_1 = filter_input(INPUT_GET, 'param_1');
 
 # Check if file extension is allowed for ocr processing
 $ext = sql_value("select file_extension value from resource where ref = '$ref'",'');
 if (!in_array($ext, $ocr_allowed_extensions))
         {
-        echo json_encode('Error: OCR not allowed for this filetype');  
+        echo json_encode('ocr_error_2');  
         exit();
-        }
+        }        
         
 # Check if density (dpi) is in margin for ocr processing 
 $resource_path = get_resource_path($ref, true, "", false, $ext);
@@ -38,15 +29,25 @@ $density = shell_exec($imagemagick_path.'/identify -format "%y" '.''.$resource_p
 $density = trim($density);
 if (intval($density) < $ocr_min_density)
         {
-        echo json_encode("Error: Image density (dpi/ppi) too low for OCR processing ($density). Minumum density is $ocr_min_density dpi/ppi.");  
+        echo json_encode('ocr_error_3');  
         exit();
         }        
 if (intval($density) > $ocr_max_density)
         {
-        echo json_encode('Density too high for OCR processing. Image needs to be converted (not yet implemented).'); // Placeholder   
+        echo json_encode('ocr_error_4'); // Placeholder   
         exit();
         }    
-        
+
+# If language parameter is not valid, choose global ocr language setting
+$ocr_lang = filter_input(INPUT_GET, 'ocr_lang');
+$tesseract_languages = get_tesseract_languages();
+if (array_search($ocr_lang, $tesseract_languages) == FALSE)
+        {
+        $ocr_lang = $ocr_global_language;  
+        }
+
+$param_1 = filter_input(INPUT_GET, 'param_1');
+
 # Do OCR and read the textfile 
 $tesseract_fullpath = get_tesseract_fullpath();
 $ocr_temp_dir = get_temp_dir();

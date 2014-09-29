@@ -32,7 +32,27 @@ function HookOcrstreamEditAfterfileoptions()
                         var1 = data;
                         console.log(JSON.parse(var1)); // debug
                         //alert (JSON.parse(var1)); // debug 
-                        hideLoadingImage(); 
+                        hideLoadingImage();
+                        if (JSON.parse(var1) === 'ocr_error_1'){
+                            alert ('<?php echo $lang["ocr_error_1"]?>');
+                            return;
+                            }
+                        if (JSON.parse(var1) === 'ocr_error_2'){
+                            alert ('<?php echo $lang["ocr_error_2"]?>');
+                            return;
+                            }
+                        if (JSON.parse(var1) === 'ocr_error_3'){
+                            alert ('<?php echo $lang["ocr_error_3"]?>');
+                            return;
+                            }
+                        if (JSON.parse(var1) === 'ocr_error_4'){
+                            alert ('<?php echo $lang["ocr_error_4"]?>');
+                            return;
+                            }                        
+                        else
+                            {
+                            window.location.reload(true);
+                            }
                         });
                 showLoadingImage();
                 });

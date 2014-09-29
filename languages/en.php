@@ -15,4 +15,8 @@ $lang['ocr_min_density'] = 'Minimum image density for OCR processing (dpi/ppi)';
 $lang['ocr_max_density'] = 'Maximum image density for OCR processing (dpi/ppi)';
 $lang["ocr_language_select"] = 'Language for text recognition';
 $lang["ocr_parameter_select"] = 'Parameter 1';
+$lang["ocr_error_1"] = 'Error: No valid Resource ID!.';
+$lang["ocr_error_2"] = 'Error: Resource filetype is not allowed for OCR processing.';
+$lang["ocr_error_3"] = 'Error: Image density (dpi/ppi) too low for OCR processing.';
+$lang["ocr_error_4"] = 'Error: Image density (dpi/ppi) too high for OCR processing.';
 ?>
