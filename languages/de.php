@@ -19,4 +19,8 @@ $lang["ocr_error_1"] = 'Fehler: Keine gültige Resourcen ID!';
 $lang["ocr_error_2"] = 'Fehler: Für den Dateityp dieser Resource ist Texterkennung nicht erlaubt.';
 $lang["ocr_error_3"] = 'Fehler: Bildauflösung (dpi/ppi) zu niedrig für Texterkennung.';
 $lang["ocr_error_4"] = 'Fehler: Bildauflösung (dpi/ppi) zu hoch für Texterkennung.';
+$lang['im_preset_density'] = 'Auflösung (-density [dpi])';
+$lang['im_preset_density_help'] = 'Legt die Auflösung des temporären Bildes fest, auf welches die Texterkennung angewendet wird. Kleinere Werte können den Rechenprozess beschleunigen, führen aber zu schlechteren Ergebnissen.';
+$lang['im_preset_geometry'] = 'Bildgröße (-geometry [px])';
+$lang['im_preset_geometry_help'] = 'Legt die maximale Breite des temporären Bildes fest. Sehr große Werte können den Rechenprozess verlangsamen.';
 ?>
