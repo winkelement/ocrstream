@@ -25,19 +25,21 @@ if (!in_array($ext, $ocr_allowed_extensions))
         
 # Check if density (dpi) is in margin for ocr processing 
 $resource_path = get_resource_path($ref, true, "", false, $ext);
-$density = shell_exec($imagemagick_path.'/identify -format "%y" '.''.$resource_path.' 2>&1');
-$density = trim($density);
-if (intval($density) < $ocr_min_density)
+
+if ($ext != 'pdf'){
+    $density = shell_exec($imagemagick_path.'/identify -format "%y" '.''.$resource_path.' 2>&1');
+//    $density = trim($density);
+    if (intval($density) < $ocr_min_density)
         {
         echo json_encode('ocr_error_3');  
         exit();
         }        
-if (intval($density) > $ocr_max_density)
+    if (intval($density) > $ocr_max_density)
         {
         echo json_encode('ocr_error_4'); // Placeholder   
         exit();
         }    
-
+}
 # If language parameter is not valid, choose global ocr language setting
 $ocr_lang = filter_input(INPUT_GET, 'ocr_lang');
 $tesseract_languages = get_tesseract_languages();
@@ -47,12 +49,24 @@ if (array_search($ocr_lang, $tesseract_languages) == FALSE)
         }
 
 $param_1 = filter_input(INPUT_GET, 'param_1');
-
-# Do OCR and read the textfile 
-$tesseract_fullpath = get_tesseract_fullpath();
 $ocr_temp_dir = get_temp_dir();
-$tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . escapeshellarg($ocr_temp_dir . '/ocrtempfile_'.$ref).' -l ' . $ocr_lang);
-shell_exec($tess_cmd);
+$tesseract_fullpath = get_tesseract_fullpath();
+if ($param_1 === 'pre_1'){
+    $convert_fullpath = get_utility_path("im-convert");
+    $im_ocr_cmd = $convert_fullpath . " " . implode(' ',$im_preset_1).' '.escapeshellarg($resource_path) .' '. escapeshellarg($ocr_temp_dir . '/im_tempfile_'.$ref.'.png');
+    run_command($im_ocr_cmd);
+    $im_tempfile = ($ocr_temp_dir . '/im_tempfile_'.$ref.'.png');
+    $tess_cmd = ($tesseract_fullpath . ' ' . $im_tempfile . ' ' . escapeshellarg($ocr_temp_dir . '/ocrtempfile_'.$ref).' -l ' . $ocr_lang);
+    shell_exec($tess_cmd);
+    }
+else{
+    $tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . escapeshellarg($ocr_temp_dir . '/ocrtempfile_'.$ref).' -l ' . $ocr_lang);
+    shell_exec($tess_cmd); 
+    }
+# Do OCR and read the textfile 
+
+//$tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . escapeshellarg($ocr_temp_dir . '/ocrtempfile_'.$ref).' -l ' . $ocr_lang);
+//shell_exec($tess_cmd);
 $ocr_temp_file = ($ocr_temp_dir . '/ocrtempfile_'.$ref.'.txt');
 $tess_content = trim(file_get_contents($ocr_temp_file));
 //$test_output = ("Resource ID:".' '.$ref.' '."\nOCR-Language:".' '.$ocr_lang.' '."\nParameter:".' '.$param_1.''."\nPath to resource:".' '.$resource_path.''."\nDensity:".' '.$density);
@@ -62,6 +76,8 @@ unlink($ocr_temp_file);
 echo json_encode($tess_content);
 exit();
 
+//echo json_encode($ref.''.$ext.''.$ocr_lang.''.$param_1); //debug
+//
 //$dim = sql_query("select width, height from resource_dimensions where resource='$ref'");
 //$image_dimensions = $dim[0];
 //$w = $image_dimensions['width'];
