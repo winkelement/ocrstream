@@ -11,3 +11,5 @@ $tesseract_path = '/usr/bin';
 $ocr_allowed_extensions = array('tif','tiff','jpg','jpeg','png','gif','bmp','pdf');
 $ocr_min_density = '300';
 $ocr_max_density = '600';
+$im_pre_1 = array(300, 1024, 100, 0, 15, 15, 10, 0, 'white', 'none', 40, '0x1', 'png');
+//density, geometry, quality, contrast-stretch, lat, contrast-stretch, fill, opaque, deskew, sharpen, filetype

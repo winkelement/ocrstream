@@ -7,25 +7,29 @@ function HookOcrstreamEditAfterfileoptions()
         global $lang;
         global $baseurl;
         global $ocr_global_language;
-//        global $ocr_global_language;    
-//        $ocr_lang = 'fra'; // testing inavlid values
-        $param_1 = 'X'; // placeholder for optional processing parameter for tesseract
-        $usekeys = FALSE;
-        $choices = get_tesseract_languages();
-        ?>
-        <script>
-        function setLanguage(selectedLanguage){
+        global $ocr_allowed_extensions;
+        
+        $ext = sql_value("select file_extension value from resource where ref = '$ref'",'');
+        if (in_array($ext, $ocr_allowed_extensions)) // Don't show OCR options for filetypes not allowed
+            {
+//            $ocr_lang = 'fra'; // testing inavlid values
+            $param_1 = 'pre_1'; // placeholder for optional processing parameter for tesseract
+            $usekeys = FALSE;
+            $choices = get_tesseract_languages();
+            ?>
+            <script>
+            function setLanguage(selectedLanguage){
                 ocr_lang = selectedLanguage;
                 return ocr_lang;
                 }
-        function showLoadingImage() {
+            function showLoadingImage() {
                 jQuery('#ocr_start').append('<td id="loading-image"><img src="../gfx/interface/loading.gif" alt="Loading..."  style="margin-left:17px" /></td>');
                 }
-        function hideLoadingImage() {
+            function hideLoadingImage() {
                 jQuery('#loading-image').remove();
                 }		
-        ocr_lang = jQuery('#ocr_lang :selected').text();
-        jQuery('[name="ocr_start"]').click(function()
+            ocr_lang = jQuery('#ocr_lang :selected').text();
+            jQuery('[name="ocr_start"]').click(function()
                 {
                 jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/pages/scan.php', { ref: '<?php echo $ref ?>', ocr_lang : (ocr_lang), param_1 : '<?php echo $param_1 ?>'}, function(data)
                         {
@@ -56,9 +60,9 @@ function HookOcrstreamEditAfterfileoptions()
                         });
                 showLoadingImage();
                 });
-        </script>
-        <div class="Question" id="question_ocr" style="font-weight: normal">
-        <table>
+            </script>
+            <div class="Question" id="question_ocr" style="font-weight: normal">
+            <table>
             <tr id = "ocr_start" style="height:37px">
                 <td><label for="ocr_single_resource"><?php echo $lang["ocr_single_resource"]?></label></td>
                 <td><input type="button" name="ocr_start" style="width:90px" value="<?php echo $lang["ocr_start"]?>"></td>
@@ -75,7 +79,8 @@ function HookOcrstreamEditAfterfileoptions()
                 ?>
                 </select></td>            
             </tr>
-        </table>
-        </div>
-        <?php
+            </table>
+            </div>
+            <?php
+            }
         }
