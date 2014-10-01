@@ -31,6 +31,18 @@ if (is_tesseract_installed())
         $page_def[] = config_add_text_list_input('ocr_allowed_extensions', $lang['ocr_input_formats']);
         $page_def[] = config_add_text_input('ocr_min_density', $lang['ocr_min_density'], false, 45);
         $page_def[] = config_add_text_input('ocr_max_density', $lang['ocr_max_density'], false, 45);
+        $page_def[] = config_add_section_header('Image processing settings', 'Some resources may need addtional image processing before doing OCR. A temporary file will be created, the original resource will stay unchanged. You can adjust the parameters for this process here.');
+        $page_def[] = config_add_html("<p style=font-size:18px;>Preset 1</p>");
+        $page_def[] = config_add_text_input('im_preset_1_density', $lang['im_preset_density'], false, 45);
+        $page_def[] = config_add_html($lang['im_preset_density_help']);
+        $page_def[] = config_add_text_input('im_preset_1_geometry', $lang['im_preset_geometry'], false, 45);
+        $page_def[] = config_add_html($lang['im_preset_geometry_help']);
+        $page_def[] = config_add_text_input('im_preset_1_quality', 'quality', false, 45);
+        $page_def[] = config_add_text_input('im_preset_1_deskew', 'deskew %', false, 45);
+        $page_def[] = config_add_text_input('im_preset_1_sharpen_r', 'sharpen radius', false, 45);
+        $page_def[] = config_add_text_input('im_preset_1_sharpen_s', 'sharpen sigma', false, 45);
+        $page_def[] = config_add_text_input('im_preset_1_shave_w', 'shave width', false, 45);
+        $page_def[] = config_add_text_input('im_preset_1_shave_h', 'shave height', false, 45);
         }
 else 
         {

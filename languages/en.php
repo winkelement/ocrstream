@@ -19,4 +19,9 @@ $lang["ocr_error_1"] = 'Error: No valid Resource ID!.';
 $lang["ocr_error_2"] = 'Error: Resource filetype is not allowed for OCR processing.';
 $lang["ocr_error_3"] = 'Error: Image density (dpi/ppi) too low for OCR processing.';
 $lang["ocr_error_4"] = 'Error: Image density (dpi/ppi) too high for OCR processing.';
+$lang['im_preset_density'] = 'Density (-density [dpi])';
+$lang['im_preset_density_help'] = 'Sets the density of the temporary image for OCR processing. Lower values can speed up processing but results can get worse.';
+$lang['im_preset_geometry'] = 'Size (-geometry [px])';
+$lang['im_preset_geometry_help'] = 'Sets maximum width of the temporary image. Very high values can slow down processing.';
+$lang["im_preset_select"] = 'Image processing';
 ?>
