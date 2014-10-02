@@ -38,6 +38,7 @@ if (is_tesseract_installed()) {
     $page_def[] = config_add_html($lang['im_preset_density_help']);
     $page_def[] = config_add_text_input('im_preset_1_geometry', $lang['im_preset_geometry'], false, 45);
     $page_def[] = config_add_html($lang['im_preset_geometry_help']);
+    // @todo: add remaining im_preset options descriptions
     $page_def[] = config_add_text_input('im_preset_1_quality', 'quality', false, 45);
     $page_def[] = config_add_text_input('im_preset_1_deskew', 'deskew %', false, 45);
     $page_def[] = config_add_text_input('im_preset_1_sharpen_r', 'sharpen radius', false, 45);

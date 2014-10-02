@@ -20,7 +20,7 @@ function get_tesseract_fullpath() {
     return $tesseract_fullpath;
 }
 
-# @todo remove if useless
+// @todo: remove if useless
 function is_tesseract_installed() {
     $tesseract_fullpath = get_tesseract_fullpath();
     if (is_windows()) {

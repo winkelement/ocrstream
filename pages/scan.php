@@ -1,6 +1,6 @@
 <?php
 
-# @todo clean up, make separate functions where possible
+// @todo: clean up, make separate functions where possible
 
 include_once "../../../include/db.php";
 include_once "../../../include/general.php";
@@ -24,7 +24,7 @@ if (!in_array($ext, $ocr_allowed_extensions)) {
 }
 
 # Check if density (dpi) is in margin for ocr processing, skip for pdf 
-# @fixme check units (inch/centimeter) to prevent false  detection
+// @fixme: check units (inch/centimeter) to prevent false detection
 $resource_path = get_resource_path($ref, true, "", false, $ext);
 if ($ext != 'pdf') {
     $density = shell_exec($imagemagick_path . '/identify -format "%y" ' . '' . $resource_path . ' 2>&1');
@@ -45,7 +45,7 @@ if (array_search($ocr_lang, $tesseract_languages) == FALSE) {
     $ocr_lang = $ocr_global_language;
 }
 # Create intermediate image for OCR if needed and run tesseract on it
-# @todo multi page support for old (<3.0.3)and new versions of tesseract
+// @todo: multi page support for old (<3.0.3)and new versions of tesseract
 $param_1 = filter_input(INPUT_GET, 'param_1');
 $ocr_temp_dir = get_temp_dir();
 $tesseract_fullpath = get_tesseract_fullpath();
@@ -70,7 +70,7 @@ update_field($ref, 72, $tess_content); // write output text (string) to database
 update_xml_metadump($ref);
 
 # Delete temp files
-# @todo delete all im_tempfiles for multipages
+// @todo: delete all im_tempfiles for multipages
 unlink($ocr_temp_file);
 //unlink($im_tempfile); // debug: don't delete files to evaluate image processing results
 
