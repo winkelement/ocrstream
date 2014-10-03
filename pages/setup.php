@@ -32,19 +32,24 @@ if (is_tesseract_installed()) {
     $page_def[] = config_add_text_list_input('ocr_allowed_extensions', $lang['ocr_input_formats']);
     $page_def[] = config_add_text_input('ocr_min_density', $lang['ocr_min_density'], false, 45);
     $page_def[] = config_add_text_input('ocr_max_density', $lang['ocr_max_density'], false, 45);
-    $page_def[] = config_add_section_header('Image processing settings', 'Some resources may need addtional image processing before doing OCR. A temporary file will be created, the original resource will stay unchanged. You can adjust the parameters for this process here.');
+    $page_def[] = config_add_section_header($lang['im_processing_header'], $lang['im_processing_help']);
     $page_def[] = config_add_html("<p style=font-size:18px;>Preset 1</p>");
     $page_def[] = config_add_text_input('im_preset_1_density', $lang['im_preset_density'], false, 45);
     $page_def[] = config_add_html($lang['im_preset_density_help']);
     $page_def[] = config_add_text_input('im_preset_1_geometry', $lang['im_preset_geometry'], false, 45);
     $page_def[] = config_add_html($lang['im_preset_geometry_help']);
-    // @todo: add remaining im_preset options descriptions
-    $page_def[] = config_add_text_input('im_preset_1_quality', 'quality', false, 45);
-    $page_def[] = config_add_text_input('im_preset_1_deskew', 'deskew %', false, 45);
-    $page_def[] = config_add_text_input('im_preset_1_sharpen_r', 'sharpen radius', false, 45);
-    $page_def[] = config_add_text_input('im_preset_1_sharpen_s', 'sharpen sigma', false, 45);
-    $page_def[] = config_add_text_input('im_preset_1_shave_w', 'shave width', false, 45);
-    $page_def[] = config_add_text_input('im_preset_1_shave_h', 'shave height', false, 45);
+    $page_def[] = config_add_text_input('im_preset_1_quality', $lang['im_preset_quality'], false, 45);
+    $page_def[] = config_add_html($lang['im_preset_quality_help']);
+    $page_def[] = config_add_text_input('im_preset_1_deskew', $lang['im_preset_deskew'], false, 45);
+    $page_def[] = config_add_html($lang['im_preset_deskew_help']);
+    $page_def[] = config_add_text_input('im_preset_1_sharpen_r', $lang['im_preset_sharpen_r'], false, 45);
+    $page_def[] = config_add_html($lang['im_preset_sharpen_r_help']);
+    $page_def[] = config_add_text_input('im_preset_1_sharpen_s', $lang['im_preset_sharpen_s'], false, 45);
+    $page_def[] = config_add_html($lang['im_preset_sharpen_s_help']);
+    $page_def[] = config_add_text_input('im_preset_1_shave_w', $lang['im_preset_shave_w'], false, 45);
+    $page_def[] = config_add_html($lang['im_preset_shave_w_help']);
+    $page_def[] = config_add_text_input('im_preset_1_shave_h', $lang['im_preset_shave_h'], false, 45);
+    $page_def[] = config_add_html($lang['im_preset_shave_h_help']);
 } else {
     $page_def[] = config_add_text_input('tesseract_path', $lang['tesseract_path_input']);
 }

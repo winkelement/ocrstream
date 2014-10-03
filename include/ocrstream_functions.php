@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Checks if OS is Windows
+ * 
+ * @return boolean
+ */
 function is_windows() {
     $os = php_uname('s');
     if (stristr($os, 'win')) {
@@ -9,7 +13,12 @@ function is_windows() {
     }
     return $is_windows;
 }
-
+/**
+ * Get path to tesseract executable
+ * 
+ * @global string $tesseract_path Tesseract directory path
+ * @return string
+ */
 function get_tesseract_fullpath() {
     global $tesseract_path;
     if (is_windows()) {
@@ -20,7 +29,12 @@ function get_tesseract_fullpath() {
     return $tesseract_fullpath;
 }
 
-// @todo: remove if useless
+/**
+ * Checks if tesseract executable exists
+ * 
+ * @return boolean 
+ * @todo remove if useless
+ */
 function is_tesseract_installed() {
     $tesseract_fullpath = get_tesseract_fullpath();
     if (is_windows()) {
@@ -38,7 +52,11 @@ function is_tesseract_installed() {
     }
     return $tesseract_installed;
 }
-
+/**
+ * Get tesseract version
+ * 
+ * @return string Tesseract version output string
+ */
 function get_tesseract_version() {
     $tesseract_fullpath = get_tesseract_fullpath();
     $tesseract_version_command = shell_exec($tesseract_fullpath . ' -v 2>&1');
@@ -51,6 +69,12 @@ function get_tesseract_version() {
     return $tesseract_version;
 }
 
+/**
+ * Get leptonica version
+ * 
+ * @return string Leptonica version output string
+ * @todo remove if not needed
+ */
 function get_leptonica_version() {
     $tesseract_fullpath = get_tesseract_fullpath();
     $tesseract_version_command = shell_exec($tesseract_fullpath . ' -v 2>&1');
@@ -63,6 +87,15 @@ function get_leptonica_version() {
     return $leptonica_version;
 }
 
+/**
+ * Get available language for tesseract ocr
+ * 
+ * Returns an array of languages that are currently installed into the /TESSDATA directory.
+ * Language codes use ISO 639-2 standard.
+ * 
+ * @link https://code.google.com/p/tesseract-ocr/downloads/list tesseract language data downloads
+ * @return array 
+ */
 function get_tesseract_languages() {
     $tesseract_fullpath = get_tesseract_fullpath();
     $tesseract_language_command = shell_exec($tesseract_fullpath . ' --list-langs 2>&1');
@@ -78,6 +111,14 @@ function get_tesseract_languages() {
     return $tesseract_languages;
 }
 
+/**
+ * Check if tesseract version is old
+ * 
+ * Version 3.0.3 of tesseract includes many improvements and optimizations.
+ * Older Versions do not support image input via textfile (list of imagepaths) for multipage processing and don't support pdf output.
+ * 
+ * @return boolean
+ */
 function tesseract_version_is_old() {
     $tesseract_version = get_tesseract_version();
     if (substr($tesseract_version, 10, 1) < 3) {
