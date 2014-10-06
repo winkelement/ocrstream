@@ -33,25 +33,17 @@ function get_tesseract_fullpath() {
  * Checks if tesseract executable exists
  * 
  * @return boolean 
- * @todo remove if useless
  */
 function is_tesseract_installed() {
     $tesseract_fullpath = get_tesseract_fullpath();
-    if (is_windows()) {
-        if (file_exists($tesseract_fullpath)) {
-            $tesseract_installed = true;
-        } else {
-            $tesseract_installed = false;
-        }
+    if (file_exists($tesseract_fullpath)) {
+        $tesseract_installed = true;
     } else {
-        if (file_exists($tesseract_fullpath)) {
-            $tesseract_installed = true;
-        } else {
-            $tesseract_installed = false;
-        }
+        $tesseract_installed = false;
     }
     return $tesseract_installed;
 }
+
 /**
  * Get tesseract version
  * 

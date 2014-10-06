@@ -9,20 +9,24 @@ include_once "../include/ocrstream_functions.php";
 
 global $imagemagick_path;
 
-# Checking if Resource ID is valid INTEGER and exists in database
+# Get parameter variables
 /* @var $ref ResourceID */
 $ref = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
+/* @var $ext FileExtension */
+$ext = sql_value("select file_extension value from resource where ref = '$ref'", '');
+/* @var $ocr_lang TesseractLanguage */
+$ocr_lang = filter_input(INPUT_GET, 'ocr_lang');
+/* @var $param_1 ImagemagickPreset */
+$param_1 = filter_input(INPUT_GET, 'param_1');
+
+# Checking if Resource ID is valid INTEGER and exists in database
 if ($ref == NULL || $ref < 1 || $ref > sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')) {
-    echo json_encode('ocr_error_1');
-    exit();
+    exit(json_encode('ocr_error_1'));
 }
 
 # Check if file extension is allowed for ocr processing
-/* @var $ext FileExtension */
-$ext = sql_value("select file_extension value from resource where ref = '$ref'", '');
 if (!in_array($ext, $ocr_allowed_extensions)) {
-    echo json_encode('ocr_error_2');
-    exit();
+    exit(json_encode('ocr_error_2'));
 }
 
 # Check if density (dpi) is in margin for ocr processing, skip for pdf 
@@ -34,26 +38,22 @@ if ($ext != 'pdf') {
     $density = shell_exec($imagemagick_path . '/identify -format "%y" ' . '' . $resource_path . ' 2>&1');
 //    $density = trim($density);
     if (intval($density) < $ocr_min_density) {
-        echo json_encode('ocr_error_3');
-        exit();
+        exit(json_encode('ocr_error_3'));
     }
     if (intval($density) > $ocr_max_density) {
-        echo json_encode('ocr_error_4'); // Placeholder   
-        exit();
+        $param_1 = 'pre_1'; // Force image procesing if density too high 
     }
 }
+
 # If language parameter is not valid, choose global ocr language setting
-/* @var $ocr_lang TesseractLanguage */
-$ocr_lang = filter_input(INPUT_GET, 'ocr_lang');
 $tesseract_languages = get_tesseract_languages();
 if (array_search($ocr_lang, $tesseract_languages) == FALSE) {
     $ocr_lang = $ocr_global_language;
 }
+
 # Create intermediate image(s) for OCR if needed and run tesseract on it
 # 
 // @todo optimized multi page support for new (>3.0.3) versions of tesseract
-/* @var $param_1 ImagemagickPreset */
-$param_1 = filter_input(INPUT_GET, 'param_1');
 $ocr_temp_dir = get_temp_dir();
 $tesseract_fullpath = get_tesseract_fullpath();
 // Get number of pages
@@ -64,8 +64,8 @@ if ($param_1 === 'pre_1') {
     $im_ocr_cmd = $convert_fullpath . " " . implode(' ', $im_preset_1) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/im_tempfile_' . $ref . '.png');
     run_command($im_ocr_cmd);
 } 
-
-if ($pg_num > 1){ // OCR multi pages
+// OCR multi pages
+if ($pg_num > 1){ 
     $i = 0;
     while ($i < $pg_num){
         $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ref . '-' . $i . '.png');
@@ -75,7 +75,8 @@ if ($pg_num > 1){ // OCR multi pages
         $i ++;
     }
 }
- else { // OCR single page
+// OCR single page
+ else {
      $tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref) . ' -l ' . $ocr_lang);
      shell_exec($tess_cmd);     
 }
@@ -96,8 +97,3 @@ echo json_encode($tess_content);
 exit();
 
 //echo json_encode($ref.''.$ext.''.$ocr_lang.''.$param_1); //debug
-//
-//$dim = sql_query("select width, height from resource_dimensions where resource='$ref'");
-//$image_dimensions = $dim[0];
-//$w = $image_dimensions['width'];
-//$h = $image_dimensions['height'];
