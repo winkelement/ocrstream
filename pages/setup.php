@@ -29,30 +29,32 @@ if (is_tesseract_installed()) {
         $page_def[] = config_add_html("<p<br></p>");
     }
     $page_def[] = config_add_single_select('ocr_global_language', $lang['ocrstream_language_select'], $tesseract_languages, false, 90);
-    $page_def[] = config_add_text_list_input('ocr_allowed_extensions', $lang['ocr_input_formats']);
-    $page_def[] = config_add_text_input('ocr_min_density', $lang['ocr_min_density'], false, 45);
-    $page_def[] = config_add_text_input('ocr_max_density', $lang['ocr_max_density'], false, 45);
-    $page_def[] = config_add_section_header($lang['im_processing_header'], $lang['im_processing_help']);
-    $page_def[] = config_add_html("<p style=font-size:18px;>Preset 1</p>");
-    $page_def[] = config_add_text_input('im_preset_1_density', $lang['im_preset_density'], false, 45);
-    $page_def[] = config_add_html($lang['im_preset_density_help']);
-    $page_def[] = config_add_text_input('im_preset_1_geometry', $lang['im_preset_geometry'], false, 45);
-    $page_def[] = config_add_html($lang['im_preset_geometry_help']);
-    $page_def[] = config_add_text_input('im_preset_1_quality', $lang['im_preset_quality'], false, 45);
-    $page_def[] = config_add_html($lang['im_preset_quality_help']);
-    $page_def[] = config_add_text_input('im_preset_1_deskew', $lang['im_preset_deskew'], false, 45);
-    $page_def[] = config_add_html($lang['im_preset_deskew_help']);
-    $page_def[] = config_add_text_input('im_preset_1_sharpen_r', $lang['im_preset_sharpen_r'], false, 45);
-    $page_def[] = config_add_html($lang['im_preset_sharpen_r_help']);
-    $page_def[] = config_add_text_input('im_preset_1_sharpen_s', $lang['im_preset_sharpen_s'], false, 45);
-    $page_def[] = config_add_html($lang['im_preset_sharpen_s_help']);
-    $page_def[] = config_add_text_input('im_preset_1_shave_w', $lang['im_preset_shave_w'], false, 45);
-    $page_def[] = config_add_html($lang['im_preset_shave_w_help']);
-    $page_def[] = config_add_text_input('im_preset_1_shave_h', $lang['im_preset_shave_h'], false, 45);
-    $page_def[] = config_add_html($lang['im_preset_shave_h_help']);
 } else {
     $page_def[] = config_add_text_input('tesseract_path', $lang['tesseract_path_input']);
 }
+
+$page_def[] = config_add_text_list_input('ocr_allowed_extensions', $lang['ocr_input_formats']);
+$page_def[] = config_add_text_input('ocr_min_density', $lang['ocr_min_density'], false, 45);
+$page_def[] = config_add_text_input('ocr_max_density', $lang['ocr_max_density'], false, 45);
+$page_def[] = config_add_html($lang['ocr_max_density_help']);
+$page_def[] = config_add_section_header($lang['im_processing_header'], $lang['im_processing_help']);
+$page_def[] = config_add_html("<p style=font-size:18px;>Preset 1</p>");
+$page_def[] = config_add_text_input('im_preset_1_density', $lang['im_preset_density'], false, 45);
+$page_def[] = config_add_html($lang['im_preset_density_help']);
+$page_def[] = config_add_text_input('im_preset_1_geometry', $lang['im_preset_geometry'], false, 45);
+$page_def[] = config_add_html($lang['im_preset_geometry_help']);
+$page_def[] = config_add_text_input('im_preset_1_quality', $lang['im_preset_quality'], false, 45);
+$page_def[] = config_add_html($lang['im_preset_quality_help']);
+$page_def[] = config_add_text_input('im_preset_1_deskew', $lang['im_preset_deskew'], false, 45);
+$page_def[] = config_add_html($lang['im_preset_deskew_help']);
+$page_def[] = config_add_text_input('im_preset_1_sharpen_r', $lang['im_preset_sharpen_r'], false, 45);
+$page_def[] = config_add_html($lang['im_preset_sharpen_r_help']);
+$page_def[] = config_add_text_input('im_preset_1_sharpen_s', $lang['im_preset_sharpen_s'], false, 45);
+$page_def[] = config_add_html($lang['im_preset_sharpen_s_help']);
+$page_def[] = config_add_text_input('im_preset_1_shave_w', $lang['im_preset_shave_w'], false, 45);
+$page_def[] = config_add_html($lang['im_preset_shave_w_help']);
+$page_def[] = config_add_text_input('im_preset_1_shave_h', $lang['im_preset_shave_h'], false, 45);
+$page_def[] = config_add_html($lang['im_preset_shave_h_help']);
 
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.

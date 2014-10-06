@@ -8,11 +8,12 @@ $lang['ocrstream_language_select'] = 'Standardsprache für Texterkennung <br> (n
 $lang['tesseract_path_info'] = 'Pfad zu tesseract-ocr:';
 $lang['ocr_single_resource'] = 'Texterkennung durchführen';
 $lang['ocr_start'] = 'Starte OCR';
-$lang['tesseract_path_input'] = 'Tesseract-ocr nicht gefunden, bitte geben Sie den Pfad an:';
-$lang['tesseract_old_version_info'] = 'Bitte aktualisieren Sie Tesseract mindestens auf Version 3.03 für alle Funktionen.';
+$lang['tesseract_path_input'] = '<p style="color:red"><b> Tesseract-ocr nicht gefunden, bitte geben Sie den Pfad an:</b></p>';
+$lang['tesseract_old_version_info'] = 'Bitte aktualisieren Sie Tesseract mindestens auf Version 3.03 für die beste Performance und erweiterte Funktionalität.';
 $lang['ocr_input_formats'] = 'Erlaubte Dateitypen:';
 $lang['ocr_min_density'] = 'Mindestauflösung des Bildes für Texterkennung (dpi/ppi)';
 $lang['ocr_max_density'] = 'Maximalauflösung des Bildes für Texterkennung (dpi/ppi)';
+$lang['ocr_max_density_help'] = 'Bilder mit einer höheren Auflösung durchlaufen einen Bearbeitungsprozess vor der Texterkennung.';
 $lang["ocr_language_select"] = 'Sprache für Texterkennung';
 $lang["ocr_parameter_select"] = 'Parameter 1';
 $lang["ocr_error_1"] = 'Fehler: Keine gültige Resourcen ID!';
