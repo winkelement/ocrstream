@@ -18,7 +18,29 @@ $ext = sql_value("select file_extension value from resource where ref = '$ref'",
 $ocr_lang = filter_input(INPUT_GET, 'ocr_lang');
 /* @var $param_1 ImagemagickPreset */
 $param_1 = filter_input(INPUT_GET, 'param_1');
-
+$w = filter_input(INPUT_GET, 'w');
+$h = filter_input(INPUT_GET, 'h');
+$x = filter_input(INPUT_GET, 'x');
+$y = filter_input(INPUT_GET, 'y');
+$im_preset_1_crop_w = $w;
+$im_preset_1_crop_h = $h;
+$im_preset_1_crop_x = $x;
+$im_preset_1_crop_y = $y;
+// Iniatialize Preset 1
+$im_preset_1 = [
+    'density'   => ('-density ' . $im_preset_1_density),
+    'geometry'  => ('-geometry ' . $im_preset_1_geometry),
+    'crop'     => ('-crop ' . $im_preset_1_crop_w . 'x' . $im_preset_1_crop_h . '+' . $im_preset_1_crop_x . '+' . $im_preset_1_crop_y),
+    'quality'   => ('-quality ' . $im_preset_1_quality),
+    'trim'      => ('-trim'),
+    'deskew'    => ('-deskew ' . $im_preset_1_deskew . '%'),
+    'normalize' => ('-normalize'),
+    'sharpen'   => ('-adaptive-sharpen ' . $im_preset_1_sharpen_r . 'x' . $im_preset_1_sharpen_s),
+   ];
+// For debug return parameters and exit here
+//echo json_encode($ref.' '.$ext.' '.$ocr_lang.' '.$param_1. ' '.$w.' '.$h.' '.$x.' '.$y . implode(' ', $im_preset_1)); //debug
+//exit();
+//
 # Checking if Resource ID is valid INTEGER and exists in database
 if ($ref == NULL || $ref < 1 || $ref > sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')) {
     exit(json_encode('ocr_error_1'));
@@ -64,7 +86,7 @@ if ($param_1 === 'pre_1') {
     $im_ocr_cmd = $convert_fullpath . " " . implode(' ', $im_preset_1) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/im_tempfile_' . $ref . '.png');
     run_command($im_ocr_cmd);
 } 
-// OCR multi pages
+// OCR multi pages processed
 if ($pg_num > 1){ 
     $i = 0;
     while ($i < $pg_num){
@@ -75,7 +97,13 @@ if ($pg_num > 1){
         $i ++;
     }
 }
-// OCR single page
+// OCR single page processed
+if ($param_1 === 'pre_1') {
+    $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ref . '.png');
+     $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref) . ' -l ' . $ocr_lang);
+     shell_exec($tess_cmd);    
+}
+// OCR single page original
  else {
      $tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref) . ' -l ' . $ocr_lang);
      shell_exec($tess_cmd);     
@@ -96,4 +124,3 @@ update_xml_metadump($ref);
 echo json_encode($tess_content);
 exit();
 
-//echo json_encode($ref.''.$ext.''.$ocr_lang.''.$param_1); //debug
