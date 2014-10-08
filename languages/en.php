@@ -34,9 +34,5 @@ $lang['im_preset_sharpen_r'] = 'Adaptive sharpen radius <br> (-adaptive-sharpen 
 $lang['im_preset_sharpen_r_help'] = 'Sets the radius of the Gaussian operator.';
 $lang['im_preset_sharpen_s'] = 'Adaptive sharpen sigma <br> (-adaptive-sharpen [radius]x[sigma])';
 $lang['im_preset_sharpen_s_help'] = 'Sets the standard deviation of the Gaussian operator. Default is 1.';
-$lang['im_preset_shave_w'] = "Crop width <br>(-shave [width px]x[height px])";
-$lang['im_preset_shave_w_help'] = 'Crops the given amount of pixels at top and bootom e.g. to get rid of headers and footers.';
-$lang['im_preset_shave_h'] = 'Crop height <br> (-shave [width px]x[height px])';
-$lang['im_preset_shave_h_help'] = 'Crops the given amount of pixels at left and right e.g. to get rid of marks at the margin.';
 $lang["im_preset_select"] = 'Image processing';
 ?>

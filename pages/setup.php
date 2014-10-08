@@ -51,11 +51,6 @@ $page_def[] = config_add_text_input('im_preset_1_sharpen_r', $lang['im_preset_sh
 $page_def[] = config_add_html($lang['im_preset_sharpen_r_help']);
 $page_def[] = config_add_text_input('im_preset_1_sharpen_s', $lang['im_preset_sharpen_s'], false, 45);
 $page_def[] = config_add_html($lang['im_preset_sharpen_s_help']);
-$page_def[] = config_add_text_input('im_preset_1_shave_w', $lang['im_preset_shave_w'], false, 45);
-$page_def[] = config_add_html($lang['im_preset_shave_w_help']);
-$page_def[] = config_add_text_input('im_preset_1_shave_h', $lang['im_preset_shave_h'], false, 45);
-$page_def[] = config_add_html($lang['im_preset_shave_h_help']);
-
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 // Each element of $page_def describes one configuration variable. Each description is

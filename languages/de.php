@@ -34,9 +34,5 @@ $lang['im_preset_sharpen_r'] = 'Adaptives Scharfzeichen Radius <br> (-adaptive-s
 $lang['im_preset_sharpen_r_help'] = 'Legt den Radius für den verwendeten Gauss-Filter fest.';
 $lang['im_preset_sharpen_s'] = 'Adaptives Scharfzeichen Sigma <br> (-adaptive-sharpen [radius]x[sigma])';
 $lang['im_preset_sharpen_s_help'] = 'Legt die Standardabweichung für den verwendeten Gauss-Filter fest. Standard ist 1.';
-$lang['im_preset_shave_w'] = "Bildzuschnitt Breite <br>(-shave [width px]x[height px])";
-$lang['im_preset_shave_w_help'] = 'Beschneidet das Bild oben und unten um z.B. Kopf- und Fußzeilen wegzulassen.';
-$lang['im_preset_shave_h'] = 'Bildzuschnitt Höhe <br> (-shave [width px]x[height px])';
-$lang['im_preset_shave_h_help'] = 'Beschneidet das Bild links und rechts um z.B. Ränder und Falzmarken wegzulassen.';
 $lang["im_preset_select"] = 'Bildbearbeitung';
 ?>
