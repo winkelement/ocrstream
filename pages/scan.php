@@ -27,7 +27,7 @@ $im_preset_1_crop_h = filter_input(INPUT_GET, 'h');
 $im_preset_1_crop_x = filter_input(INPUT_GET, 'x');
 $im_preset_1_crop_y = filter_input(INPUT_GET, 'y');
 
-# Iniatialize Preset 1
+# Initialize Preset 1
 $im_preset_1 = [
     'density'   => ('-density ' . $im_preset_1_density),
     'geometry'  => ('-geometry ' . $im_preset_1_geometry),
@@ -100,7 +100,7 @@ if ($pg_num > 1){
     }
 }
 // OCR single page processed
-if ($param_1 === 'pre_1' && $pg_num === 1) {
+if ($param_1 === 'pre_1' && $pg_num === '1') {
     $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ref_id . '.png');
     $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref_id) . ' -l ' . $ocr_lang);
     shell_exec($tess_cmd);    
