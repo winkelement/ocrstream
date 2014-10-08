@@ -9,6 +9,7 @@ function HookOcrstreamEditAfterfileoptions() {
     global $ocr_global_language;
     global $ocr_allowed_extensions;
     global $im_preset_1_geometry;
+    if (is_tesseract_installed()){
     // Hide OCR options for filetypes not allowed
     $ext = sql_value("select file_extension value from resource where ref = '$ref'", '');
     if (in_array($ext, $ocr_allowed_extensions)) {
@@ -166,5 +167,6 @@ function HookOcrstreamEditAfterfileoptions() {
             </div>
         </div>
         <?php
+    }
     }
 }
