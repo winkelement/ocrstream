@@ -1,6 +1,8 @@
 <?php
 
 // @todo clean up, make separate functions where possible
+// @todo implement filter for unwanted content/characters/whitespaces to prevent excessive load on db
+// @todo implement tesseract page segmenation mode select
 
 include_once "../../../include/db.php";
 include_once "../../../include/general.php";
@@ -18,19 +20,17 @@ $ext = sql_value("select file_extension value from resource where ref = '$ref'",
 $ocr_lang = filter_input(INPUT_GET, 'ocr_lang');
 /* @var $param_1 ImagemagickPreset */
 $param_1 = filter_input(INPUT_GET, 'param_1');
-$w = filter_input(INPUT_GET, 'w');
-$h = filter_input(INPUT_GET, 'h');
-$x = filter_input(INPUT_GET, 'x');
-$y = filter_input(INPUT_GET, 'y');
-$im_preset_1_crop_w = $w;
-$im_preset_1_crop_h = $h;
-$im_preset_1_crop_x = $x;
-$im_preset_1_crop_y = $y;
-// Iniatialize Preset 1
+// Get cropping values width, height, offset_x, offset_y
+$im_preset_1_crop_w = filter_input(INPUT_GET, 'w');
+$im_preset_1_crop_h = filter_input(INPUT_GET, 'h');
+$im_preset_1_crop_x = filter_input(INPUT_GET, 'x');
+$im_preset_1_crop_y = filter_input(INPUT_GET, 'y');
+
+# Iniatialize Preset 1
 $im_preset_1 = [
     'density'   => ('-density ' . $im_preset_1_density),
     'geometry'  => ('-geometry ' . $im_preset_1_geometry),
-    'crop'     => ('-crop ' . $im_preset_1_crop_w . 'x' . $im_preset_1_crop_h . '+' . $im_preset_1_crop_x . '+' . $im_preset_1_crop_y),
+    'crop'      => ('-crop ' . $im_preset_1_crop_w . 'x' . $im_preset_1_crop_h . '+' . $im_preset_1_crop_x . '+' . $im_preset_1_crop_y),
     'quality'   => ('-quality ' . $im_preset_1_quality),
     'trim'      => ('-trim'),
     'deskew'    => ('-deskew ' . $im_preset_1_deskew . '%'),
@@ -112,7 +112,7 @@ $ocr_output_file = $ocr_temp_dir . '/ocr_output_file_' . $ref . '.txt';
 $tess_content = trim(file_get_contents($ocr_output_file));
 
 # Write output text (string) to database (metadata field 72) and metadata.xml
-update_field($ref, 72, $tess_content); // write output text (string) to database (metadata field 72)
+update_field($ref, 72, $tess_content);
 update_xml_metadump($ref);
 
 # Delete temp files
