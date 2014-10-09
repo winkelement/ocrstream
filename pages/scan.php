@@ -120,8 +120,8 @@ update_field($ref_id, 72, $tess_content);
 update_xml_metadump($ref_id);
 
 # Delete temp files
-//array_map('unlink', glob("$ocr_temp_dir/ocr*.txt"));
-//array_map('unlink', glob("$ocr_temp_dir/im*.png"));
+//array_map('unlink', glob("$ocr_temp_dir/ocr*.txt")); //debug, uncomment for productive system
+//array_map('unlink', glob("$ocr_temp_dir/im*.png")); //debug, uncomment for productive system
 
 # Return extracted text as JSON
 echo json_encode($tess_content);
