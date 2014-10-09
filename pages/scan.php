@@ -87,14 +87,16 @@ if ($param_1 === 'pre_1') {
     $convert_fullpath = get_utility_path("im-convert");
     $im_ocr_cmd = $convert_fullpath . " " . implode(' ', $im_preset_1) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/im_tempfile_' . $ref_id . '.png');
     run_command($im_ocr_cmd);
-} 
+}
+// Make sure to remove old ocr_output_file
+array_map('unlink', glob("$ocr_temp_dir/ocr_output_file*.txt"));
 // OCR multi pages processed
 if ($pg_num > 1){ 
     $i = 0;
     while ($i < $pg_num){
         $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ref_id . '-' . $i . '.png');
         $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocrtempfile_' . $ref_id) . ' -l ' . $ocr_lang);
-        shell_exec($tess_cmd);
+        run_command($tess_cmd);
         file_put_contents($ocr_temp_dir . '/ocr_output_file_' . $ref_id . '.txt', file_get_contents($ocr_temp_dir . '/ocrtempfile_' . $ref_id . '.txt'), FILE_APPEND);
         $i ++;
     }
@@ -103,12 +105,12 @@ if ($pg_num > 1){
 if ($param_1 === 'pre_1' && $pg_num === '1') {
     $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ref_id . '.png');
     $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref_id) . ' -l ' . $ocr_lang);
-    shell_exec($tess_cmd);    
+    run_command($tess_cmd);    
 }
 // OCR single page original
 if ($param_1 === 'none') {
     $tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref_id) . ' -l ' . $ocr_lang);
-    shell_exec($tess_cmd);     
+    run_command($tess_cmd);     
 }
 $ocr_output_file = $ocr_temp_dir . '/ocr_output_file_' . $ref_id . '.txt';
 $tess_content = trim(file_get_contents($ocr_output_file));
@@ -118,8 +120,8 @@ update_field($ref_id, 72, $tess_content);
 update_xml_metadump($ref_id);
 
 # Delete temp files
-array_map('unlink', glob("$ocr_temp_dir/ocr*.txt"));
-array_map('unlink', glob("$ocr_temp_dir/im*.png"));
+//array_map('unlink', glob("$ocr_temp_dir/ocr*.txt"));
+//array_map('unlink', glob("$ocr_temp_dir/im*.png"));
 
 # Return extracted text as JSON
 echo json_encode($tess_content);
