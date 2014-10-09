@@ -28,7 +28,7 @@ $im_preset_1_crop_x = filter_input(INPUT_GET, 'x');
 $im_preset_1_crop_y = filter_input(INPUT_GET, 'y');
 
 # Initialize Preset 1
-$im_preset_1 = [
+$im_preset_1 = array(
     'density'   => ('-density ' . $im_preset_1_density),
     'geometry'  => ('-geometry ' . $im_preset_1_geometry),
     'crop'      => ('-crop ' . $im_preset_1_crop_w . 'x' . $im_preset_1_crop_h . '+' . $im_preset_1_crop_x . '+' . $im_preset_1_crop_y),
@@ -37,7 +37,7 @@ $im_preset_1 = [
     'deskew'    => ('-deskew ' . $im_preset_1_deskew . '%'),
     'normalize' => ('-normalize'),
     'sharpen'   => ('-adaptive-sharpen ' . $im_preset_1_sharpen_r . 'x' . $im_preset_1_sharpen_s),
-   ];
+   );
 // For debug return parameters and exit here
 //echo json_encode($ref.' '.$ext.' '.$ocr_lang.' '.$param_1. ' '.$w.' '.$h.' '.$x.' '.$y . implode(' ', $im_preset_1)); //debug
 //exit();
