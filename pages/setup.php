@@ -61,3 +61,15 @@ $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $page_intro);
 include '../../../include/footer.php';
+?>
+<script src="../lib/alphanum/jquery.alphanum.js"></script>
+<script>
+    jQuery("#ocr_min_density, \n\
+            #ocr_max_density, \n\
+            #im_preset_1_density,\n\
+            #im_preset_1_geometry,\n\
+            #im_preset_1_quality,\n\
+            #im_preset_1_deskew,\n\
+            #im_preset_1_sharpen_r,\n\
+            #im_preset_1_sharpen_s").numeric("ocrstreamSetupNum");
+</script>
