@@ -1,11 +1,11 @@
 <?php
 
-#
-# Configuration file for ResourceSpace plugin "ocrstream"
-#
-# These are the default values. They can be overridden by using /plugins/sample/pages/setup.php
-# which is invoked by choosing Team Centre > Manage Plugins and then clicking on Options for the
-# ocrstream plugin once it has been activated.
+/** Configuration file for ResourceSpace plugin "ocrstream"
+ * 
+ * These are the default values. They can be overridden by using /plugins/sample/pages/setup.php
+ * which is invoked by choosing Team Centre > Manage Plugins and then clicking on Options for the
+ * ocrstream plugin once it has been activated.
+ */
 
 $ocr_global_language = '';
 $tesseract_path = '/usr/bin';
