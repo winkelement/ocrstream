@@ -118,9 +118,8 @@ update_field($ref_id, 72, $tess_content);
 update_xml_metadump($ref_id);
 
 # Delete temp files
-// @todo delete all im_tempfiles for multipages
-//unlink($ocr_temp_file);
-//unlink($im_tempfile); // debug: don't delete files to evaluate image processing results
+array_map('unlink', glob("$ocr_temp_dir/ocr*.txt"));
+array_map('unlink', glob("$ocr_temp_dir/im*.png"));
 
 # Return extracted text as JSON
 echo json_encode($tess_content);
