@@ -18,6 +18,8 @@ function HookOcrstreamEditAfterfileoptions() {
     global $ocr_global_language;
     global $ocr_allowed_extensions;
     global $im_preset_1_geometry;
+    global $ocr_psm_array;
+    global $ocr_psm_global;
     if (is_tesseract_installed()) {
         // Hide OCR options for filetypes not allowed
         $ext = sql_value("select file_extension value from resource where ref = '$ref'", '');
@@ -28,7 +30,6 @@ function HookOcrstreamEditAfterfileoptions() {
             $ar = ($w_thumb / $h_thumb);
             $w = $im_preset_1_geometry;
             $h = ($w / $ar);
-            $usekeys = false;
             $choices = get_tesseract_languages();
             ?>
             <script src="../plugins/ocrstream/lib/jcrop/js/jquery.Jcrop.min.js"></script>
@@ -79,6 +80,12 @@ function HookOcrstreamEditAfterfileoptions() {
                     ocr_lang = selectedLanguage;
                     return ocr_lang;
                 }
+                ;
+                function setPsm(selectedPSM) {
+                    ocr_psm = selectedPSM;
+                    return ocr_psm;
+                }
+                ;
                 function setParams(selectedParam) {
                     param_1 = selectedParam;
                     if (param_1 === 'pre_1') {
@@ -86,14 +93,18 @@ function HookOcrstreamEditAfterfileoptions() {
                     }
                     return param_1;
                 }
+                ;
                 function showLoadingImage() {
                     jQuery('#ocr_start').append('<td id="loading-image"><img src="../gfx/interface/loading.gif" alt="Loading..."  style="margin-left:17px" /></td>');
                 }
+                ;
                 function hideLoadingImage() {
                     jQuery('#loading-image').remove();
                 }
+                ;
                 // Initilaize Parameters
                 ocr_lang = jQuery('#ocr_lang :selected').text();
+                ocr_psm = jQuery('#ocr_psm :selected').val();
                 param_1 = jQuery('#im_preset :selected').val();
                 x = '0';
                 y = '0';
@@ -106,7 +117,7 @@ function HookOcrstreamEditAfterfileoptions() {
                 // Send parameters to scan.php and get result
                 jQuery('[name="ocr_start"]').click(function ()
                 {
-                    jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/pages/scan.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
+                    jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/pages/scan.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
                     {
                         var1 = data;
                         console.log(JSON.parse(var1)); // debug
@@ -146,9 +157,22 @@ function HookOcrstreamEditAfterfileoptions() {
                         <td><label for="ocr_language_select"><?php echo $lang["ocr_language_select"] ?></label></td>
                         <td><select name="ocr_lang" id="ocr_lang" style="width:90px" onchange="setLanguage(this.form.ocr_lang.options[this.form.ocr_lang.selectedIndex].value);">
                                 <?php
+                                $usekeys_lang = false;
                                 foreach ($choices as $key => $choice) {
-                                    $value = $usekeys ? $key : $choice;
+                                    $value = $usekeys_lang ? $key : $choice;
                                     echo '    <option value="' . $value . '"' . (($ocr_global_language == $value) ? ' selected' : '') . ">$choice</option>";
+                                }
+                                ?>
+                            </select></td>            
+                    </tr>
+                    <tr>
+                        <td><label for="ocr_psm_select"><?php echo $lang["ocr_psm"] ?></label></td>
+                        <td><select name="ocr_psm" id="ocr_psm" style="width:414px" onchange="setPsm(this.form.ocr_psm.options[this.form.ocr_psm.selectedIndex].value);">
+                                <?php
+                                $usekeys_psm = true;
+                                foreach ($ocr_psm_array as $key => $choice) {
+                                    $value = $usekeys_psm ? $key : $choice;
+                                    echo '    <option value="' . $value . '"' . (($ocr_psm_global == $value) ? ' selected' : '') . ">$choice</option>";
                                 }
                                 ?>
                             </select></td>            

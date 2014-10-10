@@ -19,6 +19,7 @@ $ref_id = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
 $ext = sql_value("select file_extension value from resource where ref = '$ref_id'", '');
 /* @var $ocr_lang TesseractLanguage */
 $ocr_lang = filter_input(INPUT_GET, 'ocr_lang');
+$ocr_psm = filter_input(INPUT_GET, 'ocr_psm');
 /* @var $param_1 ImagemagickPreset */
 $param_1 = filter_input(INPUT_GET, 'param_1');
 // Get cropping values width, height, offset_x, offset_y
@@ -39,7 +40,8 @@ $im_preset_1 = array(
     'sharpen'   => ('-adaptive-sharpen ' . $im_preset_1_sharpen_r . 'x' . $im_preset_1_sharpen_s),
    );
 /* For debug return parameters and exit here */
-//echo json_encode($ref.' '.$ext.' '.$ocr_lang.' '.$param_1. ' '.$w.' '.$h.' '.$x.' '.$y . implode(' ', $im_preset_1)); //debug
+//$debug = json_encode($ref_id. ' ' .$ext. ' ' .$ocr_lang. ' ' .$ocr_psm. ' '.$param_1. ' '.$im_preset_1_crop_w.' '.$im_preset_1_crop_h.' '.$im_preset_1_crop_x.' '.$im_preset_1_crop_y . implode(' ', $im_preset_1));
+//echo $debug; //debug
 //exit();
 
 // Checking if Resource ID is valid INTEGER and exists in database
@@ -94,10 +96,10 @@ array_map('unlink', glob("$ocr_temp_dir/ocr_output_file*.txt"));
 if ($pg_num > 1 && tesseract_version_is_old() === false) { 
     $n = 0;
     while ($n < $pg_num) {
-        file_put_contents($ocr_temp_dir . '/im_tess_file_' . $ref_id, trim($ocr_temp_dir . '/im_tempfile_' . $ref_id . '-' . $n . '.png').PHP_EOL, FILE_APPEND);
+        file_put_contents($ocr_temp_dir . '/im_ocr_file_' . $ref_id, trim($ocr_temp_dir . '/im_tempfile_' . $ref_id . '-' . $n . '.png').PHP_EOL, FILE_APPEND);
         $n++;
     }
-    $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_temp_dir . '/im_tess_file_' . $ref_id . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref_id) . ' -l ' . $ocr_lang);
+    $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_temp_dir . '/im_ocr_file_' . $ref_id . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref_id) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
     run_command($tess_cmd);    
 }
 // OCR multi pages, processed, tesseract < v3.0.3
@@ -105,7 +107,7 @@ if ($pg_num > 1 && tesseract_version_is_old() === true) {
     $i = 0;
     while ($i < $pg_num) {
         $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ref_id . '-' . $i . '.png');
-        $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocrtempfile_' . $ref_id) . ' -l ' . $ocr_lang);
+        $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocrtempfile_' . $ref_id) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
         run_command($tess_cmd);
         file_put_contents($ocr_temp_dir . '/ocr_output_file_' . $ref_id . '.txt', file_get_contents($ocr_temp_dir . '/ocrtempfile_' . $ref_id . '.txt'), FILE_APPEND);
         $i ++;
@@ -114,12 +116,12 @@ if ($pg_num > 1 && tesseract_version_is_old() === true) {
 // OCR single page processed
 if ($param_1 === 'pre_1' && $pg_num === '1') {
     $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ref_id . '.png');
-    $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref_id) . ' -l ' . $ocr_lang);
+    $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref_id) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
     run_command($tess_cmd);    
 }
 // OCR single page original
 if ($param_1 === 'none') {
-    $tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref_id) . ' -l ' . $ocr_lang);
+    $tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref_id) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
     run_command($tess_cmd);     
 }
 $ocr_output_file = $ocr_temp_dir . '/ocr_output_file_' . $ref_id . '.txt';
@@ -130,8 +132,8 @@ update_field($ref_id, 72, $tess_content);
 update_xml_metadump($ref_id);
 
 // Delete temp files
-//array_map('unlink', glob("$ocr_temp_dir/ocr*.txt")); //debug, uncomment for productive system
-//array_map('unlink', glob("$ocr_temp_dir/im*.png")); //debug, uncomment for productive system
+array_map('unlink', glob("$ocr_temp_dir/ocr*.*")); //debug, uncomment for productive system
+array_map('unlink', glob("$ocr_temp_dir/im*.png")); //debug, uncomment for productive system
 
 // Return extracted text as JSON
 echo json_encode($tess_content);

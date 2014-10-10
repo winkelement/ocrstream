@@ -11,6 +11,7 @@ $lang['ocr_start'] = 'Starte OCR';
 $lang['tesseract_path_input'] = '<p style="color:red"><b> Tesseract-ocr nicht gefunden, bitte geben Sie den Pfad an:</b></p>';
 $lang['tesseract_old_version_info'] = 'Bitte aktualisieren Sie Tesseract mindestens auf Version 3.03 für die beste Performance und erweiterte Funktionalität.';
 $lang['ocr_input_formats'] = 'Erlaubte Dateitypen:';
+$lang['ocr_psm'] = 'Tesseract page segmentation mode';
 $lang['ocr_min_density'] = 'Mindestauflösung des Bildes für Texterkennung (dpi/ppi)';
 $lang['ocr_max_density'] = 'Maximalauflösung des Bildes für Texterkennung (dpi/ppi)';
 $lang['ocr_max_density_help'] = 'Bilder mit einer höheren Auflösung durchlaufen einen Bearbeitungsprozess vor der Texterkennung.';
