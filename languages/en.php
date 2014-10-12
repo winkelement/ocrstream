@@ -12,6 +12,7 @@ $lang['tesseract_path_input'] = '<p style="color:red"><b>Tesseract-ocr not found
 $lang['tesseract_old_version_info'] = 'Please update tesseract to minimum version 3.03 for best performance and extended functionality.';
 $lang['ocr_input_formats'] = 'Allowed filetypes:';
 $lang['ocr_psm'] = 'Tesseract page segmentation mode';
+$lang['ocr_ftype_1'] = 'Select field the extracted text should be written to:';
 $lang['ocr_min_density'] = 'Minimum image density for OCR processing (dpi/ppi)';
 $lang['ocr_max_density'] = 'Maximum image density for OCR processing (dpi/ppi)';
 $lang['ocr_max_density_help'] = 'Images with density above that value will be processed before doing OCR.';
@@ -20,7 +21,7 @@ $lang["ocr_parameter_select"] = 'Parameter 1';
 $lang["ocr_error_1"] = 'Error: No valid Resource ID!.';
 $lang["ocr_error_2"] = 'Error: Resource filetype is not allowed for OCR processing.';
 $lang["ocr_error_3"] = 'Error: Image density (dpi/ppi) too low for OCR processing.';
-$lang["ocr_error_4"] = 'Error: Image density (dpi/ppi) too high for OCR processing.';
+$lang["ocr_error_4"] = 'Error: Wrong resourcetype. OCR is only allowed for type Document.';
 $lang['im_processing_header'] = 'Image processing settings';
 $lang['im_processing_help'] = 'Some resources need addtional image processing before doing the OCR. <br> A temporary file will be created, the original resource will not be changed. <br> You can adjust the settings for this process here.';
 $lang['im_preset_density'] = 'Density (-density [dpi])';

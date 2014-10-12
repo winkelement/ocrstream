@@ -13,6 +13,7 @@ $ocr_allowed_extensions = array('tif', 'tiff', 'jpg', 'jpeg', 'png', 'gif', 'bmp
 $ocr_min_density = '300';
 $ocr_max_density = '600';
 $ocr_psm_global = '3';
+$ocr_ftype_1 = 72;
 $im_preset_1_density = '300';
 $im_preset_1_geometry = '1024';
 $im_preset_1_quality = '90';

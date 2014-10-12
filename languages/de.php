@@ -12,6 +12,7 @@ $lang['tesseract_path_input'] = '<p style="color:red"><b> Tesseract-ocr nicht ge
 $lang['tesseract_old_version_info'] = 'Bitte aktualisieren Sie Tesseract mindestens auf Version 3.03 für die beste Performance und erweiterte Funktionalität.';
 $lang['ocr_input_formats'] = 'Erlaubte Dateitypen:';
 $lang['ocr_psm'] = 'Tesseract page segmentation mode';
+$lang['ocr_ftype_1'] = 'Feld in welches der extrahierte Text geschrieben werden soll:';
 $lang['ocr_min_density'] = 'Mindestauflösung des Bildes für Texterkennung (dpi/ppi)';
 $lang['ocr_max_density'] = 'Maximalauflösung des Bildes für Texterkennung (dpi/ppi)';
 $lang['ocr_max_density_help'] = 'Bilder mit einer höheren Auflösung durchlaufen einen Bearbeitungsprozess vor der Texterkennung.';
@@ -20,7 +21,7 @@ $lang["ocr_parameter_select"] = 'Parameter 1';
 $lang["ocr_error_1"] = 'Fehler: Keine gültige Resourcen ID!';
 $lang["ocr_error_2"] = 'Fehler: Für den Dateityp dieser Resource ist Texterkennung nicht erlaubt.';
 $lang["ocr_error_3"] = 'Fehler: Bildauflösung (dpi/ppi) zu niedrig für Texterkennung.';
-$lang["ocr_error_4"] = 'Fehler: Bildauflösung (dpi/ppi) zu hoch für Texterkennung.';
+$lang["ocr_error_4"] = 'Fehler: Falscher Resourcentyp. Nur für den Resourcentyp Dokument ist die Texterkennung erlaubt.';
 $lang['im_processing_header'] = 'Bildbearbeitungseinstellungen';
 $lang['im_processing_help'] = 'Bei einigen Resourcen muss ein zusätzlicher Bildbearbeitungsprozess durchgeführt werden, bevor die Texterkennung erfolgen kann. <br> Es wird eine temporäre Bilddatei erzeugt, die Originaldatei wird nicht verändert. <br> Die Einstellungen für den Prozess können hier angepasst werden.';
 $lang['im_preset_density'] = 'Auflösung (-density [dpi])';

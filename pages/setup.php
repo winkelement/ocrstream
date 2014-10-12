@@ -32,7 +32,8 @@ if (is_tesseract_installed()) {
 } else {
     $page_def[] = config_add_text_input('tesseract_path', $lang['tesseract_path_input']);
 }
-$page_def[] = config_add_single_select('ocr_psm_global', $lang['ocr_psm'], $ocr_psm_array, true, 414);
+//$page_def[] = config_add_single_select('ocr_psm_global', $lang['ocr_psm'], $ocr_psm_array, true, 414); // not really needed here
+$page_def[] = config_add_single_ftype_select('ocr_ftype_1', $lang['ocr_ftype_1']);
 $page_def[] = config_add_text_list_input('ocr_allowed_extensions', $lang['ocr_input_formats']);
 $page_def[] = config_add_text_input('ocr_min_density', $lang['ocr_min_density'], false, 45);
 $page_def[] = config_add_text_input('ocr_max_density', $lang['ocr_max_density'], false, 45);
