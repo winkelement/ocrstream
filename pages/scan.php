@@ -28,17 +28,6 @@ $im_preset_1_crop_h = filter_input(INPUT_GET, 'h');
 $im_preset_1_crop_x = filter_input(INPUT_GET, 'x');
 $im_preset_1_crop_y = filter_input(INPUT_GET, 'y');
 
-/* Initialize Preset 1 */
-$im_preset_1 = array(
-    'density'   => ('-density ' . $im_preset_1_density),
-    'geometry'  => ('-geometry ' . $im_preset_1_geometry),
-    'crop'      => ('-crop ' . $im_preset_1_crop_w . 'x' . $im_preset_1_crop_h . '+' . $im_preset_1_crop_x . '+' . $im_preset_1_crop_y),
-    'quality'   => ('-quality ' . $im_preset_1_quality),
-    'trim'      => ('-trim'),
-    'deskew'    => ('-deskew ' . $im_preset_1_deskew . '%'),
-    'normalize' => ('-normalize'),
-    'sharpen'   => ('-adaptive-sharpen ' . $im_preset_1_sharpen_r . 'x' . $im_preset_1_sharpen_s),
-   );
 /* For debug: return parameters and exit here */
 //$debug = json_encode($ref_id. ' ' .$ext. ' ' .$ocr_lang. ' ' .$ocr_psm. ' '.$param_1. ' '.$im_preset_1_crop_w.' '.$im_preset_1_crop_h.' '.$im_preset_1_crop_x.' '.$im_preset_1_crop_y . implode(' ', $im_preset_1));
 //echo $debug; //debug
@@ -131,15 +120,15 @@ if ($param_1 === 'none') {
 $ocr_output_file = $ocr_temp_dir . '/ocr_output_file_' . $ref_id . '.txt';
 $tess_content = trim(file_get_contents($ocr_output_file));
 
+if ($use_ocr_db_filter == true) {
 // Filter extracted content
-$re1 = "/[^a-zA-Züäöß\\s]/mi";
-$filter1 = preg_replace($re1, " ", $tess_content);
-$re2 = "/(^|\\s)[a-zÜüäÄöÖß0-9](\\s|$)/mi"; 
-$filter2 = preg_replace($re2, "", $filter1);        
+    $filter1 = preg_replace($ocr_db_filter_1, '$1', $tess_content);
+    $filter2 = preg_replace($ocr_db_filter_2, '$1', $filter1);
+    update_field($ref_id, $ocr_ftype_1, $filter2);
+} else {
+    update_field($ref_id, $ocr_ftype_1, $tess_content);
+}
 
-update_field($ref_id, $ocr_ftype_1, $filter2);
-// Write unfiltered output text (string) to database (metadata field 72) and metadata.xml
-//update_field($ref_id, $ocr_ftype_1, $tess_content);
 update_xml_metadump($ref_id);
 
 // Return extracted text as JSON
