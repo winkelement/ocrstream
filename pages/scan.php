@@ -28,18 +28,7 @@ $im_preset_1_crop_h = filter_input(INPUT_GET, 'h');
 $im_preset_1_crop_x = filter_input(INPUT_GET, 'x');
 $im_preset_1_crop_y = filter_input(INPUT_GET, 'y');
 
-/* Initialize Preset 1 */
-$im_preset_1 = array(
-    'density'   => ('-density ' . $im_preset_1_density),
-    'geometry'  => ('-geometry ' . $im_preset_1_geometry),
-    'crop'      => ('-crop ' . $im_preset_1_crop_w . 'x' . $im_preset_1_crop_h . '+' . $im_preset_1_crop_x . '+' . $im_preset_1_crop_y),
-    'quality'   => ('-quality ' . $im_preset_1_quality),
-    'trim'      => ('-trim'),
-    'deskew'    => ('-deskew ' . $im_preset_1_deskew . '%'),
-    'normalize' => ('-normalize'),
-    'sharpen'   => ('-adaptive-sharpen ' . $im_preset_1_sharpen_r . 'x' . $im_preset_1_sharpen_s),
-   );
-/* For debug return parameters and exit here */
+/* For debug: return parameters and exit here */
 //$debug = json_encode($ref_id. ' ' .$ext. ' ' .$ocr_lang. ' ' .$ocr_psm. ' '.$param_1. ' '.$im_preset_1_crop_w.' '.$im_preset_1_crop_h.' '.$im_preset_1_crop_x.' '.$im_preset_1_crop_y . implode(' ', $im_preset_1));
 //echo $debug; //debug
 //exit();
@@ -50,8 +39,13 @@ if ($ref_id == null || $ref_id < 1 || $ref_id > sql_value("SELECT ref value FROM
 }
 
 // Check if file extension is allowed for ocr processing
-if (!in_array($ext, $ocr_allowed_extensions)) {
+if (!in_array($ext, $ocr_allowed_extensions)){
     exit(json_encode('ocr_error_2'));
+}
+
+// Check if resourcetype is document
+if (sql_value("select resource_type value from resource where ref ='$ref_id'", '') != 2){
+    exit(json_encode('ocr_error_4'));
 }
 
 // Check if density (dpi) is in margin for ocr processing, skip for pdf 
@@ -90,8 +84,7 @@ if ($param_1 === 'pre_1') {
     $im_ocr_cmd = $convert_fullpath . " " . implode(' ', $im_preset_1) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/im_tempfile_' . $ref_id . '.png');
     run_command($im_ocr_cmd);
 }
-// Remove old ocr_output_file
-array_map('unlink', glob("$ocr_temp_dir/ocr_output_file*.txt"));
+
 // OCR multi pages, processed, tesseract > v3.0.3
 if ($pg_num > 1 && tesseract_version_is_old() === false) { 
     $n = 0;
@@ -127,14 +120,22 @@ if ($param_1 === 'none') {
 $ocr_output_file = $ocr_temp_dir . '/ocr_output_file_' . $ref_id . '.txt';
 $tess_content = trim(file_get_contents($ocr_output_file));
 
-// Write output text (string) to database (metadata field 72) and metadata.xml
-update_field($ref_id, 72, $tess_content);
+if ($use_ocr_db_filter == true) {
+// Filter extracted content
+    $filter1 = preg_replace($ocr_db_filter_1, '$1', $tess_content);
+    $filter2 = preg_replace($ocr_db_filter_2, '$1', $filter1);
+    update_field($ref_id, $ocr_ftype_1, $filter2);
+} else {
+    update_field($ref_id, $ocr_ftype_1, $tess_content);
+}
+
 update_xml_metadump($ref_id);
+
+// Return extracted text as JSON
+echo json_encode($tess_content);
 
 // Delete temp files
 array_map('unlink', glob("$ocr_temp_dir/ocr*.*")); //debug, uncomment for productive system
 array_map('unlink', glob("$ocr_temp_dir/im*.png")); //debug, uncomment for productive system
 
-// Return extracted text as JSON
-echo json_encode($tess_content);
 exit();

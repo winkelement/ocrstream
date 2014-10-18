@@ -1,6 +1,6 @@
 name: ocrstream
 author: Andreas Rotter, Robert Damrau
-version: 0.3.1
+version: 0.3.2
 desc: OCR Plugin using tesseract-ocr
 info_url: https://github.com/andirotter/ocrstream
 config_url: /plugins/ocrstream/pages/setup.php
