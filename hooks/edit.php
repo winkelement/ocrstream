@@ -141,7 +141,7 @@ function HookOcrstreamEditAfterfileoptions() {
                         else
                         {
                             //@todo find a way to update 'Extracted text' field wihout reloading whole page
-                            window.location.reload(true);
+//                            window.location.reload(true);
                         }
                     });
                     showLoadingImage();
@@ -206,4 +206,11 @@ function HookOcrstreamEditAfterfileoptions() {
             <?php
         }
     }
+}
+
+function HookOcrstreamEditReplaceuploadoptions() {
+    global $lang;
+    ?></div><h2 class="CollapsibleSectionHead"><?php echo $lang["ocr-upload-options"] ?></h2>
+        <div class="CollapsibleSection" id="OCROptionsSection">
+    <?php
 }

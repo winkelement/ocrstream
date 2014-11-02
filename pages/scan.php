@@ -30,6 +30,19 @@ $im_preset_1_crop_h = filter_input(INPUT_GET, 'h');
 $im_preset_1_crop_x = filter_input(INPUT_GET, 'x');
 $im_preset_1_crop_y = filter_input(INPUT_GET, 'y');
 
+// Build IM-Preset Array
+$im_preset_1 = array(
+    'colorspace'=> ('-colorspace gray'),
+    'type'      => ('-type grayscale'),
+    'density'   => ('-density ' . $im_preset_1_density),
+    'geometry'  => ('-geometry ' . $im_preset_1_geometry),
+    'crop'      => ('-crop ' . $im_preset_1_crop_w . 'x' . $im_preset_1_crop_h . '+' . $im_preset_1_crop_x . '+' . $im_preset_1_crop_y),
+    'quality'   => ('-quality ' . $im_preset_1_quality),
+    'trim'      => ('-trim'),
+    'deskew'    => ('-deskew ' . $im_preset_1_deskew . '%'),
+    'normalize' => ('-normalize'),
+    'sharpen'   => ('-adaptive-sharpen ' . $im_preset_1_sharpen_r . 'x' . $im_preset_1_sharpen_s),
+);
 /* For debug: return parameters and exit here */
 //$debug = json_encode($ref_id. ' ' .$ext. ' ' .$ocr_lang. ' ' .$ocr_psm. ' '.$param_1. ' '.$im_preset_1_crop_w.' '.$im_preset_1_crop_h.' '.$im_preset_1_crop_x.' '.$im_preset_1_crop_y . implode(' ', $im_preset_1));
 //echo $debug; //debug
@@ -138,11 +151,15 @@ if ($use_ocr_db_filter == true) {
 
 update_xml_metadump($ref_id);
 
+// Set OCR state flag
+$ocr_state = 1;
+sql_query("UPDATE resource SET ocr_state =  '$ocr_state' WHERE ref = '$ref_id'");
+
 // Return extracted text as JSON
 echo json_encode($tess_content);
 
 // Delete temp files
 array_map('unlink', glob("$ocr_temp_dir/ocr*.*")); //debug, uncomment for productive system
-array_map('unlink', glob("$ocr_temp_dir/im*.png")); //debug, uncomment for productive system
+array_map('unlink', glob("$ocr_temp_dir/im*")); //debug, uncomment for productive system
 
 exit();

@@ -19,10 +19,6 @@ $ocr_db_filter_2 = "/(^|\\s)[a-zÜüäÄöÖß0-9](\\s|$)/mi";
 $im_preset_1_density = '300';
 $im_preset_1_geometry = '1024';
 $im_preset_1_quality = '90';
-$im_preset_1_crop_w = '0';
-$im_preset_1_crop_h = '0';
-$im_preset_1_crop_x = '0';
-$im_preset_1_crop_y = '0';
 $im_preset_1_deskew = '40';
 $im_preset_1_sharpen_r = '0';
 $im_preset_1_sharpen_s = '1';
@@ -38,13 +34,4 @@ $ocr_psm_array = array(
     8 => 'Treat the image as a single word.',
     9 => 'Treat the image as a single word in a circle.',
     10 => 'Treat the image as a single character.');
-$im_preset_1 = array(
-    'density'   => ('-density ' . $im_preset_1_density),
-    'geometry'  => ('-geometry ' . $im_preset_1_geometry),
-    'crop'      => ('-crop ' . $im_preset_1_crop_w . 'x' . $im_preset_1_crop_h . '+' . $im_preset_1_crop_x . '+' . $im_preset_1_crop_y),
-    'quality'   => ('-quality ' . $im_preset_1_quality),
-    'trim'      => ('-trim'),
-    'deskew'    => ('-deskew ' . $im_preset_1_deskew . '%'),
-    'normalize' => ('-normalize'),
-    'sharpen'   => ('-adaptive-sharpen ' . $im_preset_1_sharpen_r . 'x' . $im_preset_1_sharpen_s),
-);
+
