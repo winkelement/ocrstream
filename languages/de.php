@@ -39,4 +39,5 @@ $lang['im_preset_sharpen_r_help'] = 'Legt den Radius für den verwendeten Gauss-
 $lang['im_preset_sharpen_s'] = 'Adaptives Scharfzeichen Sigma <br> (-adaptive-sharpen [radius]x[sigma])';
 $lang['im_preset_sharpen_s_help'] = 'Legt die Standardabweichung für den verwendeten Gauss-Filter fest. Standard ist 1.';
 $lang["im_preset_select"] = 'Bildbearbeitung';
+$lang["ocr-upload-options"] = 'OCR Optionen';
 ?>

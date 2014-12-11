@@ -2,12 +2,14 @@
 
 // @todo clean up, make separate functions where possible
 // @todo implement filter for unwanted content/characters/whitespaces to prevent excessive load on db
-// @todo implement tesseract page segmenation mode select
 
 require_once "../../../include/db.php";
 require_once "../../../include/general.php";
 require_once "../../../include/resource_functions.php";
 require_once "../include/ocrstream_functions.php";
+spl_autoload_register(function ($class) {
+    include '../lib/Process/' . $class . '.php';
+});
 
 global $imagemagick_path;
 
@@ -28,6 +30,19 @@ $im_preset_1_crop_h = filter_input(INPUT_GET, 'h');
 $im_preset_1_crop_x = filter_input(INPUT_GET, 'x');
 $im_preset_1_crop_y = filter_input(INPUT_GET, 'y');
 
+// Build IM-Preset Array
+$im_preset_1 = array(
+    'colorspace'=> ('-colorspace gray'),
+    'type'      => ('-type grayscale'),
+    'density'   => ('-density ' . $im_preset_1_density),
+    'geometry'  => ('-geometry ' . $im_preset_1_geometry),
+    'crop'      => ('-crop ' . $im_preset_1_crop_w . 'x' . $im_preset_1_crop_h . '+' . $im_preset_1_crop_x . '+' . $im_preset_1_crop_y),
+    'quality'   => ('-quality ' . $im_preset_1_quality),
+    'trim'      => ('-trim'),
+    'deskew'    => ('-deskew ' . $im_preset_1_deskew . '%'),
+    'normalize' => ('-normalize'),
+    'sharpen'   => ('-adaptive-sharpen ' . $im_preset_1_sharpen_r . 'x' . $im_preset_1_sharpen_s),
+);
 /* For debug: return parameters and exit here */
 //$debug = json_encode($ref_id. ' ' .$ext. ' ' .$ocr_lang. ' ' .$ocr_psm. ' '.$param_1. ' '.$im_preset_1_crop_w.' '.$im_preset_1_crop_h.' '.$im_preset_1_crop_x.' '.$im_preset_1_crop_y . implode(' ', $im_preset_1));
 //echo $debug; //debug
@@ -82,7 +97,8 @@ $pg_num = get_page_count($resource, -1);
 if ($param_1 === 'pre_1') {
     $convert_fullpath = get_utility_path("im-convert");
     $im_ocr_cmd = $convert_fullpath . " " . implode(' ', $im_preset_1) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/im_tempfile_' . $ref_id . '.png');
-    run_command($im_ocr_cmd);
+    $process_im = new Process($im_ocr_cmd);
+    $process_im->run();
 }
 
 // OCR multi pages, processed, tesseract > v3.0.3
@@ -93,7 +109,8 @@ if ($pg_num > 1 && tesseract_version_is_old() === false) {
         $n++;
     }
     $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_temp_dir . '/im_ocr_file_' . $ref_id . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref_id) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
-    run_command($tess_cmd);    
+    $process = new Process($tess_cmd);
+    $process->run();   
 }
 // OCR multi pages, processed, tesseract < v3.0.3
 if ($pg_num > 1 && tesseract_version_is_old() === true) { 
@@ -101,7 +118,8 @@ if ($pg_num > 1 && tesseract_version_is_old() === true) {
     while ($i < $pg_num) {
         $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ref_id . '-' . $i . '.png');
         $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocrtempfile_' . $ref_id) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
-        run_command($tess_cmd);
+        $process = new Process($tess_cmd);
+        $process->run();
         file_put_contents($ocr_temp_dir . '/ocr_output_file_' . $ref_id . '.txt', file_get_contents($ocr_temp_dir . '/ocrtempfile_' . $ref_id . '.txt'), FILE_APPEND);
         $i ++;
     }
@@ -110,12 +128,14 @@ if ($pg_num > 1 && tesseract_version_is_old() === true) {
 if ($param_1 === 'pre_1' && $pg_num === '1') {
     $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ref_id . '.png');
     $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref_id) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
-    run_command($tess_cmd);    
+    $process = new Process($tess_cmd);
+    $process->run();  
 }
 // OCR single page original
 if ($param_1 === 'none') {
     $tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref_id) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
-    run_command($tess_cmd);     
+    $process = new Process($tess_cmd);
+    $process->run();
 }
 $ocr_output_file = $ocr_temp_dir . '/ocr_output_file_' . $ref_id . '.txt';
 $tess_content = trim(file_get_contents($ocr_output_file));
@@ -131,11 +151,15 @@ if ($use_ocr_db_filter == true) {
 
 update_xml_metadump($ref_id);
 
+// Set OCR state flag
+$ocr_state = 1;
+sql_query("UPDATE resource SET ocr_state =  '$ocr_state' WHERE ref = '$ref_id'");
+
 // Return extracted text as JSON
 echo json_encode($tess_content);
 
 // Delete temp files
 array_map('unlink', glob("$ocr_temp_dir/ocr*.*")); //debug, uncomment for productive system
-array_map('unlink', glob("$ocr_temp_dir/im*.png")); //debug, uncomment for productive system
+array_map('unlink', glob("$ocr_temp_dir/im*")); //debug, uncomment for productive system
 
 exit();
