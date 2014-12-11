@@ -117,34 +117,43 @@ function HookOcrstreamEditAfterfileoptions() {
                 // Send parameters to scan.php and get result
                 jQuery('[name="ocr_start"]').click(function ()
                 {
-                    jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/pages/scan.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
+                    console.log('stage 1 started');
+                    jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_1.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
                     {
                         var1 = data;
                         console.log(JSON.parse(var1)); // debug
+                        console.log('stage 2 started');
+                        jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_2.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
+                    {
+                        var2 = data;
+                        console.log(JSON.parse(var2)); // debug
                         hideLoadingImage();
-                        if (JSON.parse(var1) === 'ocr_error_1') {
-                            alert('<?php echo $lang["ocr_error_1"] ?>');
-                            return;
-                        }
-                        if (JSON.parse(var1) === 'ocr_error_2') {
-                            alert('<?php echo $lang["ocr_error_2"] ?>');
-                            return;
-                        }
-                        if (JSON.parse(var1) === 'ocr_error_3') {
-                            alert('<?php echo $lang["ocr_error_3"] ?>');
-                            return;
-                        }
-                        if (JSON.parse(var1) === 'ocr_error_4') {
-                            alert('<?php echo $lang["ocr_error_4"] ?>');
-                            return;
-                        }
-                        else
-                        {
-                            //@todo find a way to update 'Extracted text' field wihout reloading whole page
-//                            window.location.reload(true);
-                        }
+                 
+                    });
+//                        if (JSON.parse(var1) === 'ocr_error_1') {
+//                            alert('<?php echo $lang["ocr_error_1"] ?>');
+//                            return;
+//                        }
+//                        if (JSON.parse(var1) === 'ocr_error_2') {
+//                            alert('<?php echo $lang["ocr_error_2"] ?>');
+//                            return;
+//                        }
+//                        if (JSON.parse(var1) === 'ocr_error_3') {
+//                            alert('<?php echo $lang["ocr_error_3"] ?>');
+//                            return;
+//                        }
+//                        if (JSON.parse(var1) === 'ocr_error_4') {
+//                            alert('<?php echo $lang["ocr_error_4"] ?>');
+//                            return;
+//                        }
+//                        else
+//                        {
+//                            //@todo find a way to update 'Extracted text' field wihout reloading whole page
+////                            window.location.reload(true);
+//                        }
                     });
                     showLoadingImage();
+                    
                 });
             </script>
             <div class="Question" id="question_ocr" style="font-weight: normal">
@@ -196,12 +205,6 @@ function HookOcrstreamEditAfterfileoptions() {
                             </select></td>            
                     </tr>
                 </table>
-                <div id="coords">
-                    <input type="hidden" id="x1" name="x1" />
-                    <input type="hidden" id="y1" name="y1" />
-                    <input type="hidden" id="w" name="w" />
-                    <input type="hidden" id="h" name="h" />
-                </div>
             </div>
             <?php
         }
