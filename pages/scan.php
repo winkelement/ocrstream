@@ -159,7 +159,7 @@ if ($use_ocr_db_filter == true) {
 update_xml_metadump($ref_id);
 
 // Set OCR state flag
-$ocr_state = 1;
+$ocr_state = 2;
 sql_query("UPDATE resource SET ocr_state =  '$ocr_state' WHERE ref = '$ref_id'");
 
 // Return extracted text as JSON
