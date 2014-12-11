@@ -8,7 +8,11 @@ function is_windows() {
     $os = php_uname('s');
     if (stristr($os, 'win')) {
         $is_windows = true;
-    } else {
+    }
+    if (stristr($os, 'Darwin')) {
+        $is_windows = false; 
+    } 
+    else {
         $is_windows = false;
     }
     return $is_windows;
