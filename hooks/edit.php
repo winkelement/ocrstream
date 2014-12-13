@@ -117,36 +117,32 @@ function HookOcrstreamEditAfterfileoptions() {
                 // Send parameters to scan.php and get result
                 jQuery('[name="ocr_start"]').click(function ()
                 {
-                    console.log('stage 1 started');
-                    jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_1.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
+                    console.log('stage 1 started'); 
+                    jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_1.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang)}, function (data)
                     {
                         var1 = data;
                         console.log(JSON.parse(var1)); // debug
+                        if (JSON.parse(var1) === 'ocr_error_4') {
+                            hideLoadingImage();
+                            alert('<?php echo $lang["ocr_error_4"] ?>');
+                            return;
+                        }
                         console.log('stage 2 started');
                         jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_2.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
-                    {
-                        var2 = data;
-                        console.log(JSON.parse(var2)); // debug
-                        hideLoadingImage();
+                        {
+                            var2 = data;
+                            console.log(JSON.parse(var2)); // debug
+                            console.log('stage 3 started');
+                            jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_3.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
+                            {
+                                var3 = data;
+                                console.log(JSON.parse(var3)); // debug
+                                console.log('stage 4 started');
+                                hideLoadingImage();
+                            });
                  
                     });
-//                        if (JSON.parse(var1) === 'ocr_error_1') {
-//                            alert('<?php echo $lang["ocr_error_1"] ?>');
-//                            return;
-//                        }
-//                        if (JSON.parse(var1) === 'ocr_error_2') {
-//                            alert('<?php echo $lang["ocr_error_2"] ?>');
-//                            return;
-//                        }
-//                        if (JSON.parse(var1) === 'ocr_error_3') {
-//                            alert('<?php echo $lang["ocr_error_3"] ?>');
-//                            return;
-//                        }
-//                        if (JSON.parse(var1) === 'ocr_error_4') {
-//                            alert('<?php echo $lang["ocr_error_4"] ?>');
-//                            return;
-//                        }
-//                        else
+
 //                        {
 //                            //@todo find a way to update 'Extracted text' field wihout reloading whole page
 ////                            window.location.reload(true);
