@@ -58,7 +58,6 @@ if ($param_1 === 'pre_1' || $_SESSION["ocr_force_processing"] === 1) {
     $_SESSION["ocr_stage"] = 2;
     $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage"] . ' skipped ' . $ref_id . ' ' . $ext . ' ' . $param_1 . ' ' . $im_preset_1_crop_w . ' ' . $im_preset_1_crop_h . ' ' . $im_preset_1_crop_x . ' ' . $im_preset_1_crop_y);
 }
-sleep(3);
 
 echo $debug; //debug
 exit();

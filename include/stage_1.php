@@ -57,6 +57,6 @@ if (array_search($ocr_lang, $tesseract_languages) == false) {
 
 $_SESSION["ocr_stage"] = 1;
 
-$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage"] . ' completed ' .$ref_id. ' ' .$ext. ' ' .$ocr_lang. ' ' .$_SESSION["force_processing"].' '.$_SESSION["ocr_force_language"]);
+$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage"] . ' completed ' .$ref_id. ' ' .$ext. ' ' .$ocr_lang. ' ' .$_SESSION["ocr_force_processing"].' '.$_SESSION["ocr_force_language"]);
 echo $debug; //debug
 exit();

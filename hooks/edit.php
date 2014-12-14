@@ -138,10 +138,16 @@ function HookOcrstreamEditAfterfileoptions() {
                                 var3 = data;
                                 console.log(JSON.parse(var3)); // debug
                                 console.log('stage 4 started');
+                                jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_4.php', {ref: '<?php echo $ref ?>'}, function (data)
+                                {
+                                    var4 = data;
+                                    console.log(JSON.parse(var4)); // debug
+                                    hideLoadingImage();
+                                });
                                 hideLoadingImage();
                             });
                  
-                    });
+                        });
 
 //                        {
 //                            //@todo find a way to update 'Extracted text' field wihout reloading whole page

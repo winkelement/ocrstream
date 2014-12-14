@@ -65,7 +65,7 @@ if ($param_1 === 'pre_1' && $pg_num === '1') {
     run_command($tess_cmd);
 }
 // OCR single page original
-if ($param_1 === 'none' && $_SESSION["ocr_force_processing"] =! 1) {
+if ($param_1 === 'none' && $_SESSION["ocr_force_processing"] != 1) {
     $tesseract_fullpath = get_tesseract_fullpath();
     $ext = sql_value("select file_extension value from resource where ref = '$ref_id'", '');
     $resource_path = get_resource_path($ref_id, true, "", false, $ext);
@@ -76,6 +76,6 @@ if ($param_1 === 'none' && $_SESSION["ocr_force_processing"] =! 1) {
 }
 $_SESSION["ocr_stage"] = 3;
 
-$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage"] . ' completed ' .$ref_id. ' ' .$ocr_lang. ' ' .$_SESSION["force_processing"].' '.$_SESSION["ocr_force_language"]);
+$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage"] . ' completed ' .$ref_id. ' ' .$ocr_lang. ' ' .$_SESSION["ocr_force_processing"].' '.$_SESSION["ocr_force_language"]);
 echo $debug; //debug
 exit();
