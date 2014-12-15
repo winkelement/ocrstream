@@ -32,7 +32,10 @@ if (is_tesseract_installed()) {
 } else {
     $page_def[] = config_add_text_input('tesseract_path', $lang['tesseract_path_input']);
 }
-
+//$page_def[] = config_add_single_select('ocr_psm_global', $lang['ocr_psm'], $ocr_psm_array, true, 414); // not really needed here
+$page_def[] = config_add_single_ftype_select('ocr_ftype_1', $lang['ocr_ftype_1']);
+$page_def[] = config_add_boolean_select ('use_ocr_db_filter', $lang['ocr_db_filter'], '', 90);
+$page_def[] = config_add_html($lang['ocr_db_filter_help']);
 $page_def[] = config_add_text_list_input('ocr_allowed_extensions', $lang['ocr_input_formats']);
 $page_def[] = config_add_text_input('ocr_min_density', $lang['ocr_min_density'], false, 45);
 $page_def[] = config_add_text_input('ocr_max_density', $lang['ocr_max_density'], false, 45);
@@ -51,11 +54,6 @@ $page_def[] = config_add_text_input('im_preset_1_sharpen_r', $lang['im_preset_sh
 $page_def[] = config_add_html($lang['im_preset_sharpen_r_help']);
 $page_def[] = config_add_text_input('im_preset_1_sharpen_s', $lang['im_preset_sharpen_s'], false, 45);
 $page_def[] = config_add_html($lang['im_preset_sharpen_s_help']);
-$page_def[] = config_add_text_input('im_preset_1_shave_w', $lang['im_preset_shave_w'], false, 45);
-$page_def[] = config_add_html($lang['im_preset_shave_w_help']);
-$page_def[] = config_add_text_input('im_preset_1_shave_h', $lang['im_preset_shave_h'], false, 45);
-$page_def[] = config_add_html($lang['im_preset_shave_h_help']);
-
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 // Each element of $page_def describes one configuration variable. Each description is
@@ -66,3 +64,15 @@ $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $page_intro);
 include '../../../include/footer.php';
+?>
+<script src="../lib/alphanum/jquery.alphanum.js"></script>
+<script>
+    jQuery("#ocr_min_density, \n\
+            #ocr_max_density, \n\
+            #im_preset_1_density,\n\
+            #im_preset_1_geometry,\n\
+            #im_preset_1_quality,\n\
+            #im_preset_1_deskew,\n\
+            #im_preset_1_sharpen_r,\n\
+            #im_preset_1_sharpen_s").numeric("ocrstreamSetupNum");
+</script>
