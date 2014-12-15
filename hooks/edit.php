@@ -114,10 +114,10 @@ function HookOcrstreamEditAfterfileoptions() {
                 if (param_1 === 'pre_1') {
                     ocr_crop();
                 }
-                // Send parameters to scan.php and get result
+                // Send parameters to stage 1 - 4 for OCR processing
                 jQuery('[name="ocr_start"]').click(function ()
                 {
-                    console.log('stage 1 started'); 
+                    console.log('stage 1 started'); // debug
                     jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_1.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang)}, function (data)
                     {
                         var1 = data;
@@ -127,24 +127,24 @@ function HookOcrstreamEditAfterfileoptions() {
                             alert('<?php echo $lang["ocr_error_4"] ?>');
                             return;
                         }
-                        console.log('stage 2 started');
+                        console.log('stage 2 started'); // debug
                         jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_2.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
                         {
                             var2 = data;
                             console.log(JSON.parse(var2)); // debug
-                            console.log('stage 3 started');
+                            console.log('stage 3 started'); // debug
                             jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_3.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
                             {
                                 var3 = data;
                                 console.log(JSON.parse(var3)); // debug
-                                console.log('stage 4 started');
+                                console.log('stage 4 started'); // debug
                                 jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_4.php', {ref: '<?php echo $ref ?>'}, function (data)
                                 {
                                     var4 = data;
                                     console.log(JSON.parse(var4)); // debug
                                     hideLoadingImage();
                                 });
-                                hideLoadingImage();
+
                             });
                  
                         });

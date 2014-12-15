@@ -1,4 +1,5 @@
 <?php
+SESSION_START();
 
 //  Stage 3 - The Recognizer
 //
@@ -8,13 +9,11 @@ require_once "../../../include/general.php";
 require_once "../../../include/resource_functions.php";
 require_once "../include/ocrstream_functions.php";
 
-SESSION_START();
-
-if ($_SESSION["ocr_stage"] != 2) {
-    exit(json_encode('Error: stage 2 not completed.'));
-}
 // Get Input Values
 $ref_id = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
+if ($_SESSION["ocr_stage_" . $ref_id] != 2) {
+    exit(json_encode('Error: stage 2 not completed.'));
+}
 $ocr_lang = filter_input(INPUT_GET, 'ocr_lang');
 $ocr_psm = filter_input(INPUT_GET, 'ocr_psm');
 $param_1 = filter_input(INPUT_GET, 'param_1');
@@ -23,11 +22,12 @@ $param_1 = filter_input(INPUT_GET, 'param_1');
 $resource = get_resource_data($ref_id);
 $pg_num = get_page_count($resource, -1);
 
-$ocr_temp_dir = get_temp_dir();
+$ocr_temp_dir = $_SESSION['ocr_temp_dir'];
 $tesseract_fullpath = get_tesseract_fullpath();
+$_SESSION['ocr_tesseract_fullpath'] = $tesseract_fullpath;
 
-// Check for language override
-if ($_SESSION["ocr_force_language"] === 1){
+// Check for language override flag
+if ($_SESSION["ocr_force_language_" . $ref_id] === 1){
     $ocr_lang = $ocr_global_language;
 }
 
@@ -65,17 +65,17 @@ if ($param_1 === 'pre_1' && $pg_num === '1') {
     run_command($tess_cmd);
 }
 // OCR single page original
-if ($param_1 === 'none' && $_SESSION["ocr_force_processing"] != 1) {
-    $tesseract_fullpath = get_tesseract_fullpath();
-    $ext = sql_value("select file_extension value from resource where ref = '$ref_id'", '');
-    $resource_path = get_resource_path($ref_id, true, "", false, $ext);
+if ($param_1 === 'none' && $_SESSION["ocr_force_processing_" . $ref_id] != 1) {
+    $ext = $_SESSION['ocr_file_extension_' . $ref_id];
+    $resource_path = $_SESSION['ocr_resource_path_' . $ref_id];
     $tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref_id) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
 //    $process = new Process($tess_cmd);
 //    $process->run();
     run_command($tess_cmd);
 }
-$_SESSION["ocr_stage"] = 3;
 
-$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage"] . ' completed ' .$ref_id. ' ' .$ocr_lang. ' ' .$_SESSION["ocr_force_processing"].' '.$_SESSION["ocr_force_language"]);
+$_SESSION["ocr_stage_" . $ref_id] = 3;
+
+$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref_id] . ' completed ' .$ref_id. ' ' .$ocr_lang. ' ' .$_SESSION["ocr_force_processing_" . $ref_id].' '.$_SESSION["ocr_force_language_" . $ref_id]);
 echo $debug; //debug
 exit();

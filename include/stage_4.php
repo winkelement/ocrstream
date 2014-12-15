@@ -1,4 +1,5 @@
 <?php
+SESSION_START();
 
 //  Stage 4 - The Texter
 //
@@ -8,15 +9,13 @@ require_once "../../../include/general.php";
 require_once "../../../include/resource_functions.php";
 require_once "../include/ocrstream_functions.php";
 
-SESSION_START();
-
-if ($_SESSION["ocr_stage"] != 3) {
+// Get ID
+$ref_id = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
+if ($_SESSION["ocr_stage_" . $ref_id] != 3) {
     exit(json_encode('Error: stage 3 not completed.'));
 }
-// Get Input Values
-$ref_id = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
 
-$ocr_temp_dir = get_temp_dir();
+$ocr_temp_dir = $_SESSION['ocr_temp_dir'];
 $ocr_output_file = $ocr_temp_dir . '/ocr_output_file_' . $ref_id . '.txt';
 $tess_content = trim(file_get_contents($ocr_output_file));
 
@@ -42,9 +41,13 @@ sql_query("UPDATE resource SET ocr_state =  '$ocr_state' WHERE ref = '$ref_id'")
 array_map('unlink', glob("$ocr_temp_dir/ocr*.*")); //debug, uncomment for productive system
 array_map('unlink', glob("$ocr_temp_dir/im*")); //debug, uncomment for productive system
 
-$_SESSION["ocr_stage"] = 4;
+$_SESSION['ocr_stage_' . $ref_id] = 4;
 
-$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage"] . ' completed ' .$ref_id. ' ' .$_SESSION["ocr_force_processing"].' '.$_SESSION["ocr_force_language"]);
+$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref_id] . ' completed ' .$ref_id. ' ' .$_SESSION["ocr_force_processing_" . $ref_id].' '.$_SESSION["ocr_force_language_" . $ref_id]);
 echo $debug; //debug
+
+// Clear all SESSION Variables
+session_unset();
+
 exit();
 
