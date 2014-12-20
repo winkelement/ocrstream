@@ -207,3 +207,54 @@ function HookOcrstreamEditAfterfileoptions() {
         }
     }
 }
+
+function HookOcrstreamEditReplaceuploadoptions() {
+    global $lang;
+    global $ref;
+    global $ocr_global_language;
+    global $ocr_allowed_extensions;
+    global $ocr_psm_array;
+    global $ocr_psm_global;
+    $choices = get_tesseract_languages();
+    if ($ref < 0){
+    ?><div><h2 class="CollapsibleSectionHead"><?php echo $lang["ocr-upload-options"] ?></h2>
+        <div class="CollapsibleSection" id="OCROptionsSection">
+            <div class="Question" id="question_ocr" style="font-weight: normal">
+                <table>
+                    <tr id = "ocr_start" style="height:37px">
+                        <td><label for="ocr_single_resource"><?php echo $lang["ocr_single_resource"] ?></label></td>
+                        <td><input type="checkbox" name="ocr_start" value="<?php echo $lang["ocr_start"] ?>"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="ocr_language_select"><?php echo $lang["ocr_language_select"] ?></label></td>
+                        <td><select name="ocr_lang" id="ocr_lang" style="width:90px" onchange="setLanguage(this.form.ocr_lang.options[this.form.ocr_lang.selectedIndex].value);">
+                                <?php
+                                $usekeys_lang = false;
+                                foreach ($choices as $key => $choice) {
+                                    $value = $usekeys_lang ? $key : $choice;
+                                    echo '    <option value="' . $value . '"' . (($ocr_global_language == $value) ? ' selected' : '') . ">$choice</option>";
+                                }
+                                ?>
+                            </select></td>            
+                    </tr>
+                    <tr>
+                        <td><label for="ocr_psm_select"><?php echo $lang["ocr_psm"] ?></label></td>
+                        <td><select name="ocr_psm" id="ocr_psm" style="width:414px" onchange="setPsm(this.form.ocr_psm.options[this.form.ocr_psm.selectedIndex].value);">
+                                <?php
+                                $usekeys_psm = true;
+                                foreach ($ocr_psm_array as $key => $choice) {
+                                    $value = $usekeys_psm ? $key : $choice;
+                                    echo '    <option value="' . $value . '"' . (($ocr_psm_global == $value) ? ' selected' : '') . ">$choice</option>";
+                                }
+                                ?>
+                            </select></td>            
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+            
+            
+    <?php
+    }
+}

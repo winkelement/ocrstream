@@ -36,4 +36,5 @@ $lang['im_preset_sharpen_r_help'] = 'Sets the radius of the Gaussian operator.';
 $lang['im_preset_sharpen_s'] = 'Adaptive sharpen sigma <br> (-adaptive-sharpen [radius]x[sigma])';
 $lang['im_preset_sharpen_s_help'] = 'Sets the standard deviation of the Gaussian operator. Default is 1.';
 $lang["im_preset_select"] = 'Image processing';
+$lang["ocr-upload-options"] = 'OCR Options';
 ?>
