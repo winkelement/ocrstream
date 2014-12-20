@@ -37,9 +37,7 @@ function HookOcrstreamEditAfterfileoptions() {
             <script>
                 function ocr_crop() {
                     jQuery(function ($) {
-
                         var jcrop_api;
-
                         $('.ImageBorder').Jcrop({
                             trueSize: ['<?php echo $w ?>', '<?php echo $h ?>'],
                             onChange: setCoords,
@@ -48,16 +46,13 @@ function HookOcrstreamEditAfterfileoptions() {
                         }, function () {
                             jcrop_api = this;
                         });
-
                         $('#coords').on('change', 'input', function (e) {
                             var x1 = $('#x1').val(),
                                     y1 = $('#y1').val();
                             jcrop_api.setSelect([x1, y1]);
                         });
-
                     });
                 }
-
                 function setCoords(c)
                 {
                     jQuery('#x1').val(Math.round(c.x));
@@ -70,7 +65,6 @@ function HookOcrstreamEditAfterfileoptions() {
                     h = (Math.round(c.h));
                 }
                 ;
-
                 function clearCoords()
                 {
                     jQuery('#coords input').val('');
@@ -114,37 +108,46 @@ function HookOcrstreamEditAfterfileoptions() {
                 if (param_1 === 'pre_1') {
                     ocr_crop();
                 }
-                // Send parameters to scan.php and get result
+                // Send parameters to stage 1 - 4 for OCR processing
                 jQuery('[name="ocr_start"]').click(function ()
                 {
-                    jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/pages/scan.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
+                    console.log('stage 1 started'); // debug
+                    jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_1.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang)}, function (data)
                     {
                         var1 = data;
                         console.log(JSON.parse(var1)); // debug
-                        hideLoadingImage();
-                        if (JSON.parse(var1) === 'ocr_error_1') {
-                            alert('<?php echo $lang["ocr_error_1"] ?>');
-                            return;
-                        }
-                        if (JSON.parse(var1) === 'ocr_error_2') {
-                            alert('<?php echo $lang["ocr_error_2"] ?>');
-                            return;
-                        }
-                        if (JSON.parse(var1) === 'ocr_error_3') {
-                            alert('<?php echo $lang["ocr_error_3"] ?>');
-                            return;
-                        }
                         if (JSON.parse(var1) === 'ocr_error_4') {
+                            hideLoadingImage();
                             alert('<?php echo $lang["ocr_error_4"] ?>');
                             return;
                         }
-                        else
+                        console.log('stage 2 started'); // debug
+                        jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_2.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
                         {
-                            //@todo find a way to update 'Extracted text' field wihout reloading whole page
-                            window.location.reload(true);
-                        }
+                            var2 = data;
+                            console.log(JSON.parse(var2)); // debug
+                            console.log('stage 3 started'); // debug
+                            jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_3.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
+                            {
+                                var3 = data;
+                                console.log(JSON.parse(var3)); // debug
+                                console.log('stage 4 started'); // debug
+                                jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_4.php', {ref: '<?php echo $ref ?>'}, function (data)
+                                {
+                                    var4 = data;
+                                    console.log(JSON.parse(var4)); // debug
+                                    hideLoadingImage();
+                                });
+                            });
+                 
+                        });
+//                        {
+//                            //@todo find a way to update 'Extracted text' field wihout reloading whole page
+////                            window.location.reload(true);
+//                        }
                     });
                     showLoadingImage();
+                    
                 });
             </script>
             <div class="Question" id="question_ocr" style="font-weight: normal">
@@ -196,12 +199,6 @@ function HookOcrstreamEditAfterfileoptions() {
                             </select></td>            
                     </tr>
                 </table>
-                <div id="coords">
-                    <input type="hidden" id="x1" name="x1" />
-                    <input type="hidden" id="y1" name="y1" />
-                    <input type="hidden" id="w" name="w" />
-                    <input type="hidden" id="h" name="h" />
-                </div>
             </div>
             <?php
         }
