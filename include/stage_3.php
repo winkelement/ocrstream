@@ -76,6 +76,6 @@ if ($param_1 === 'none' && $_SESSION["ocr_force_processing_" . $ref_id] != 1) {
 
 $_SESSION["ocr_stage_" . $ref_id] = 3;
 
-$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref_id] . ' completed ' .$ref_id. ' ' .$ocr_lang. ' ' .$_SESSION["ocr_force_processing_" . $ref_id].' '.$_SESSION["ocr_force_language_" . $ref_id]);
+$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref_id] . ' completed ' .$ref_id. ' ' .$ocr_lang. ' ' .$_SESSION["ocr_force_processing_" . $ref_id].' '.$_SESSION["ocr_force_language_" . $ref_id]. ' '.$ocr_psm);
 echo $debug; //debug
 exit();

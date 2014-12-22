@@ -212,19 +212,44 @@ function HookOcrstreamEditReplaceuploadoptions() {
     global $ocr_allowed_extensions;
     global $ocr_psm_array;
     global $ocr_psm_global;
+    global $baseurl;
     $choices = get_tesseract_languages();
     if ($ref < 0){
-    ?><div><h2 class="CollapsibleSectionHead"><?php echo $lang["ocr-upload-options"] ?></h2>
+        ?>
+        <script>
+            function setLanguage_1(selectedLanguage) 
+                {
+                    ocr_lang = selectedLanguage;
+                    return ocr_lang;
+                }
+                ;
+            function setPsm_1(selectedPSM) 
+                {
+                    ocr_psm = selectedPSM;
+                    return ocr_psm;
+                }
+                ;
+            function setOCRStart(selectedOCRStart) 
+                {
+                    ocr_start = selectedOCRStart;
+                    return ocr_start;
+                }
+                ;
+            ocr_lang = jQuery('#ocr_lang :selected').text();
+            ocr_psm = jQuery('#ocr_psm :selected').val();
+            ocr_start = jQuery('#ocr_upload_start :selected').val();
+        </script>
+    <div><h2 class="CollapsibleSectionHead"><?php echo $lang["ocr-upload-options"] ?></h2>
         <div class="CollapsibleSection" id="OCROptionsSection">
             <div class="Question" id="question_ocr" style="font-weight: normal">
                 <table>
                     <tr id = "ocr_start" style="height:37px">
                         <td><label for="ocr_single_resource"><?php echo $lang["ocr_single_resource"] ?></label></td>
-                        <td><input type="checkbox" name="ocr_start" value="<?php echo $lang["ocr_start"] ?>"></td>
+                        <td><input type="checkbox" name="ocr_upload_start" id= "ocr_upload_start" ></td>
                     </tr>
                     <tr>
                         <td><label for="ocr_language_select"><?php echo $lang["ocr_language_select"] ?></label></td>
-                        <td><select name="ocr_lang" id="ocr_lang" style="width:90px" onchange="setLanguage(this.form.ocr_lang.options[this.form.ocr_lang.selectedIndex].value);">
+                        <td><select name="ocr_lang" id="ocr_lang" style="width:90px" onchange="setLanguage_1(this.form.ocr_lang.options[this.form.ocr_lang.selectedIndex].value);">
                                 <?php
                                 $usekeys_lang = false;
                                 foreach ($choices as $key => $choice) {
@@ -236,7 +261,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
                     </tr>
                     <tr>
                         <td><label for="ocr_psm_select"><?php echo $lang["ocr_psm"] ?></label></td>
-                        <td><select name="ocr_psm" id="ocr_psm" style="width:414px" onchange="setPsm(this.form.ocr_psm.options[this.form.ocr_psm.selectedIndex].value);">
+                        <td><select name="ocr_psm" id="ocr_psm" style="width:414px" onchange="setPsm_1(this.form.ocr_psm.options[this.form.ocr_psm.selectedIndex].value);">
                                 <?php
                                 $usekeys_psm = true;
                                 foreach ($ocr_psm_array as $key => $choice) {
@@ -249,9 +274,13 @@ function HookOcrstreamEditReplaceuploadoptions() {
                 </table>
             </div>
         </div>
-    </div>
-            
-            
+    </div>                        
     <?php
+    }
+}
+function HookOcrstreamEditEditbeforesave() {
+    global $uploadparams;
+    if (isset($_POST['ocr_upload_start'])){
+        $uploadparams.=("&ocr_lang=" . $_POST['ocr_lang'] . "&ocr_psm=" . $_POST['ocr_psm']);
     }
 }
