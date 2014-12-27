@@ -2,42 +2,26 @@
 
 function HookOcrstreamUpload_pluploadAfterpluploadfile() {
     global $ref;
+    global $lang;
     global $baseurl;
-    if (isset($_POST['ocr_upload_start'])){
-    $ocr_lang=getvalescaped("ocr_lang","");
-    $ocr_psm=getvalescaped("ocr_psm","");
-        ?>
-        <script>
-            jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_1.php', {ref: '<?php echo $ref ?>', ocr_lang: '<?php echo $_GET['ocr_lang'] ?>'}, function (data)
-                {
-                var1 = data;
-                        console.log(JSON.parse(var1)); // debug
-                        if (JSON.parse(var1) === 'ocr_error_4') {
-                            alert('<?php echo $lang["ocr_error_4"] ?>');
-                            return;
-                        }
-                        console.log('stage 2 started'); // debug
-                        jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_2.php', {ref: '<?php echo $ref ?>', ocr_lang: '<?php echo $_GET['ocr_lang'] ?>', ocr_psm: '<?php echo $_GET['ocr_psm'] ?>'}, function (data)
-                        {
-                            var2 = data;
-                            console.log(JSON.parse(var2)); // debug
-                            console.log('stage 3 started'); // debug
-                            jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_3.php', {ref: '<?php echo $ref ?>', ocr_lang: '<?php echo $_GET['ocr_lang'] ?>', ocr_psm: '<?php echo $_GET['ocr_psm'] ?>'}, function (data)
-                            {
-                                var3 = data;
-                                console.log(JSON.parse(var3)); // debug
-                                console.log('stage 4 started'); // debug
-                                jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_4.php', {ref: '<?php echo $ref ?>'}, function (data)
-                                {
-                                    var4 = data;
-                                    console.log(JSON.parse(var4)); // debug
-                                });
-                            });                 
-                        });
-                    });
-        </script>
-        <?php
+    global $ocr_allowed_extensions;
+    global $ocr_global_language;
+    global $im_preset_1_density;
+    global $im_preset_1_geometry;
+    global $im_preset_1_quality;
+    global $im_preset_1_deskew;
+    global $im_preset_1_sharpen_r;
+    global $im_preset_1_sharpen_s;
+    global $use_ocr_db_filter;
+    global $ocr_db_filter_1;
+    global $ocr_db_filter_2;
+    global $ocr_ftype_1;
+    session_start();
+    if (isset($_SESSION["ocr_start"])) {
+        require_once "../plugins/ocrstream/include/stage_1.php";
+        require_once "../plugins/ocrstream/include/stage_2.php";
+        require_once "../plugins/ocrstream/include/stage_3.php";
+        require_once "../plugins/ocrstream/include/stage_4.php";
     }
-//    update_field($ref, 72, 'Halloooofofo');
 }
 

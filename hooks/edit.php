@@ -1,16 +1,11 @@
 <?php
 require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 
-/**
- * Hook for OCR on single resource (resource edit)
- * 
- * @global string $ref
- * @global string $lang
- * @global type $baseurl
- * @global string $ocr_global_language
- * @global array $ocr_allowed_extensions
- * @global type $im_preset_1_geometry
- */
+function HookOcrstreamEditEditbeforeheader() {
+    session_start();
+}
+
+//@todo: add all error codes
 function HookOcrstreamEditAfterfileoptions() {
     global $ref;
     global $lang;
@@ -214,7 +209,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
     global $ocr_psm_global;
     global $baseurl;
     $choices = get_tesseract_languages();
-    if ($ref < 0){
+    if (($ref < 0) && (is_tesseract_installed())){
         ?>
         <script>
             function setLanguage_1(selectedLanguage) 
@@ -229,15 +224,17 @@ function HookOcrstreamEditReplaceuploadoptions() {
                     return ocr_psm;
                 }
                 ;
-            function setOCRStart(selectedOCRStart) 
+            function setOCRStart() 
                 {
-                    ocr_start = selectedOCRStart;
+                    ocr_start = jQuery('#ocr_upload_start').attr('checked');
+                    console.log(ocr_start);
                     return ocr_start;
                 }
                 ;
             ocr_lang = jQuery('#ocr_lang :selected').text();
             ocr_psm = jQuery('#ocr_psm :selected').val();
-            ocr_start = jQuery('#ocr_upload_start :selected').val();
+            ocr_start = jQuery('#ocr_upload_start').attr('checked');
+            console.log(ocr_start);
         </script>
     <div><h2 class="CollapsibleSectionHead"><?php echo $lang["ocr-upload-options"] ?></h2>
         <div class="CollapsibleSection" id="OCROptionsSection">
@@ -245,7 +242,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
                 <table>
                     <tr id = "ocr_start" style="height:37px">
                         <td><label for="ocr_single_resource"><?php echo $lang["ocr_single_resource"] ?></label></td>
-                        <td><input type="checkbox" name="ocr_upload_start" id= "ocr_upload_start" ></td>
+                        <td><input type="checkbox" name="ocr_upload_start" id= "ocr_upload_start" onchange="setOCRStart();"></td>
                     </tr>
                     <tr>
                         <td><label for="ocr_language_select"><?php echo $lang["ocr_language_select"] ?></label></td>
@@ -276,11 +273,18 @@ function HookOcrstreamEditReplaceuploadoptions() {
         </div>
     </div>                        
     <?php
+    
     }
 }
 function HookOcrstreamEditEditbeforesave() {
-    global $uploadparams;
-    if (isset($_POST['ocr_upload_start'])){
-        $uploadparams.=("&ocr_lang=" . $_POST['ocr_lang'] . "&ocr_psm=" . $_POST['ocr_psm']);
+    if (isset($_POST['ocr_upload_start'])) {
+        $_SESSION['ocr_lang'] = $_POST['ocr_lang'];
+        $_SESSION['ocr_start'] = $_POST['ocr_upload_start'];
+        $_SESSION['ocr_psm'] = $_POST['ocr_psm'];
     }
+
+//    global $uploadparams;
+//    if (isset($_POST['ocr_upload_start'])){
+//        $uploadparams.=("&ocr=" . $_POST['ocr_upload_start'] . "&ocr_lang=" . $_POST['ocr_lang'] . "&ocr_psm=" . $_POST['ocr_psm']);
+//    }
 }

@@ -1,31 +1,43 @@
 <?php
-SESSION_START();
-
 //  Stage 2 - The Converter
 //
 //
-require_once "../../../include/db.php";
-require_once "../../../include/general.php";
-require_once "../../../include/resource_functions.php";
-require_once "../include/ocrstream_functions.php";
+if (!isset($_SESSION["ocr_start"])) {
+    SESSION_START();
+    require_once "../../../include/db.php";
+    require_once "../../../include/general.php";
+    require_once "../../../include/resource_functions.php";
+    require_once "../include/ocrstream_functions.php";
+    $param_1 = filter_input(INPUT_GET, 'param_1');
+    $im_preset_1_crop_w = filter_input(INPUT_GET, 'w');
+    $im_preset_1_crop_h = filter_input(INPUT_GET, 'h');
+    $im_preset_1_crop_x = filter_input(INPUT_GET, 'x');
+    $im_preset_1_crop_y = filter_input(INPUT_GET, 'y');
+    $ref = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
+}
+else {
+    require_once "../include/db.php";
+    require_once "../include/general.php";
+    require_once "../include/resource_functions.php";
+    require_once "../plugins/ocrstream/include/ocrstream_functions.php";
+    $param_1 = 'pre_1';
+    $im_preset_1_crop_w = 0;
+    $im_preset_1_crop_h = 0;
+    $im_preset_1_crop_x = 0;
+    $im_preset_1_crop_y = 0;
+}
 
 global $imagemagick_path;
 
 // Get ID
-$ref_id = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
+//$ref = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
 
-if ($_SESSION["ocr_stage_" . $ref_id] != 1) {
+if ($_SESSION["ocr_stage_" . $ref] != 1) {
     exit(json_encode('ocr_error_stage_1'));
 }
-/* @var $param_1 ImagemagickPreset */
-$param_1 = filter_input(INPUT_GET, 'param_1');
-$im_preset_1_crop_w = filter_input(INPUT_GET, 'w');
-$im_preset_1_crop_h = filter_input(INPUT_GET, 'h');
-$im_preset_1_crop_x = filter_input(INPUT_GET, 'x');
-$im_preset_1_crop_y = filter_input(INPUT_GET, 'y');
 
 // Get original file extension
-$ext = $_SESSION['ocr_file_extension_' . $ref_id];
+$ext = $_SESSION['ocr_file_extension_' . $ref];
 
 // Build IM-Preset Array
 $im_preset_1 = array(
@@ -48,19 +60,22 @@ $ocr_temp_dir = get_temp_dir();
 $_SESSION['ocr_temp_dir'] = $ocr_temp_dir;
 
 // Image processing with Preset 1 settings
-if ($param_1 === 'pre_1' || $_SESSION["ocr_force_processing_" . $ref_id] === 1) {
+if ($param_1 === 'pre_1' || $_SESSION["ocr_force_processing_" . $ref] === 1) {
     $convert_fullpath = get_utility_path("im-convert");
-    $resource_path = $_SESSION['ocr_resource_path_' . $ref_id];
-    $im_ocr_cmd = $convert_fullpath . " " . implode(' ', $im_preset_1) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/im_tempfile_' . $ref_id . '.jpg');
+    $resource_path = $_SESSION['ocr_resource_path_' . $ref];
+    $im_ocr_cmd = $convert_fullpath . " " . implode(' ', $im_preset_1) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/im_tempfile_' . $ref . '.jpg');
 //    $process_im = new Process($im_ocr_cmd);
 //    $process_im->run();
     run_command($im_ocr_cmd);
-    $_SESSION["ocr_stage_" . $ref_id] = 2;
-    $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref_id] . ' completed ' . $ref_id . ' ' . $ext . ' ' . $param_1 . ' ' . $im_preset_1_crop_w . ' ' . $im_preset_1_crop_h . ' ' . $im_preset_1_crop_x . ' ' . $im_preset_1_crop_y);
+    if (!file_exists($ocr_temp_dir . '/im_tempfile_' . $ref . '.jpg')) {
+        exit(json_encode('ocr image processing error (stage 2)'));
+    }
+    $_SESSION["ocr_stage_" . $ref] = 2;
+    $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . ' completed: ' . $ref . ' ext: ' . $ext . ' im_preset: ' . $param_1);
 } else {
-    $_SESSION["ocr_stage_" . $ref_id] = 2;
-    $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref_id] . ' skipped ' . $ref_id . ' ' . $ext . ' ' . $param_1 . ' ' . $im_preset_1_crop_w . ' ' . $im_preset_1_crop_h . ' ' . $im_preset_1_crop_x . ' ' . $im_preset_1_crop_y);
+    $_SESSION["ocr_stage_" . $ref] = 2;
+    $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . ' skipped: ' . $ref . ' im_preset: ' . $param_1);
 }
 
 echo $debug; //debug
-exit();
+return($debug);

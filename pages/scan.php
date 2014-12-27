@@ -1,7 +1,8 @@
 <?php
-
-// @todo clean up, make separate functions where possible
-// @todo implement filter for unwanted content/characters/whitespaces to prevent excessive load on db
+/*  Not needed anymore, now using stage 1 - 4
+ * 
+ *  @todo: delete file 
+ */
 
 require_once "../../../include/db.php";
 require_once "../../../include/general.php";
@@ -67,7 +68,6 @@ if (sql_value("select resource_type value from resource where ref ='$ref_id'", '
 }
 
 // Check if density (dpi) is in margin for ocr processing, skip for pdf 
-// @todo check units (inch/centimeter) to prevent false detection
 /* @var $resource_path Path */
 /* @var $density ImageProperties */
 $resource_path = get_resource_path($ref_id, true, "", false, $ext); // get complete path to original file with extension
