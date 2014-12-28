@@ -23,5 +23,10 @@ function HookOcrstreamUpload_pluploadAfterpluploadfile() {
         require_once "../plugins/ocrstream/include/stage_3.php";
         require_once "../plugins/ocrstream/include/stage_4.php";
     }
+    if (isset($_SESSION["ocr_cron"])) {
+        $ocr_state = 1;
+        sql_query("UPDATE resource SET ocr_state =  '$ocr_state' WHERE ref = '$ref'");
+        echo "OCR state 1: $ref";
+    }
 }
 

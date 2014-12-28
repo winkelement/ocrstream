@@ -207,6 +207,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
     global $ocr_allowed_extensions;
     global $ocr_psm_array;
     global $ocr_psm_global;
+    global $ocr_cronjob_enabled;
     global $baseurl;
     $choices = get_tesseract_languages();
     if (($ref < 0) && (is_tesseract_installed())){
@@ -227,8 +228,31 @@ function HookOcrstreamEditReplaceuploadoptions() {
             function setOCRStart() 
                 {
                     ocr_start = jQuery('#ocr_upload_start').attr('checked');
+                    if (ocr_start === 'checked') {
+                        jQuery('#ocr_cron').hide();
+                    }
+                    else {
+                        jQuery('#ocr_cron').show();
+                    }
                     console.log(ocr_start);
                     return ocr_start;
+                }
+                ;
+                function setOCRCron() 
+                {
+                    ocr_cron = jQuery('#ocr_cron_start').attr('checked');
+                    if (ocr_cron === 'checked') {
+                        jQuery('#ocr_start').hide();
+                        jQuery('#ocr_language_select').hide();
+                        jQuery('#ocr_psm_select').hide();
+                    }
+                    else {
+                        jQuery('#ocr_start').show();
+                        jQuery('#ocr_language_select').show();
+                        jQuery('#ocr_psm_select').show();
+                    }
+                    console.log(ocr_cron);
+                    return ocr_cron;
                 }
                 ;
             ocr_lang = jQuery('#ocr_lang :selected').text();
@@ -244,7 +268,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
                         <td><label for="ocr_single_resource"><?php echo $lang["ocr_single_resource"] ?></label></td>
                         <td><input type="checkbox" name="ocr_upload_start" id= "ocr_upload_start" onchange="setOCRStart();"></td>
                     </tr>
-                    <tr>
+                    <tr id = "ocr_language_select">
                         <td><label for="ocr_language_select"><?php echo $lang["ocr_language_select"] ?></label></td>
                         <td><select name="ocr_lang" id="ocr_lang" style="width:90px" onchange="setLanguage_1(this.form.ocr_lang.options[this.form.ocr_lang.selectedIndex].value);">
                                 <?php
@@ -256,7 +280,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
                                 ?>
                             </select></td>            
                     </tr>
-                    <tr>
+                    <tr id = "ocr_psm_select">
                         <td><label for="ocr_psm_select"><?php echo $lang["ocr_psm"] ?></label></td>
                         <td><select name="ocr_psm" id="ocr_psm" style="width:414px" onchange="setPsm_1(this.form.ocr_psm.options[this.form.ocr_psm.selectedIndex].value);">
                                 <?php
@@ -268,6 +292,12 @@ function HookOcrstreamEditReplaceuploadoptions() {
                                 ?>
                             </select></td>            
                     </tr>
+                    <?php if ($ocr_cronjob_enabled == true){?>
+                    <tr id = "ocr_cron" style="height:37px">
+                        <td><label for="ocr_upload_cronjob"><?php echo $lang["ocr_upload_cronjob"] ?></label></td>
+                        <td><input type="checkbox" name="ocr_cron_start" id= "ocr_cron_start" onchange="setOCRCron();"></td>
+                    </tr>
+                    <?php } ?>
                 </table>
             </div>
         </div>
@@ -282,7 +312,9 @@ function HookOcrstreamEditEditbeforesave() {
         $_SESSION['ocr_start'] = $_POST['ocr_upload_start'];
         $_SESSION['ocr_psm'] = $_POST['ocr_psm'];
     }
-
+    if (isset($_POST['ocr_cron_start'])) {
+        $_SESSION['ocr_cron'] = $_POST['ocr_cron_start'];
+    }
 //    global $uploadparams;
 //    if (isset($_POST['ocr_upload_start'])){
 //        $uploadparams.=("&ocr=" . $_POST['ocr_upload_start'] . "&ocr_lang=" . $_POST['ocr_lang'] . "&ocr_psm=" . $_POST['ocr_psm']);
