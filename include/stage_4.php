@@ -5,6 +5,7 @@
 if (!isset($_SESSION["ocr_start"])) {
     SESSION_START();
     require_once "../../../include/db.php";
+    require_once "../../../include/authenticate.php";
     require_once "../../../include/general.php";
     require_once "../../../include/resource_functions.php";
     require_once "../include/ocrstream_functions.php";
@@ -13,6 +14,7 @@ if (!isset($_SESSION["ocr_start"])) {
 else {
     require_once "../include/db.php";
     require_once "../include/general.php";
+    require_once "../include/authenticate.php";
     require_once "../include/resource_functions.php";
     require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 }
@@ -62,5 +64,5 @@ if ($end_of_queque == true || !isset($_SESSION["ocr_start"])){
     session_unset();
 }
 
-return($debug);
+//return($debug);
 

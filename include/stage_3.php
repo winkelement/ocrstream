@@ -6,6 +6,7 @@ if (!isset($_SESSION["ocr_start"])) {
     SESSION_START();
     require_once "../../../include/db.php";
     require_once "../../../include/general.php";
+    require_once "../../../include/authenticate.php";
     require_once "../../../include/resource_functions.php";
     require_once "../include/ocrstream_functions.php";
     $ref = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
@@ -16,6 +17,7 @@ if (!isset($_SESSION["ocr_start"])) {
 else {
     require_once "../include/db.php";
     require_once "../include/general.php";
+    require_once "../include/authenticate.php";
     require_once "../include/resource_functions.php";
     require_once "../plugins/ocrstream/include/ocrstream_functions.php";
     $ocr_lang = $_SESSION['ocr_lang'];
@@ -92,4 +94,4 @@ $_SESSION["ocr_stage_" . $ref] = 3;
 
 $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . ' completed: ' .$ref. ' lang: ' .$ocr_lang. ' PSM: '.$ocr_psm);
 echo $debug; //debug
-return($debug);
+//return($debug);

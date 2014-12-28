@@ -40,4 +40,6 @@ $lang['im_preset_sharpen_s'] = 'Sharpen sigma <br> (-sharpen [radius]x[sigma])';
 $lang['im_preset_sharpen_s_help'] = 'Sets the standard deviation of the Gaussian operator. Default is 1.';
 $lang["im_preset_select"] = 'Image processing';
 $lang["ocr-upload-options"] = 'OCR Options';
+$lang['ocr_cronjob'] = 'Set cronjob for OCR processing.';
+$lang['ocr_cronjob_help'] = 'Marked resources (ocr_state = 1) will processed with default settings.';
 ?>

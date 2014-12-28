@@ -40,6 +40,8 @@ $page_def[] = config_add_text_list_input('ocr_allowed_extensions', $lang['ocr_in
 $page_def[] = config_add_text_input('ocr_min_density', $lang['ocr_min_density'], false, 45);
 $page_def[] = config_add_text_input('ocr_max_density', $lang['ocr_max_density'], false, 45);
 $page_def[] = config_add_html($lang['ocr_max_density_help']);
+$page_def[] = config_add_boolean_select('ocr_cronjob_enabled', $lang['ocr_cronjob'], '', 90);
+$page_def[] = config_add_html($lang['ocr_cronjob_help']);
 $page_def[] = config_add_section_header($lang['im_processing_header'], $lang['im_processing_help']);
 $page_def[] = config_add_html("<p style=font-size:18px;>Preset 1</p>");
 $page_def[] = config_add_text_input('im_preset_1_density', $lang['im_preset_density'], false, 45);

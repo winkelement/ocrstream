@@ -40,4 +40,6 @@ $lang['im_preset_sharpen_s'] = 'Scharfzeichen Sigma <br> (-sharpen [radius]x[sig
 $lang['im_preset_sharpen_s_help'] = 'Legt die Standardabweichung für den verwendeten Gauss-Filter fest. Standard ist 1.';
 $lang["im_preset_select"] = 'Bildbearbeitung';
 $lang["ocr-upload-options"] = 'OCR Optionen';
+$lang['ocr_cronjob'] = 'Erstellt einen Cronjob für die Texterkennung.';
+$lang['ocr_cronjob_help'] = 'Markierte Resourcen (ocr_state = 1) werden mit Standardeinstellungen verarbeitet.';
 ?>

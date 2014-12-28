@@ -6,6 +6,7 @@ if (!isset($_SESSION["ocr_start"])) {
     SESSION_START();
     require_once "../../../include/db.php";
     require_once "../../../include/general.php";
+    require_once "../../../include/authenticate.php";
     require_once "../../../include/resource_functions.php";
     require_once "../include/ocrstream_functions.php";
     $param_1 = filter_input(INPUT_GET, 'param_1');
@@ -18,6 +19,7 @@ if (!isset($_SESSION["ocr_start"])) {
 else {
     require_once "../include/db.php";
     require_once "../include/general.php";
+    require_once "../include/authenticate.php";
     require_once "../include/resource_functions.php";
     require_once "../plugins/ocrstream/include/ocrstream_functions.php";
     $param_1 = 'pre_1';
@@ -33,7 +35,7 @@ global $imagemagick_path;
 //$ref = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
 
 if ($_SESSION["ocr_stage_" . $ref] != 1) {
-    exit(json_encode('ocr_error_stage_1'));
+    exit(json_encode('Error: stage 1 not completed.'));
 }
 
 // Get original file extension
@@ -78,4 +80,4 @@ if ($param_1 === 'pre_1' || $_SESSION["ocr_force_processing_" . $ref] === 1) {
 }
 
 echo $debug; //debug
-return($debug);
+//return($debug);
