@@ -5,7 +5,6 @@ function HookOcrstreamEditEditbeforeheader() {
     session_start();
 }
 
-//@todo: add all error codes
 function HookOcrstreamEditAfterfileoptions() {
     global $ref;
     global $lang;
@@ -116,8 +115,27 @@ function HookOcrstreamEditAfterfileoptions() {
                     {
                         var1 = data;
                         console.log(JSON.parse(var1)); // debug
+                        if (JSON.parse(var1) === 'ocr_error_1') {
+                            hideLoadingImage();
+                            jQuery('#ocr_status_text').fadeOut(800);
+                            alert('<?php echo $lang["ocr_error_1"] ?>');
+                            return;
+                        }
+                        if (JSON.parse(var1) === 'ocr_error_2') {
+                            hideLoadingImage();
+                            jQuery('#ocr_status_text').fadeOut(800);
+                            alert('<?php echo $lang["ocr_error_2"] ?>');
+                            return;
+                        }
+                        if (JSON.parse(var1) === 'ocr_error_3') {
+                            hideLoadingImage();
+                            jQuery('#ocr_status_text').fadeOut(800);
+                            alert('<?php echo $lang["ocr_error_3"] ?>');
+                            return;
+                        }
                         if (JSON.parse(var1) === 'ocr_error_4') {
                             hideLoadingImage();
+                            jQuery('#ocr_status_text').fadeOut(800);
                             alert('<?php echo $lang["ocr_error_4"] ?>');
                             return;
                         }
@@ -146,10 +164,10 @@ function HookOcrstreamEditAfterfileoptions() {
                             });
                  
                         });
-//                        {
-//                            //@todo find a way to update 'Extracted text' field wihout reloading whole page
-////                            window.location.reload(true);
-//                        }
+                        //{
+                        //@todo find a way to update 'Extracted text' field wihout reloading whole page
+                        //window.location.reload(true);
+                        //}
                     });
                     showLoadingImage();
                     
@@ -327,8 +345,4 @@ function HookOcrstreamEditEditbeforesave() {
     if (isset($_POST['ocr_cron_start'])) {
         $_SESSION['ocr_cron'] = $_POST['ocr_cron_start'];
     }
-//    global $uploadparams;
-//    if (isset($_POST['ocr_upload_start'])){
-//        $uploadparams.=("&ocr=" . $_POST['ocr_upload_start'] . "&ocr_lang=" . $_POST['ocr_lang'] . "&ocr_psm=" . $_POST['ocr_psm']);
-//    }
 }
