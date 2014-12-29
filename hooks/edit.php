@@ -84,11 +84,11 @@ function HookOcrstreamEditAfterfileoptions() {
                 }
                 ;
                 function showLoadingImage() {
-                    jQuery('#ocr_start').append('<td id="loading-image"><img src="../gfx/interface/loading.gif" alt="Loading..."  style="margin-left:17px" /></td>');
+                    jQuery('#ocr_status_anim').append('<div id="loading-image"><img src="../gfx/interface/loading.gif" alt="Loading..."  style="margin-left:17px" /></div>');
                 }
                 ;
                 function hideLoadingImage() {
-                    jQuery('#loading-image').remove();
+                    jQuery('#loading-image').fadeOut(800);
                 }
                 ;
                 // Initilaize Parameters
@@ -99,6 +99,10 @@ function HookOcrstreamEditAfterfileoptions() {
                 y = '0';
                 w = '0';
                 h = '0';
+                status_1 = 'OCR Stage 1/4 .';
+                status_2 = 'OCR Stage 2/4 ..';
+                status_3 = 'OCR Stage 3/4 ...';
+                status_4 = 'OCR Stage 4/4 ....';
                 // Only show jCrop when image is going to be processed
                 if (param_1 === 'pre_1') {
                     ocr_crop();
@@ -106,7 +110,8 @@ function HookOcrstreamEditAfterfileoptions() {
                 // Send parameters to stage 1 - 4 for OCR processing
                 jQuery('[name="ocr_start"]').click(function ()
                 {
-                    console.log('stage 1 started'); // debug
+                    console.log(status_1); // debug
+                    jQuery('#ocr_status_text').html(status_1);
                     jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_1.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang)}, function (data)
                     {
                         var1 = data;
@@ -116,22 +121,27 @@ function HookOcrstreamEditAfterfileoptions() {
                             alert('<?php echo $lang["ocr_error_4"] ?>');
                             return;
                         }
-                        console.log('stage 2 started'); // debug
+                        console.log(status_2); // debug
+                        jQuery('#ocr_status_text').html(status_2);
                         jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_2.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
                         {
                             var2 = data;
                             console.log(JSON.parse(var2)); // debug
-                            console.log('stage 3 started'); // debug
+                            console.log(status_3); // debug
+                            jQuery('#ocr_status_text').html(status_3);
                             jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_3.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
                             {
                                 var3 = data;
                                 console.log(JSON.parse(var3)); // debug
-                                console.log('stage 4 started'); // debug
+                                console.log(status_4); // debug
+                                jQuery('#ocr_status_text').html(status_4);
                                 jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_4.php', {ref: '<?php echo $ref ?>'}, function (data)
                                 {
                                     var4 = data;
                                     console.log(JSON.parse(var4)); // debug
+                                    jQuery('#ocr_status_text').html(JSON.parse(var4));
                                     hideLoadingImage();
+                                    jQuery('#ocr_status_text').fadeOut(800);
                                 });
                             });
                  
@@ -150,6 +160,8 @@ function HookOcrstreamEditAfterfileoptions() {
                     <tr id = "ocr_start" style="height:37px">
                         <td><label for="ocr_single_resource"><?php echo $lang["ocr_single_resource"] ?></label></td>
                         <td><input type="button" name="ocr_start" style="width:90px" value="<?php echo $lang["ocr_start"] ?>"></td>
+                        <td id = "ocr_status_anim"></td>
+                        <td><div id = "ocr_status_text" style="width:400px"></div><span></span></td>
                     </tr>
                     <tr>
                         <td><label for="ocr_language_select"><?php echo $lang["ocr_language_select"] ?></label></td>
@@ -165,7 +177,7 @@ function HookOcrstreamEditAfterfileoptions() {
                     </tr>
                     <tr>
                         <td><label for="ocr_psm_select"><?php echo $lang["ocr_psm"] ?></label></td>
-                        <td><select name="ocr_psm" id="ocr_psm" style="width:414px" onchange="setPsm(this.form.ocr_psm.options[this.form.ocr_psm.selectedIndex].value);">
+                        <td><select name="ocr_psm" id="ocr_psm" style="width:90px" onchange="setPsm(this.form.ocr_psm.options[this.form.ocr_psm.selectedIndex].value);">
                                 <?php
                                 $usekeys_psm = true;
                                 foreach ($ocr_psm_array as $key => $choice) {

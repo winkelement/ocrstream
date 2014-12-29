@@ -55,7 +55,7 @@ array_map('unlink', glob("$ocr_temp_dir/im*")); //debug, uncomment for productiv
 
 $_SESSION['ocr_stage_' . $ref] = 4;
 
-$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . ' completed: ' .$ref);
+$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 completed: ' .$ref);
 echo $debug; //debug
 
 // Clear all SESSION Variables for single resource OCR or if last file in queque has been uploaded

@@ -73,10 +73,10 @@ if ($param_1 === 'pre_1' || $_SESSION["ocr_force_processing_" . $ref] === 1) {
         exit(json_encode('ocr image processing error (stage 2)'));
     }
     $_SESSION["ocr_stage_" . $ref] = 2;
-    $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . ' completed: ' . $ref . ' ext: ' . $ext . ' im_preset: ' . $param_1);
+    $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 completed: ' . $ref . ' ext: ' . $ext . ' im_preset: ' . $param_1);
 } else {
     $_SESSION["ocr_stage_" . $ref] = 2;
-    $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . ' skipped: ' . $ref . ' im_preset: ' . $param_1);
+    $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 skipped: ' . $ref . ' im_preset: ' . $param_1);
 }
 
 echo $debug; //debug

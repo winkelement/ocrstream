@@ -92,6 +92,6 @@ if ($param_1 === 'none' && $_SESSION["ocr_force_processing_" . $ref] != 1) {
 
 $_SESSION["ocr_stage_" . $ref] = 3;
 
-$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . ' completed: ' .$ref. ' lang: ' .$ocr_lang. ' PSM: '.$ocr_psm);
+$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 completed: ' .$ref. ' lang: ' .$ocr_lang. ' PSM: '.$ocr_psm);
 echo $debug; //debug
 //return($debug);
