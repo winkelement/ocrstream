@@ -3,7 +3,6 @@
 //
 //
 if (!isset($_SESSION["ocr_start"])) {
-    SESSION_START();
     require_once "../../../include/db.php";
     require_once "../../../include/general.php";
     require_once "../../../include/authenticate.php";
@@ -25,9 +24,9 @@ else {
     $param_1 = 'pre_1';
 }
 
-// Get Input Values
-//$ref = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
-if ($_SESSION["ocr_stage_" . $ref] != 2) {
+if (is_session_started() === FALSE ) session_start();
+
+if ($_SESSION["ocr_stage_" . $ref] !== 2) {
     exit(json_encode('Error: stage 2 not completed.'));
 }
 //$ocr_lang = filter_input(INPUT_GET, 'ocr_lang');

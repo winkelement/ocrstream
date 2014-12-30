@@ -3,7 +3,6 @@
 //
 //
 if (!isset($_SESSION["ocr_start"])) {
-    SESSION_START();
     require_once "../../../include/db.php";
     require_once "../../../include/authenticate.php";
     require_once "../../../include/general.php";
@@ -19,9 +18,9 @@ else {
     require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 }
 
-// Get ID
-//$ref = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
-if ($_SESSION["ocr_stage_" . $ref] != 3) {
+if (is_session_started() === FALSE ) session_start();
+
+if ($_SESSION["ocr_stage_" . $ref] !== 3) {
     exit(json_encode('Error: stage 3 not completed.'));
 }
 

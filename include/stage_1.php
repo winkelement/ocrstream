@@ -3,7 +3,6 @@
 //
 //
 if (!isset($_SESSION["ocr_start"])) {
-    SESSION_START();
     require_once "../../../include/db.php";
     require_once "../../../include/general.php";
     require_once "../../../include/authenticate.php";
@@ -18,6 +17,8 @@ else {
     require_once "../include/resource_functions.php";
     require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 }
+
+if (is_session_started() === FALSE ) session_start();
 
 global $imagemagick_path;
 global $ocr_min_density;
