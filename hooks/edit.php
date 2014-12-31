@@ -29,6 +29,7 @@ function HookOcrstreamEditAfterfileoptions() {
             <script src="../plugins/ocrstream/lib/jcrop/js/jquery.Jcrop.min.js"></script>
             <link rel="stylesheet" href="../plugins/ocrstream/lib/jcrop/css/jquery.Jcrop.css" type="text/css" />
             <script>
+            jQuery( document ).ready(function() {
                 function ocr_crop() {
                     jQuery(function ($) {
                         var jcrop_api;
@@ -83,7 +84,7 @@ function HookOcrstreamEditAfterfileoptions() {
                 }
                 ;
                 function showLoadingImage() {
-                    jQuery('#ocr_status_anim').append('<div id="loading-image"><img src="../gfx/interface/loading.gif" alt="Loading..."  style="margin-left:17px" /></div>');
+                    jQuery('#ocr_status_anim').append('<div id="loading-image"><img src="../plugins/ocrstream/gfx/loader_2.gif" alt="Loading..."  style="margin-left:17px" /></div>');
                 }
                 ;
                 function hideLoadingImage() {
@@ -172,6 +173,7 @@ function HookOcrstreamEditAfterfileoptions() {
                     showLoadingImage();
                     
                 });
+            });
             </script>
             <div class="Question" id="question_ocr" style="font-weight: normal">
                 <table>
@@ -281,14 +283,12 @@ function HookOcrstreamEditReplaceuploadoptions() {
                         jQuery('#ocr_language_select').show();
                         jQuery('#ocr_psm_select').show();
                     }
-                    console.log(ocr_cron);
                     return ocr_cron;
                 }
                 ;
             ocr_lang = jQuery('#ocr_lang :selected').text();
             ocr_psm = jQuery('#ocr_psm :selected').val();
             ocr_start = jQuery('#ocr_upload_start').attr('checked');
-            console.log(ocr_start);
         </script>
     <div><h2 class="CollapsibleSectionHead"><?php echo $lang["ocr-upload-options"] ?></h2>
         <div class="CollapsibleSection" id="OCROptionsSection">
