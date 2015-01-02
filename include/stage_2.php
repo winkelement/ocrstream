@@ -2,6 +2,8 @@
 //  Stage 2 - The Converter
 //
 //
+$start_2 = microtime(true);
+
 if (!isset($_SESSION["ocr_start"])) {
     require_once "../../../include/db.php";
     require_once "../../../include/general.php";
@@ -74,10 +76,16 @@ if ($param_1 === 'pre_1' || $_SESSION["ocr_force_processing_" . $ref] === 1) {
         exit(json_encode('ocr image processing error (stage 2)'));
     }
     $_SESSION["ocr_stage_" . $ref] = 2;
-    $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 completed: ' . $ref . ' ext: ' . $ext . ' im_preset: ' . $param_1);
+    // Measure execution time for stage 2
+    $elapsed_2 = round((microtime(true) - $start_2), 3);
+    $_SESSION["ocr_stage_2_time"] = $elapsed_2;
+    $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 completed: ' . $ref . ' ext: ' . $ext . ' im_preset: ' . $param_1 . ' Time: ' . $elapsed_2);
 } else {
     $_SESSION["ocr_stage_" . $ref] = 2;
-    $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 skipped: ' . $ref . ' im_preset: ' . $param_1);
+    // Measure execution time for stage 2
+    $elapsed_2 = round((microtime(true) - $start_2), 3);
+    $_SESSION["ocr_stage_2_time"] = $elapsed_2;
+    $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 skipped: ' . $ref . ' im_preset: ' . $param_1 . ' Time: ' . $elapsed_2);
 }
 
 echo $debug; //debug

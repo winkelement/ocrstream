@@ -2,6 +2,8 @@
 //  Stage 4 - The Texter
 //
 //
+$start_4 = microtime(true);
+
 if (!isset($_SESSION["ocr_start"])) {
     require_once "../../../include/db.php";
     require_once "../../../include/authenticate.php";
@@ -56,7 +58,12 @@ array_map('unlink', glob("$ocr_temp_dir/im*")); //debug, uncomment for productiv
 
 $_SESSION['ocr_stage_' . $ref] = 4;
 
-$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 completed: ' .$ref);
+// Measure execution time for stage 3
+$elapsed_4 = round((microtime(true) - $start_4), 3);
+$_SESSION["ocr_stage_4_time"] = $elapsed_4;
+$ocr_total_time = ($_SESSION["ocr_stage_1_time"]) + ($_SESSION["ocr_stage_2_time"]) + ($_SESSION["ocr_stage_3_time"]) + ($_SESSION["ocr_stage_4_time"]);
+
+$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 completed: ' .$ref . ' Time: ' . $elapsed_4 . ' Total Time: ' . $ocr_total_time);
 echo $debug; //debug
 
 // Clear all SESSION Variables for single resource OCR or if last file in queque has been uploaded

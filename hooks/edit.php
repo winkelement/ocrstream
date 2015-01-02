@@ -21,6 +21,8 @@ function HookOcrstreamEditAfterfileoptions() {
         // Hide OCR options for filetypes not allowed
         $ext = sql_value("select file_extension value from resource where ref = '$ref'", '');
         if (in_array($ext, $ocr_allowed_extensions)) {
+            // Check ocr_state
+            $ocr_state =  sql_value("SELECT ocr_state value FROM resource WHERE ref = '$ref'", '');
             // Get aspect ratio of image for calculating crop size
             $w_thumb = sql_value("select thumb_width value from resource where ref = '$ref'", '');
             $h_thumb = sql_value("select thumb_height value from resource where ref = '$ref'", '');
@@ -275,7 +277,6 @@ function HookOcrstreamEditReplaceuploadoptions() {
                     else {
                         jQuery('#ocr_cron').show();
                     }
-                    console.log(ocr_start);
                     return ocr_start;
                 }
                 ;

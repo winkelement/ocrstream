@@ -2,6 +2,8 @@
 //  Stage 3 - The Recognizer
 //
 //
+$start_3 = microtime(true);
+
 if (!isset($_SESSION["ocr_start"])) {
     require_once "../../../include/db.php";
     require_once "../../../include/general.php";
@@ -90,6 +92,10 @@ if ($param_1 === 'none' && $_SESSION["ocr_force_processing_" . $ref] !== 1) {
 
 $_SESSION["ocr_stage_" . $ref] = 3;
 
-$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 completed: ' .$ref. ' lang: ' .$ocr_lang. ' PSM: '.$ocr_psm);
+// Measure execution time for stage 3
+$elapsed_3 = round((microtime(true) - $start_3), 3);
+$_SESSION["ocr_stage_3_time"] = $elapsed_3;
+
+$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 completed: ' .$ref. ' lang: ' .$ocr_lang. ' PSM: '.$ocr_psm . ' Time: ' . $elapsed_3);
 echo $debug; //debug
 //return($debug);

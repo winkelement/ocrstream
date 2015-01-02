@@ -2,6 +2,8 @@
 //  Stage 1 - The Checker
 //
 //
+$start_1 = microtime(true);
+
 if (!isset($_SESSION["ocr_start"])) {
     require_once "../../../include/db.php";
     require_once "../../../include/general.php";
@@ -94,6 +96,10 @@ if (array_search($ocr_lang, $tesseract_languages) == false) {
 
 $_SESSION["ocr_stage_" . $ref] = 1;
 
-$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 completed: ' .$ref. ' ext: ' .$ext);
+// Measure execution time for stage 1
+$elapsed_1 = round((microtime(true) - $start_1), 3);
+$_SESSION["ocr_stage_1_time"] = $elapsed_1;
+
+$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 completed: ' .$ref. ' ext: ' .$ext . ' Time: ' . $elapsed_1);
 echo $debug; //debug
 //return($debug);
