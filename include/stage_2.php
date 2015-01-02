@@ -28,12 +28,11 @@ else {
     $im_preset_1_crop_y = 0;
 }
 
-if (is_session_started() === FALSE ) session_start();
+if (is_session_started() === FALSE) {
+    session_start();
+}
 
 global $imagemagick_path;
-
-// Get ID
-//$ref = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
 
 if ($_SESSION["ocr_stage_" . $ref] !== 1) {
     exit(json_encode('Error: stage 1 not completed.'));
@@ -70,7 +69,7 @@ if ($param_1 === 'pre_1' || $_SESSION["ocr_force_processing_" . $ref] === 1) {
 //    $process_im = new Process($im_ocr_cmd);
 //    $process_im->run();
     run_command($im_ocr_cmd);
-    // Checking if image(s) were created
+    // Checking if temp image(s) were created
     if (!file_exists($ocr_temp_dir . '/im_tempfile_' . $ref . '.jpg') && !file_exists($ocr_temp_dir . '/im_tempfile_' . $ref . '-0.jpg')) {
         exit(json_encode('ocr image processing error (stage 2)'));
     }

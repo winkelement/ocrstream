@@ -21,17 +21,16 @@ else {
     require_once "../plugins/ocrstream/include/ocrstream_functions.php";
     $ocr_lang = $_SESSION['ocr_lang'];
     $ocr_psm = $_SESSION['ocr_psm'];
-    $param_1 = 'pre_1';
+    $param_1 = 'none';
 }
 
-if (is_session_started() === FALSE ) session_start();
+if (is_session_started() === FALSE) {
+    session_start();
+}
 
 if ($_SESSION["ocr_stage_" . $ref] !== 2) {
     exit(json_encode('Error: stage 2 not completed.'));
 }
-//$ocr_lang = filter_input(INPUT_GET, 'ocr_lang');
-//$ocr_psm = filter_input(INPUT_GET, 'ocr_psm');
-//$param_1 = filter_input(INPUT_GET, 'param_1');
 
 // Get number of pages
 $resource = get_resource_data($ref);
@@ -72,7 +71,7 @@ if ($pg_num > 1 && tesseract_version_is_old() === true) {
     }
 }
 // OCR single page processed
-if ($param_1 === 'pre_1' && $pg_num === '1') {
+if (($param_1 === 'pre_1' && $pg_num === '1') || ($_SESSION["ocr_force_processing_" . $ref] === 1 && $pg_num === '1')) {
     $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ref . '.jpg');
     $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
 //    $process = new Process($tess_cmd);
@@ -80,7 +79,7 @@ if ($param_1 === 'pre_1' && $pg_num === '1') {
     run_command($tess_cmd);
 }
 // OCR single page original
-if ($param_1 === 'none' && $_SESSION["ocr_force_processing_" . $ref] != 1) {
+if ($param_1 === 'none' && $_SESSION["ocr_force_processing_" . $ref] !== 1) {
     $ext = $_SESSION['ocr_file_extension_' . $ref];
     $resource_path = $_SESSION['ocr_resource_path_' . $ref];
     $tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ref) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);

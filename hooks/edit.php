@@ -2,6 +2,9 @@
 require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 
 function HookOcrstreamEditEditbeforeheader() {
+    // Clear Session in case ocr processing failed before and old values are present
+    session_unset();
+    // Start Session for Single Resource Edit and Upload
     session_start();
 }
 
@@ -29,7 +32,6 @@ function HookOcrstreamEditAfterfileoptions() {
             <script src="../plugins/ocrstream/lib/jcrop/js/jquery.Jcrop.min.js"></script>
             <link rel="stylesheet" href="../plugins/ocrstream/lib/jcrop/css/jquery.Jcrop.css" type="text/css" />
             <script>
-            jQuery( document ).ready(function() {
                 function ocr_crop() {
                     jQuery(function ($) {
                         var jcrop_api;
@@ -108,72 +110,79 @@ function HookOcrstreamEditAfterfileoptions() {
                     ocr_crop();
                 }
                 // Send parameters to stage 1 - 4 for OCR processing
-                jQuery('[name="ocr_start"]').click(function ()
-                {
-                    console.log(status_1); // debug
-                    jQuery('#ocr_status_text').html(status_1);
-                    jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_1.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang)}, function (data)
+                jQuery( document ).ready(function() {
+                    jQuery('[name="ocr_start"]').click(function ()
                     {
-                        var1 = data;
-                        console.log(JSON.parse(var1)); // debug
-                        if (JSON.parse(var1) === 'ocr_error_1') {
-                            hideLoadingImage();
-                            jQuery('#ocr_status_text').fadeOut(800);
-                            alert('<?php echo $lang["ocr_error_1"] ?>');
-                            return;
-                        }
-                        if (JSON.parse(var1) === 'ocr_error_2') {
-                            hideLoadingImage();
-                            jQuery('#ocr_status_text').fadeOut(800);
-                            alert('<?php echo $lang["ocr_error_2"] ?>');
-                            return;
-                        }
-                        if (JSON.parse(var1) === 'ocr_error_3') {
-                            hideLoadingImage();
-                            jQuery('#ocr_status_text').fadeOut(800);
-                            alert('<?php echo $lang["ocr_error_3"] ?>');
-                            return;
-                        }
-                        if (JSON.parse(var1) === 'ocr_error_4') {
-                            hideLoadingImage();
-                            jQuery('#ocr_status_text').fadeOut(800);
-                            alert('<?php echo $lang["ocr_error_4"] ?>');
-                            return;
-                        }
-                        console.log(status_2); // debug
-                        jQuery('#ocr_status_text').html(status_2);
-                        jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_2.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
+                        console.log(status_1); // debug
+                        jQuery('#ocr_status_text').html(status_1);
+                        jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_1.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang)}, function (data)
                         {
-                            var2 = data;
-                            console.log(JSON.parse(var2)); // debug
-                            console.log(status_3); // debug
-                            jQuery('#ocr_status_text').html(status_3);
-                            jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_3.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
+                            var1 = data;
+                            console.log(JSON.parse(var1)); // debug
+                            if (JSON.parse(var1) === 'ocr_error_1') {
+                                hideLoadingImage();
+                                jQuery('#ocr_status_text').fadeOut(800);
+                                alert('<?php echo $lang["ocr_error_1"] ?>');
+                                return;
+                            }
+                            if (JSON.parse(var1) === 'ocr_error_2') {
+                                hideLoadingImage();
+                                jQuery('#ocr_status_text').fadeOut(800);
+                                alert('<?php echo $lang["ocr_error_2"] ?>');
+                                return;
+                            }
+                            if (JSON.parse(var1) === 'ocr_error_3') {
+                                hideLoadingImage();
+                                jQuery('#ocr_status_text').fadeOut(800);
+                                alert('<?php echo $lang["ocr_error_3"] ?>');
+                                return;
+                            }
+                            if (JSON.parse(var1) === 'ocr_error_4') {
+                                hideLoadingImage();
+                                jQuery('#ocr_status_text').fadeOut(800);
+                                alert('<?php echo $lang["ocr_error_4"] ?>');
+                                return;
+                            }
+                            if (JSON.parse(var1) === 'ocr_error_5') {
+                                hideLoadingImage();
+                                jQuery('#ocr_status_text').fadeOut(800);
+                                alert('<?php echo $lang["ocr_error_5"] ?>');
+                                return;
+                            }
+                            console.log(status_2); // debug
+                            jQuery('#ocr_status_text').html(status_2);
+                            jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_2.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
                             {
-                                var3 = data;
-                                console.log(JSON.parse(var3)); // debug
-                                console.log(status_4); // debug
-                                jQuery('#ocr_status_text').html(status_4);
-                                jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_4.php', {ref: '<?php echo $ref ?>'}, function (data)
+                                var2 = data;
+                                console.log(JSON.parse(var2)); // debug
+                                console.log(status_3); // debug
+                                jQuery('#ocr_status_text').html(status_3);
+                                jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_3.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
                                 {
-                                    var4 = data;
-                                    console.log(JSON.parse(var4)); // debug
-                                    jQuery('#ocr_status_text').html(JSON.parse(var4));
-                                    hideLoadingImage();
-                                    jQuery('#ocr_status_text').fadeOut(800);
+                                    var3 = data;
+                                    console.log(JSON.parse(var3)); // debug
+                                    console.log(status_4); // debug
+                                    jQuery('#ocr_status_text').html(status_4);
+                                    jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_4.php', {ref: '<?php echo $ref ?>'}, function (data)
+                                    {
+                                        var4 = data;
+                                        console.log(JSON.parse(var4)); // debug
+                                        jQuery('#ocr_status_text').html(JSON.parse(var4));
+                                        hideLoadingImage();
+                                        jQuery('#ocr_status_text').fadeOut(800);
+                                    });
                                 });
+
                             });
-                 
+                            //{
+                            //@todo find a way to update 'Extracted text' field wihout reloading whole page
+                            //window.location.reload(true);
+                            //}
                         });
-                        //{
-                        //@todo find a way to update 'Extracted text' field wihout reloading whole page
-                        //window.location.reload(true);
-                        //}
+                        showLoadingImage();
+
                     });
-                    showLoadingImage();
-                    
-                });
-            });
+                    });
             </script>
             <div class="Question" id="question_ocr" style="font-weight: normal">
                 <table>

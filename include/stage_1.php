@@ -18,14 +18,16 @@ else {
     require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 }
 
-if (is_session_started() === FALSE ) session_start();
+if (is_session_started() === FALSE) {
+    session_start();
+}
 
 global $imagemagick_path;
 global $ocr_min_density;
 global $ocr_max_density;
+global $ocr_min_geometry;
+global $ocr_max_geometry;
 
-// Get Input
-//$ref = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
 if (isset($_SESSION['ocr_lang'])) {
     $ocr_lang = $_SESSION['ocr_lang'];
 } else {
@@ -39,6 +41,7 @@ $_SESSION["ocr_stage_" . $ref] = 0;
 // Get original file extension
 $ext = sql_value("select file_extension value from resource where ref = '$ref'", '');
 $_SESSION['ocr_file_extension_' . $ref] = $ext;
+ 
 
 $resource_path = get_resource_path($ref, true, "", false, $ext); // get complete path to original file with extension
 $_SESSION['ocr_resource_path_' . $ref] = $resource_path;
@@ -58,18 +61,31 @@ if (sql_value("select resource_type value from resource where ref ='$ref'", '') 
     exit(json_encode('ocr_error_4'));
 }
 
-// Check if density (dpi) is in margin for ocr processing, skip for pdf 
+// Check if density (dpi) and geometry (px) is in margin for ocr processing, skip for pdf
+// Ignore 72 dpi values (Screen resolution)
 // @todo check units (inch/centimeter) to prevent false detection
-if ($ext != 'pdf') {
+if ($ext !== 'pdf') {
     $density = run_command($imagemagick_path . '/identify -format "%y" ' . '' . $resource_path . ' 2>&1');
-    if (intval($density) < $ocr_min_density) {
+    if (intval($density) < $ocr_min_density && intval($density) !== 72) {
         exit(json_encode('ocr_error_3'));
     }
     if (intval($density) > $ocr_max_density) {
         $_SESSION["ocr_force_processing_" . $ref] = 1; // Force image procesing if density too high 
     }
+    $geometry = sql_value("SELECT width value FROM resource_dimensions WHERE resource ='$ref'", '');
+    if (intval($geometry) < $ocr_min_geometry) {
+        exit(json_encode('ocr_error_5'));
+    }
+    if (intval($geometry) > $ocr_max_geometry) {
+        $_SESSION["ocr_force_processing_" . $ref] = 1; // Force image procesing if width too high 
+    }
 }
 
+// Force image processing if filetype is pdf
+// Needs to be set for file uploads where param_1 = none
+if ($ext === 'pdf') {
+    $_SESSION["ocr_force_processing_" . $ref] = 1;
+}
 // If language parameter is not valid, choose global ocr language setting
 $tesseract_languages = get_tesseract_languages();
 if (array_search($ocr_lang, $tesseract_languages) == false) {

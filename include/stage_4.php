@@ -18,7 +18,9 @@ else {
     require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 }
 
-if (is_session_started() === FALSE ) session_start();
+if (is_session_started() === FALSE) {
+    session_start();
+}
 
 if ($_SESSION["ocr_stage_" . $ref] !== 3) {
     exit(json_encode('Error: stage 3 not completed.'));

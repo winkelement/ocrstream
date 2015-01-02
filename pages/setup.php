@@ -8,7 +8,7 @@ if (!checkperm('a')) {
 }
 include '../../../include/general.php';
 
-include_once "../include/ocrstream_functions.php";
+require "../include/ocrstream_functions.php";
 
 // Specify the name of this plugin, the heading to display for the page and the
 // optional introductory text. Set $page_intro to "" for no intro text
@@ -40,6 +40,8 @@ $page_def[] = config_add_text_list_input('ocr_allowed_extensions', $lang['ocr_in
 $page_def[] = config_add_text_input('ocr_min_density', $lang['ocr_min_density'], false, 45);
 $page_def[] = config_add_text_input('ocr_max_density', $lang['ocr_max_density'], false, 45);
 $page_def[] = config_add_html($lang['ocr_max_density_help']);
+$page_def[] = config_add_text_input('ocr_min_geometry', $lang['ocr_min_geometry'], false, 45);
+$page_def[] = config_add_text_input('ocr_max_geometry', $lang['ocr_max_geometry'], false, 45);
 $page_def[] = config_add_boolean_select('ocr_cronjob_enabled', $lang['ocr_cronjob'], '', 90);
 $page_def[] = config_add_html($lang['ocr_cronjob_help']);
 $page_def[] = config_add_section_header($lang['im_processing_header'], $lang['im_processing_help']);
