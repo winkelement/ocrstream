@@ -15,7 +15,7 @@ if (!isset($_SESSION["ocr_start"])) {
 else {
     require_once "../include/db.php";
     require_once "../include/general.php";
-    require_once "../include/authenticate.php";
+//    require_once "../include/authenticate.php";
     require_once "../include/resource_functions.php";
     require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 }
@@ -62,6 +62,7 @@ $_SESSION['ocr_stage_' . $ref] = 4;
 $elapsed_4 = round((microtime(true) - $start_4), 3);
 $_SESSION["ocr_stage_4_time"] = $elapsed_4;
 $ocr_total_time = ($_SESSION["ocr_stage_1_time"]) + ($_SESSION["ocr_stage_2_time"]) + ($_SESSION["ocr_stage_3_time"]) + ($_SESSION["ocr_stage_4_time"]);
+$_SESSION["ocr_total_time"] = $ocr_total_time;
 
 $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 completed: ' .$ref . ' Time: ' . $elapsed_4 . ' Total Time: ' . $ocr_total_time);
 echo $debug; //debug

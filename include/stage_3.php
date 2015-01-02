@@ -18,11 +18,17 @@ if (!isset($_SESSION["ocr_start"])) {
 else {
     require_once "../include/db.php";
     require_once "../include/general.php";
-    require_once "../include/authenticate.php";
+    // require_once "../include/authenticate.php";
     require_once "../include/resource_functions.php";
     require_once "../plugins/ocrstream/include/ocrstream_functions.php";
-    $ocr_lang = $_SESSION['ocr_lang'];
-    $ocr_psm = $_SESSION['ocr_psm'];
+    if (isset($_SESSION['ocr_lang'])) {
+        $ocr_lang = $_SESSION['ocr_lang'];
+    }
+    if (isset($_SESSION['ocr_psm'])) {
+        $ocr_psm = $_SESSION['ocr_psm'];
+    } else {
+        $ocr_psm = $ocr_psm_global;
+    }
     $param_1 = 'none';
 }
 

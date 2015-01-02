@@ -20,10 +20,10 @@ if (!isset($_SESSION["ocr_start"])) {
 else {
     require_once "../include/db.php";
     require_once "../include/general.php";
-    require_once "../include/authenticate.php";
+//    require_once "../include/authenticate.php";
     require_once "../include/resource_functions.php";
     require_once "../plugins/ocrstream/include/ocrstream_functions.php";
-    $param_1 = 'pre_1';
+    $param_1 = 'none';
     $im_preset_1_crop_w = 0;
     $im_preset_1_crop_h = 0;
     $im_preset_1_crop_x = 0;

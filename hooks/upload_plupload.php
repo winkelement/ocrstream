@@ -18,10 +18,10 @@ function HookOcrstreamUpload_pluploadAfterpluploadfile() {
     global $ocr_ftype_1;
     session_start();
     if (isset($_SESSION["ocr_start"])) {
-        require_once "../plugins/ocrstream/include/stage_1.php";
-        require_once "../plugins/ocrstream/include/stage_2.php";
-        require_once "../plugins/ocrstream/include/stage_3.php";
-        require_once "../plugins/ocrstream/include/stage_4.php";
+        require "../plugins/ocrstream/include/stage_1.php";
+        require "../plugins/ocrstream/include/stage_2.php";
+        require "../plugins/ocrstream/include/stage_3.php";
+        require "../plugins/ocrstream/include/stage_4.php";
     }
     if (isset($_SESSION["ocr_cron"])) {
         $ocr_state = 1;

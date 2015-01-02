@@ -15,13 +15,18 @@ if (!isset($_SESSION["ocr_start"])) {
 else {
     require_once "../include/db.php";
     require_once "../include/general.php";
-    require_once "../include/authenticate.php";
+//    require_once "../include/authenticate.php";
     require_once "../include/resource_functions.php";
     require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 }
 
 if (is_session_started() === FALSE) {
     session_start();
+}
+
+// Checking if Resource ID is valid INTEGER and exists in database
+if ($ref == null || $ref < 0 || $ref > sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')) {
+    exit(json_encode('ocr_error_1'));
 }
 
 global $imagemagick_path;
@@ -44,14 +49,8 @@ $_SESSION["ocr_stage_" . $ref] = 0;
 $ext = sql_value("select file_extension value from resource where ref = '$ref'", '');
 $_SESSION['ocr_file_extension_' . $ref] = $ext;
  
-
 $resource_path = get_resource_path($ref, true, "", false, $ext); // get complete path to original file with extension
 $_SESSION['ocr_resource_path_' . $ref] = $resource_path;
-
-// Checking if Resource ID is valid INTEGER and exists in database
-if ($ref == null || $ref < 0 || $ref > sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')) {
-    exit(json_encode('ocr_error_1'));
-}
 
 // Check if file extension is allowed for ocr processing
 if (!in_array($ext, $ocr_allowed_extensions)){

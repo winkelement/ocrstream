@@ -73,6 +73,8 @@ include '../../../include/footer.php';
 <script>
     jQuery("#ocr_min_density, \n\
             #ocr_max_density, \n\
+            #ocr_min_geometry, \n\
+            #ocr_max_geometry, \n\
             #im_preset_1_density,\n\
             #im_preset_1_geometry,\n\
             #im_preset_1_quality,\n\

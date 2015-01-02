@@ -1,11 +1,11 @@
 <?php
 require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 
-function HookOcrstreamEditEditbeforeheader() {
-    // Clear Session in case ocr processing failed before and old values are present
-    session_unset();
+function HookOcrstreamEditEditbeforeheader() {    
     // Start Session for Single Resource Edit and Upload
     session_start();
+    // Clear Session in case ocr processing failed before and old values are present
+    session_unset();
 }
 
 function HookOcrstreamEditAfterfileoptions() {
@@ -17,12 +17,14 @@ function HookOcrstreamEditAfterfileoptions() {
     global $im_preset_1_geometry;
     global $ocr_psm_array;
     global $ocr_psm_global;
+    global $ocr_cronjob_enabled;
     if (is_tesseract_installed()) {
         // Hide OCR options for filetypes not allowed
         $ext = sql_value("select file_extension value from resource where ref = '$ref'", '');
         if (in_array($ext, $ocr_allowed_extensions)) {
             // Check ocr_state
             $ocr_state =  sql_value("SELECT ocr_state value FROM resource WHERE ref = '$ref'", '');
+            // echo $ocr_state; //debug
             // Get aspect ratio of image for calculating crop size
             $w_thumb = sql_value("select thumb_width value from resource where ref = '$ref'", '');
             $h_thumb = sql_value("select thumb_height value from resource where ref = '$ref'", '');
@@ -85,6 +87,27 @@ function HookOcrstreamEditAfterfileoptions() {
                         ocr_crop();
                     }
                     return param_1;
+                };
+                function setOCRCron() 
+                {
+                    ocr_cron = jQuery('#ocr_cron_start').attr('checked');
+                    if (ocr_cron === 'checked') {
+                        ocr_state = '1';
+                        jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/ocr_state_set.php', {ref: '<?php echo $ref ?>', ocr_state: (ocr_state)}, function (data)
+                        {
+                            var1 = data;
+                            console.log(var1); // debug
+                        });     
+                    } else {
+                        ocr_state = '0';
+                        jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/ocr_state_set.php', {ref: '<?php echo $ref ?>', ocr_state: (ocr_state)}, function (data)
+                        {
+                            var2 = data;
+                            console.log(var2); // debug
+                        });
+                    }                  
+                    console.log(ocr_cron);// debug
+                    return ocr_cron;
                 }
                 ;
                 function showLoadingImage() {
@@ -96,6 +119,7 @@ function HookOcrstreamEditAfterfileoptions() {
                 }
                 ;
                 // Initilaize Parameters
+                ocr_state = <?php echo $ocr_state ?>;
                 ocr_lang = jQuery('#ocr_lang :selected').text();
                 ocr_psm = jQuery('#ocr_psm :selected').val();
                 param_1 = jQuery('#im_preset :selected').val();
@@ -113,6 +137,11 @@ function HookOcrstreamEditAfterfileoptions() {
                 }
                 // Send parameters to stage 1 - 4 for OCR processing
                 jQuery( document ).ready(function() {
+                    
+                    if (ocr_state == 1) {
+                        jQuery('#ocr_cron_start').prop('checked', true);
+                    }
+                    
                     jQuery('[name="ocr_start"]').click(function ()
                     {
                         console.log(status_1); // debug
@@ -236,6 +265,12 @@ function HookOcrstreamEditAfterfileoptions() {
                                 ?>
                             </select></td>            
                     </tr>
+                    <?php if ($ocr_cronjob_enabled == true){?>
+                    <tr id = "ocr_cron" style="height:37px">
+                        <td><label for="ocr_upload_cronjob"><?php echo $lang["ocr_upload_cronjob"] ?></label></td>
+                        <td><input type="checkbox" name="ocr_cron_start" id= "ocr_cron_start" onchange="setOCRCron();"></td>
+                    </tr>
+                    <?php } ?>
                 </table>
             </div>
             <?php
