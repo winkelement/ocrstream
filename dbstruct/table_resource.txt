@@ -1,1 +1,1 @@
-ocr_state,int(11),YES,,,
+ocr_state,int(11),YES,,0,
