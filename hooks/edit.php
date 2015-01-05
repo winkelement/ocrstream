@@ -1,7 +1,7 @@
 <?php
 require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 
-function HookOcrstreamEditEditbeforeheader() {    
+function HookOcrstreamEditEditbeforeheader() {
     // Start Session for Single Resource Edit and Upload
     session_start();
     // Clear Session in case ocr processing failed before and old values are present
@@ -88,24 +88,24 @@ function HookOcrstreamEditAfterfileoptions() {
                     }
                     return param_1;
                 };
-                function setOCRCron() 
+                function setOCRCron(resourceId)
                 {
                     ocr_cron = jQuery('#ocr_cron_start').attr('checked');
                     if (ocr_cron === 'checked') {
                         ocr_state = '1';
-                        jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/ocr_state_set.php', {ref: '<?php echo $ref ?>', ocr_state: (ocr_state)}, function (data)
+                        jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/pages/rest.php', {ref: resourceId, ocr_state: ocr_state}, function (data)
                         {
                             var1 = data;
                             console.log(var1); // debug
-                        });     
+                        });
                     } else {
                         ocr_state = '0';
-                        jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/ocr_state_set.php', {ref: '<?php echo $ref ?>', ocr_state: (ocr_state)}, function (data)
+                        jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/pages/rest.php', {ref: resourceId, ocr_state: ocr_state}, function (data)
                         {
                             var2 = data;
                             console.log(var2); // debug
                         });
-                    }                  
+                    }
                     console.log(ocr_cron);// debug
                     return ocr_cron;
                 }
@@ -118,83 +118,63 @@ function HookOcrstreamEditAfterfileoptions() {
                     jQuery('#loading-image').fadeOut(800);
                 }
                 ;
-                // Initilaize Parameters
-                ocr_state = <?php echo $ocr_state ?>;
-                ocr_lang = jQuery('#ocr_lang :selected').text();
-                ocr_psm = jQuery('#ocr_psm :selected').val();
-                param_1 = jQuery('#im_preset :selected').val();
-                x = '0';
-                y = '0';
-                w = '0';
-                h = '0';
-                status_1 = 'OCR Stage 1/4 .';
-                status_2 = 'OCR Stage 2/4 ..';
-                status_3 = 'OCR Stage 3/4 ...';
-                status_4 = 'OCR Stage 4/4 ....';
-                // Only show jCrop when image is going to be processed
-                if (param_1 === 'pre_1') {
-                    ocr_crop();
-                }
+
                 // Send parameters to stage 1 - 4 for OCR processing
                 jQuery( document ).ready(function() {
-                    
+
+                         // Initilaize Parameters
+                    ocr_state = <?php echo $ocr_state ?>;
+                    resourceId = <?php echo $ref ?>;
+                    baseUrl = '<?php echo $baseurl ?>';
+                    ocr_lang = jQuery('#ocr_lang :selected').text();
+                    ocr_psm = jQuery('#ocr_psm :selected').val();
+                    param_1 = jQuery('#im_preset :selected').val();
+                    x = '0';
+                    y = '0';
+                    w = '0';
+                    h = '0';
+                    status_1 = 'OCR Stage 1/4 .';
+                    status_2 = 'OCR Stage 2/4 ..';
+                    status_3 = 'OCR Stage 3/4 ...';
+                    status_4 = 'OCR Stage 4/4 ....';
+                    // Only show jCrop when image is going to be processed
+                    if (param_1 === 'pre_1') {
+                        ocr_crop();
+                    }
                     if (ocr_state == 1) {
                         jQuery('#ocr_cron_start').prop('checked', true);
                     }
-                    
+
                     jQuery('[name="ocr_start"]').click(function ()
                     {
                         console.log(status_1); // debug
                         jQuery('#ocr_status_text').html(status_1);
-                        jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_1.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang)}, function (data)
+                        jQuery.get(baseUrl + '/plugins/ocrstream/include/stage_1.php', {ref: resourceId, ocr_lang: (ocr_lang)}, function (data)
                         {
-                            var1 = data;
-                            console.log(JSON.parse(var1)); // debug
-                            if (JSON.parse(var1) === 'ocr_error_1') {
+                            stageOneOutput = JSON.parse(data);
+                            console.log((stageOneOutput)); // debug
+                            if (stageOneOutput.hasOwnProperty("error")) {
                                 hideLoadingImage();
                                 jQuery('#ocr_status_text').fadeOut(800);
-                                alert('<?php echo $lang["ocr_error_1"] ?>');
+                                alert(stageOneOutput["error"]);
                                 return;
                             }
-                            if (JSON.parse(var1) === 'ocr_error_2') {
-                                hideLoadingImage();
-                                jQuery('#ocr_status_text').fadeOut(800);
-                                alert('<?php echo $lang["ocr_error_2"] ?>');
-                                return;
-                            }
-                            if (JSON.parse(var1) === 'ocr_error_3') {
-                                hideLoadingImage();
-                                jQuery('#ocr_status_text').fadeOut(800);
-                                alert('<?php echo $lang["ocr_error_3"] ?>');
-                                return;
-                            }
-                            if (JSON.parse(var1) === 'ocr_error_4') {
-                                hideLoadingImage();
-                                jQuery('#ocr_status_text').fadeOut(800);
-                                alert('<?php echo $lang["ocr_error_4"] ?>');
-                                return;
-                            }
-                            if (JSON.parse(var1) === 'ocr_error_5') {
-                                hideLoadingImage();
-                                jQuery('#ocr_status_text').fadeOut(800);
-                                alert('<?php echo $lang["ocr_error_5"] ?>');
-                                return;
-                            }
+
                             console.log(status_2); // debug
                             jQuery('#ocr_status_text').html(status_2);
-                            jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_2.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
+                            jQuery.get(baseUrl + '/plugins/ocrstream/include/stage_2.php', {ref: resourceId, ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
                             {
                                 var2 = data;
                                 console.log(JSON.parse(var2)); // debug
                                 console.log(status_3); // debug
                                 jQuery('#ocr_status_text').html(status_3);
-                                jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_3.php', {ref: '<?php echo $ref ?>', ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
+                                jQuery.get(baseUrl + '/plugins/ocrstream/include/stage_3.php', {ref: resourceId, ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
                                 {
                                     var3 = data;
                                     console.log(JSON.parse(var3)); // debug
                                     console.log(status_4); // debug
                                     jQuery('#ocr_status_text').html(status_4);
-                                    jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/include/stage_4.php', {ref: '<?php echo $ref ?>'}, function (data)
+                                    jQuery.get(baseUrl + '/plugins/ocrstream/include/stage_4.php', {ref: resourceId}, function (data)
                                     {
                                         var4 = data;
                                         console.log(JSON.parse(var4)); // debug
@@ -215,12 +195,12 @@ function HookOcrstreamEditAfterfileoptions() {
                     });
                     });
             </script>
-            <div class="Question" id="question_ocr" style="font-weight: normal">
+            <div id="question_ocr" style="font-weight: normal">
                 <table>
                     <tr id = "ocr_start" style="height:37px">
                         <td><label for="ocr_single_resource"><?php echo $lang["ocr_single_resource"] ?></label></td>
                         <td><input type="button" name="ocr_start" style="width:90px" value="<?php echo $lang["ocr_start"] ?>"></td>
-                        <td id = "ocr_status_anim"></td>
+                        <td id="ocr_status_anim"></td>
                         <td><div id = "ocr_status_text" style="width:400px"></div><span></span></td>
                     </tr>
                     <tr>
@@ -233,7 +213,7 @@ function HookOcrstreamEditAfterfileoptions() {
                                     echo '    <option value="' . $value . '"' . (($ocr_global_language == $value) ? ' selected' : '') . ">$choice</option>";
                                 }
                                 ?>
-                            </select></td>            
+                            </select></td>
                     </tr>
                     <tr>
                         <td><label for="ocr_psm_select"><?php echo $lang["ocr_psm"] ?></label></td>
@@ -245,7 +225,7 @@ function HookOcrstreamEditAfterfileoptions() {
                                     echo '    <option value="' . $value . '"' . (($ocr_psm_global == $value) ? ' selected' : '') . ">$choice</option>";
                                 }
                                 ?>
-                            </select></td>            
+                            </select></td>
                     </tr>
                     <tr>
                         <td><label for="im_preset_select"><?php echo $lang["im_preset_select"] ?></label></td>
@@ -258,17 +238,17 @@ function HookOcrstreamEditAfterfileoptions() {
                                     <?php
                                 } else {
                                     ?>
-                                    <option value="none" selected>none</option>  
+                                    <option value="none" selected>none</option>
                                     <option value="pre_1">Preset 1</option>
                                     <?php
                                 }
                                 ?>
-                            </select></td>            
+                            </select></td>
                     </tr>
                     <?php if ($ocr_cronjob_enabled == true){?>
                     <tr id = "ocr_cron" style="height:37px">
                         <td><label for="ocr_upload_cronjob"><?php echo $lang["ocr_upload_cronjob"] ?></label></td>
-                        <td><input type="checkbox" name="ocr_cron_start" id= "ocr_cron_start" onchange="setOCRCron();"></td>
+                        <td><input type="checkbox" name="ocr_cron_start" id= "ocr_cron_start" onchange="setOCRCron(<?php echo $ref; ?>);"></td>
                     </tr>
                     <?php } ?>
                 </table>
@@ -291,19 +271,19 @@ function HookOcrstreamEditReplaceuploadoptions() {
     if (($ref < 0) && (is_tesseract_installed())){
         ?>
         <script>
-            function setLanguage_1(selectedLanguage) 
+            function setLanguage_1(selectedLanguage)
                 {
                     ocr_lang = selectedLanguage;
                     return ocr_lang;
                 }
                 ;
-            function setPsm_1(selectedPSM) 
+            function setPsm_1(selectedPSM)
                 {
                     ocr_psm = selectedPSM;
                     return ocr_psm;
                 }
                 ;
-            function setOCRStart() 
+            function setOCRStart()
                 {
                     ocr_start = jQuery('#ocr_upload_start').attr('checked');
                     if (ocr_start === 'checked') {
@@ -315,7 +295,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
                     return ocr_start;
                 }
                 ;
-                function setOCRCron() 
+                function setOCRCron()
                 {
                     ocr_cron = jQuery('#ocr_cron_start').attr('checked');
                     if (ocr_cron === 'checked') {
@@ -353,7 +333,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
                                     echo '    <option value="' . $value . '"' . (($ocr_global_language == $value) ? ' selected' : '') . ">$choice</option>";
                                 }
                                 ?>
-                            </select></td>            
+                            </select></td>
                     </tr>
                     <tr id = "ocr_psm_select">
                         <td><label for="ocr_psm_select"><?php echo $lang["ocr_psm"] ?></label></td>
@@ -365,7 +345,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
                                     echo '    <option value="' . $value . '"' . (($ocr_psm_global == $value) ? ' selected' : '') . ">$choice</option>";
                                 }
                                 ?>
-                            </select></td>            
+                            </select></td>
                     </tr>
                     <?php if ($ocr_cronjob_enabled == true){?>
                     <tr id = "ocr_cron" style="height:37px">
@@ -376,9 +356,9 @@ function HookOcrstreamEditReplaceuploadoptions() {
                 </table>
             </div>
         </div>
-    </div>                        
+    </div>
     <?php
-    
+
     }
 }
 function HookOcrstreamEditEditbeforesave() {
