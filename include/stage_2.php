@@ -10,6 +10,9 @@ if (!isset($_SESSION["ocr_start"])) {
     require_once "../../../include/authenticate.php";
     require_once "../../../include/resource_functions.php";
     require_once "../include/ocrstream_functions.php";
+    spl_autoload_register(function ($class) {
+    include '../lib/Process/' . $class . '.php';
+    });
     $param_1 = filter_input(INPUT_GET, 'param_1');
     $im_preset_1_crop_w = filter_input(INPUT_GET, 'w');
     $im_preset_1_crop_h = filter_input(INPUT_GET, 'h');
@@ -65,12 +68,17 @@ $_SESSION['ocr_temp_dir'] = $ocr_temp_dir;
 
 // Image processing with Preset 1 settings
 if ($param_1 === 'pre_1' || $_SESSION["ocr_force_processing_" . $ref] === 1) {
+    set_time_limit(1800);
     $convert_fullpath = get_utility_path("im-convert");
     $resource_path = $_SESSION['ocr_resource_path_' . $ref];
     $im_ocr_cmd = $convert_fullpath . " " . implode(' ', $im_preset_1) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/im_tempfile_' . $ref . '.jpg');
-//    $process_im = new Process($im_ocr_cmd);
-//    $process_im->run();
-    run_command($im_ocr_cmd);
+    $process = new Process($im_ocr_cmd);
+    $process->setTimeout(3600);
+    $process->run();
+    if (!$process->isSuccessful()) {
+        throw new \RuntimeException($process->getErrorOutput());
+    }
+//    run_command($im_ocr_cmd);
     // Checking if temp image(s) were created
     if (!file_exists($ocr_temp_dir . '/im_tempfile_' . $ref . '.jpg') && !file_exists($ocr_temp_dir . '/im_tempfile_' . $ref . '-0.jpg')) {
         exit(json_encode('ocr image processing error (stage 2)'));

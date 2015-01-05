@@ -32,6 +32,8 @@ $ocr_temp_dir = $_SESSION['ocr_temp_dir'];
 $ocr_output_file = $ocr_temp_dir . '/ocr_output_file_' . $ref . '.txt';
 $tess_content = trim(file_get_contents($ocr_output_file));
 
+set_time_limit(1800);
+
 if ($use_ocr_db_filter == true) {
 // Filter extracted content
     $filter1 = preg_replace($ocr_db_filter_1, '$1', $tess_content);
