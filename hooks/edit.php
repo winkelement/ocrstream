@@ -34,6 +34,7 @@ function HookOcrstreamEditAfterfileoptions() {
             $choices = get_tesseract_languages();
             ?>
             <script src="../plugins/ocrstream/lib/jcrop/js/jquery.Jcrop.min.js"></script>
+            <script src="../plugins/ocrstream/lib/utilities.js"></script>
             <link rel="stylesheet" href="../plugins/ocrstream/lib/jcrop/css/jquery.Jcrop.css" type="text/css" />
             <script>
                 function ocr_crop() {
