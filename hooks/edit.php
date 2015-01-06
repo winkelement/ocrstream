@@ -20,11 +20,8 @@ function HookOcrstreamEditAfterfileoptions() {
     global $ocr_cronjob_enabled;
     if (is_tesseract_installed()) {
         // Hide OCR options for filetypes not allowed
-        $ext = sql_value("select file_extension value from resource where ref = '$ref'", '');
+        $ext = get_file_extension($ref);
         if (in_array($ext, $ocr_allowed_extensions)) {
-            // Check ocr_state
-            $ocr_state =  sql_value("SELECT ocr_state value FROM resource WHERE ref = '$ref'", '');
-            // echo $ocr_state; //debug
             // Get aspect ratio of image for calculating crop size
             $w_thumb = sql_value("select thumb_width value from resource where ref = '$ref'", '');
             $h_thumb = sql_value("select thumb_height value from resource where ref = '$ref'", '');
@@ -123,10 +120,17 @@ function HookOcrstreamEditAfterfileoptions() {
                 // Send parameters to stage 1 - 4 for OCR processing
                 jQuery( document ).ready(function() {
 
-                         // Initilaize Parameters
-                    ocr_state = <?php echo $ocr_state ?>;
+                    // Initilaize Parameters
                     resourceId = <?php echo $ref ?>;
                     baseUrl = '<?php echo $baseurl ?>';
+                    jQuery.get(baseUrl + '/plugins/ocrstream/pages/rest.php', {ref: resourceId, ocr_state_query: 1}, function(data) {
+                        ocr_state = data;
+                        if (ocr_state == 1) {
+                        jQuery('#ocr_cron_start').prop('checked', true);
+                        }
+                        console.log(ocr_state); // debug
+                        return ocr_state;
+                    });                    
                     ocr_lang = jQuery('#ocr_lang :selected').text();
                     ocr_psm = jQuery('#ocr_psm :selected').val();
                     param_1 = jQuery('#im_preset :selected').val();
@@ -134,23 +138,17 @@ function HookOcrstreamEditAfterfileoptions() {
                     y = '0';
                     w = '0';
                     h = '0';
-                    status_1 = 'OCR Stage 1/4 .';
-                    status_2 = 'OCR Stage 2/4 ..';
-                    status_3 = 'OCR Stage 3/4 ...';
-                    status_4 = 'OCR Stage 4/4 ....';
+                    status = 'OCR Stage ';
                     // Only show jCrop when image is going to be processed
                     if (param_1 === 'pre_1') {
                         ocr_crop();
-                    }
-                    if (ocr_state == 1) {
-                        jQuery('#ocr_cron_start').prop('checked', true);
-                    }
+                    }                  
 
                     jQuery('[name="ocr_start"]').click(function ()
                     {
-                        console.log(status_1); // debug
-                        jQuery('#ocr_status_text').html(status_1);
-                        jQuery.get(baseUrl + '/plugins/ocrstream/include/stage_1.php', {ref: resourceId, ocr_lang: (ocr_lang)}, function (data)
+                        console.log(status + '1/4 .'); // debug
+                        jQuery('#ocr_status_text').html(status + '1/4 .');
+                        jQuery.get(baseUrl + '/plugins/ocrstream/include/stage_1.php', {ref: resourceId, ocr_lang: ocr_lang}, function (data)
                         {
                             stageOneOutput = JSON.parse(data);
                             console.log((stageOneOutput)); // debug
@@ -161,20 +159,20 @@ function HookOcrstreamEditAfterfileoptions() {
                                 return;
                             }
 
-                            console.log(status_2); // debug
-                            jQuery('#ocr_status_text').html(status_2);
-                            jQuery.get(baseUrl + '/plugins/ocrstream/include/stage_2.php', {ref: resourceId, ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
+                            console.log(status + '2/4 ..'); // debug
+                            jQuery('#ocr_status_text').html(status + '2/4 ..');
+                            jQuery.get(baseUrl + '/plugins/ocrstream/include/stage_2.php', {ref: resourceId, ocr_lang: ocr_lang, ocr_psm: ocr_psm, param_1: param_1, w: w, h: h, x: x, y: y}, function (data)
                             {
                                 var2 = data;
                                 console.log(JSON.parse(var2)); // debug
-                                console.log(status_3); // debug
-                                jQuery('#ocr_status_text').html(status_3);
-                                jQuery.get(baseUrl + '/plugins/ocrstream/include/stage_3.php', {ref: resourceId, ocr_lang: (ocr_lang), ocr_psm: (ocr_psm), param_1: (param_1), w: (w), h: (h), x: (x), y: (y)}, function (data)
+                                console.log(status + '3/4 ...'); // debug
+                                jQuery('#ocr_status_text').html(status + '3/4 ...');
+                                jQuery.get(baseUrl + '/plugins/ocrstream/include/stage_3.php', {ref: resourceId, ocr_lang: ocr_lang, ocr_psm: ocr_psm, param_1: param_1}, function (data)
                                 {
                                     var3 = data;
                                     console.log(JSON.parse(var3)); // debug
-                                    console.log(status_4); // debug
-                                    jQuery('#ocr_status_text').html(status_4);
+                                    console.log(status + '4/4 ....'); // debug
+                                    jQuery('#ocr_status_text').html(status + '4/4 ....');
                                     jQuery.get(baseUrl + '/plugins/ocrstream/include/stage_4.php', {ref: resourceId}, function (data)
                                     {
                                         var4 = data;
@@ -288,10 +286,10 @@ function HookOcrstreamEditReplaceuploadoptions() {
                 {
                     ocr_start = jQuery('#ocr_upload_start').attr('checked');
                     if (ocr_start === 'checked') {
-                        jQuery('#ocr_cron').hide();
+                        jQuery('#ocr_cron').fadeOut(200);
                     }
                     else {
-                        jQuery('#ocr_cron').show();
+                        jQuery('#ocr_cron').fadeIn(200);
                     }
                     return ocr_start;
                 }
@@ -300,14 +298,14 @@ function HookOcrstreamEditReplaceuploadoptions() {
                 {
                     ocr_cron = jQuery('#ocr_cron_start').attr('checked');
                     if (ocr_cron === 'checked') {
-                        jQuery('#ocr_start').hide();
-                        jQuery('#ocr_language_select').hide();
-                        jQuery('#ocr_psm_select').hide();
+                        jQuery('#ocr_start').fadeOut(200);
+                        jQuery('#ocr_language_select').fadeOut(200);
+                        jQuery('#ocr_psm_select').fadeOut(200);
                     }
                     else {
-                        jQuery('#ocr_start').show();
-                        jQuery('#ocr_language_select').show();
-                        jQuery('#ocr_psm_select').show();
+                        jQuery('#ocr_start').fadeIn(200);
+                        jQuery('#ocr_language_select').fadeIn(200);
+                        jQuery('#ocr_psm_select').fadeIn(200);
                     }
                     return ocr_cron;
                 }

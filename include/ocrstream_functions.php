@@ -141,3 +141,8 @@ function is_session_started()
     }
     return FALSE;
 }
+
+function get_file_extension ($ref) {
+    $ext = sql_value("select file_extension value from resource where ref = '$ref'", '');
+    return $ext;
+}
