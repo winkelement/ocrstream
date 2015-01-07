@@ -14,7 +14,6 @@ function HookOcrstreamEditAfterfileoptions() {
     global $baseurl;
     global $ocr_global_language;
     global $ocr_allowed_extensions;
-    global $im_preset_1_geometry;
     global $ocr_psm_array;
     global $ocr_psm_global;
     global $ocr_cronjob_enabled;
@@ -22,12 +21,6 @@ function HookOcrstreamEditAfterfileoptions() {
         // Hide OCR options for filetypes not allowed
         $ext = get_file_extension($ref);
         if (in_array($ext, $ocr_allowed_extensions)) {
-            // Get aspect ratio of image for calculating crop size
-            $w_thumb = sql_value("select thumb_width value from resource where ref = '$ref'", '');
-            $h_thumb = sql_value("select thumb_height value from resource where ref = '$ref'", '');
-            $ar = ($w_thumb / $h_thumb);
-            $w = $im_preset_1_geometry;
-            $h = ($w / $ar);
             $choices = get_tesseract_languages();
             ?>
             <script src="../plugins/ocrstream/lib/jcrop/js/jquery.Jcrop.min.js"></script>
@@ -36,9 +29,13 @@ function HookOcrstreamEditAfterfileoptions() {
             <script>
                 function ocr_crop() {
                     jQuery(function ($) {
+                        jQuery.get(baseUrl + '/plugins/ocrstream/pages/rest.php', {ref: resourceId, get_true_size: 1}, function(data) {
+                        w_true = JSON.parse(data)[0];
+                        h_true = JSON.parse(data)[1];
+                        console.log(w_true, h_true); //debug
                         var jcrop_api;
                         $('.ImageBorder').Jcrop({
-                            trueSize: ['<?php echo $w ?>', '<?php echo $h ?>'],
+                            trueSize: [w_true, h_true],
                             onChange: setCoords,
                             onSelect: setCoords,
                             onRelease: clearCoords
@@ -47,10 +44,11 @@ function HookOcrstreamEditAfterfileoptions() {
                         });
                         $('#coords').on('change', 'input', function (e) {
                             var x1 = $('#x1').val(),
-                                    y1 = $('#y1').val();
+                                y1 = $('#y1').val();
                             jcrop_api.setSelect([x1, y1]);
+                            });
                         });
-                    });
+                    });    
                 }
                 function setCoords(c)
                 {
@@ -91,14 +89,14 @@ function HookOcrstreamEditAfterfileoptions() {
                     ocr_cron = jQuery('#ocr_cron_start').attr('checked');
                     if (ocr_cron === 'checked') {
                         ocr_state = '1';
-                        jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/pages/rest.php', {ref: resourceId, ocr_state: ocr_state}, function (data)
+                        jQuery.get(baseUrl + '/plugins/ocrstream/pages/rest.php', {ref: resourceId, ocr_state: ocr_state}, function (data)
                         {
                             var1 = data;
                             console.log(var1); // debug
                         });
                     } else {
                         ocr_state = '0';
-                        jQuery.get('<?php echo $baseurl ?>/plugins/ocrstream/pages/rest.php', {ref: resourceId, ocr_state: ocr_state}, function (data)
+                        jQuery.get(baseUrl + '/plugins/ocrstream/pages/rest.php', {ref: resourceId, ocr_state: ocr_state}, function (data)
                         {
                             var2 = data;
                             console.log(var2); // debug
