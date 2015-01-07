@@ -19,7 +19,7 @@ if (isset($ref) && isset($ocr_state)) {
 if (isset($ref) && isset($ocr_state_query)) {
     $ocr_db_state =  sql_value("SELECT ocr_state value FROM resource WHERE ref = '$ref'", '');
     $ocr_db_state === '' ? $ocr_state = 0 : $ocr_state = $ocr_db_state;
-    echo ($ocr_state);
+    echo json_encode(intval($ocr_state));
 }
 
 // Return true size image dimensions for jCrop

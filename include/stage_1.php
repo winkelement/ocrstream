@@ -24,17 +24,17 @@ if (is_session_started() === FALSE) {
     session_start();
 }
 
-// Checking if Resource ID is valid INTEGER and exists in database
-if ($ref == null || $ref < 0 || $ref > sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')) {
-    exit(json_encode(array("error" => $lang['ocr_error_1'])));
-}
-
 global $imagemagick_path;
 global $ocr_min_density;
 global $ocr_max_density;
 global $ocr_min_geometry;
 global $ocr_max_geometry;
 global $lang;
+
+// Checking if Resource ID is valid INTEGER and exists in database
+if ($ref == null || $ref < 1 || $ref > sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')) {
+    exit(json_encode(array("error" => $lang['ocr_error_1'])));
+}
 
 if (isset($_SESSION['ocr_lang'])) {
     $ocr_lang = $_SESSION['ocr_lang'];
@@ -47,7 +47,7 @@ $_SESSION["ocr_force_language_" . $ref] = 0;
 $_SESSION["ocr_stage_" . $ref] = 0;
 
 // Get original file extension
-$ext = sql_value("select file_extension value from resource where ref = '$ref'", '');
+$ext = get_file_extension($ref);
 $_SESSION['ocr_file_extension_' . $ref] = $ext;
 
 $resource_path = get_resource_path($ref, true, "", false, $ext); // get complete path to original file with extension

@@ -43,7 +43,7 @@ if ($_SESSION["ocr_stage_" . $ref] !== 1) {
     exit(json_encode('Error: stage 1 not completed.'));
 }
 
-// Get original file extension
+// Get original file extension from stage 1
 $ext = $_SESSION['ocr_file_extension_' . $ref];
 
 // Build IM-Preset Array
@@ -62,7 +62,6 @@ $im_preset_1 = array(
 );
 
 // Create intermediate image(s) for OCR
-// 
 $ocr_temp_dir = get_temp_dir();
 $_SESSION['ocr_temp_dir'] = $ocr_temp_dir;
 
@@ -78,7 +77,7 @@ if ($param_1 === 'pre_1' || $_SESSION["ocr_force_processing_" . $ref] === 1) {
     if (!$process->isSuccessful()) {
         throw new \RuntimeException($process->getErrorOutput());
     }
-//    run_command($im_ocr_cmd);
+    // run_command($im_ocr_cmd);
     // Checking if temp image(s) were created
     if (!file_exists($ocr_temp_dir . '/im_tempfile_' . $ref . '.jpg') && !file_exists($ocr_temp_dir . '/im_tempfile_' . $ref . '-0.jpg')) {
         exit(json_encode('ocr image processing error (stage 2)'));

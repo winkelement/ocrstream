@@ -130,6 +130,11 @@ function tesseract_version_is_old() {
     return $tesseract_version_is_old;
 }
 
+/**
+ * Check if PHP Session is started
+ * 
+ * @return boolean
+ */
 function is_session_started()
 {
     if ( php_sapi_name() !== 'cli' ) {
@@ -142,6 +147,12 @@ function is_session_started()
     return FALSE;
 }
 
+/**
+ * Get the file extension from the original resource file
+ * 
+ * @param mixed $ref
+ * @return string file extension
+ */
 function get_file_extension ($ref) {
     $ext = sql_value("select file_extension value from resource where ref = '$ref'", '');
     return $ext;
