@@ -26,6 +26,9 @@ else {
 //    require_once "../include/authenticate.php";
     require_once "../include/resource_functions.php";
     require_once "../plugins/ocrstream/include/ocrstream_functions.php";
+    spl_autoload_register(function ($class) {
+    include '../plugins/ocrstream/lib/Process/' . $class . '.php';
+    });
     $param_1 = 'none';
     $im_preset_1_crop_w = 0;
     $im_preset_1_crop_h = 0;
@@ -71,9 +74,12 @@ if ($param_1 === 'pre_1' || $_SESSION["ocr_force_processing_" . $ref] === 1) {
     $convert_fullpath = get_utility_path("im-convert");
     $resource_path = $_SESSION['ocr_resource_path_' . $ref];
     $im_ocr_cmd = $convert_fullpath . " " . implode(' ', $im_preset_1) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/im_tempfile_' . $ref . '.jpg');
+    debug("CLI command: $im_ocr_cmd");
     $process = new Process($im_ocr_cmd);
     $process->setTimeout(3600);
     $process->run();
+    debug ("CLI output: " . $process->getOutput());
+    debug ("CLI errors: " . trim($process->getErrorOutput()));
     if (!$process->isSuccessful()) {
         throw new \RuntimeException($process->getErrorOutput());
     }
