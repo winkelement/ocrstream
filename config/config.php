@@ -6,7 +6,7 @@
  * which is invoked by choosing Team Centre > Manage Plugins and then clicking on Options for the
  * ocrstream plugin once it has been activated.
  */
-$ocr_global_language = '';
+$ocr_global_language = 'eng';
 $tesseract_path = '/usr/bin';
 $ocr_cronjob_enabled = false;
 $ocr_allowed_extensions = array('tif', 'tiff', 'jpg', 'jpeg', 'png', 'gif', 'bmp', 'pdf');
