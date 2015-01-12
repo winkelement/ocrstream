@@ -43,7 +43,8 @@ if (is_session_started() === FALSE) {
 }
 
 if ($_SESSION["ocr_stage_" . $ref] !== 2) {
-    exit(json_encode('Error: stage 2 not completed.'));
+    session_unset();
+    exit(json_encode(array("error" => $lang['ocr_error_stage_2'])));
 }
 
 // Get number of pages
@@ -75,9 +76,6 @@ if ($pg_num > 1 && tesseract_version_is_old() === false) {
     $process->run();
     debug ("CLI output: " . $process->getOutput());
     debug ("CLI errors: " . trim($process->getErrorOutput()));
-    if (!$process->isSuccessful()) {
-        throw new \RuntimeException($process->getErrorOutput());
-    }
 //    run_command($tess_cmd);
 }
 // OCR multi pages, processed, tesseract < v3.0.3
@@ -94,9 +92,6 @@ if ($pg_num > 1 && tesseract_version_is_old() === true) {
         $process->run();
         debug ("CLI output: " . $process->getOutput());
         debug ("CLI errors: " . trim($process->getErrorOutput()));
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
 //        run_command($tess_cmd);
         file_put_contents($ocr_temp_dir . '/ocr_output_file_' . $ref . '.txt', file_get_contents($ocr_temp_dir . '/ocrtempfile_' . $ref . '.txt'), FILE_APPEND);
         $i ++;

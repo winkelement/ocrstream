@@ -40,11 +40,12 @@ if (is_session_started() === FALSE) {
     session_start();
 }
 
-global $imagemagick_path;
-
 if ($_SESSION["ocr_stage_" . $ref] !== 1) {
-    exit(json_encode('Error: stage 1 not completed.'));
+    session_unset();
+    exit(json_encode(array("error" => $lang['ocr_error_stage_1'])));
 }
+
+global $imagemagick_path;
 
 // Get original file extension from stage 1
 $ext = $_SESSION['ocr_file_extension_' . $ref];
@@ -80,13 +81,11 @@ if ($param_1 === 'pre_1' || $_SESSION["ocr_force_processing_" . $ref] === 1) {
     $process->run();
     debug ("CLI output: " . $process->getOutput());
     debug ("CLI errors: " . trim($process->getErrorOutput()));
-    if (!$process->isSuccessful()) {
-        throw new \RuntimeException($process->getErrorOutput());
-    }
     // run_command($im_ocr_cmd);
     // Checking if temp image(s) were created
     if (!file_exists($ocr_temp_dir . '/im_tempfile_' . $ref . '.jpg') && !file_exists($ocr_temp_dir . '/im_tempfile_' . $ref . '-0.jpg')) {
-        exit(json_encode('ocr image processing error (stage 2)'));
+        session_unset();
+        exit(json_encode(array("error" => $lang['ocr_error_6'])));
     }
     $_SESSION["ocr_stage_" . $ref] = 2;
     // Measure execution time for stage 2
@@ -102,4 +101,3 @@ if ($param_1 === 'pre_1' || $_SESSION["ocr_force_processing_" . $ref] === 1) {
 }
 
 echo $debug; //debug
-//return($debug);

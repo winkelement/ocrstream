@@ -33,6 +33,7 @@ global $lang;
 
 // Checking if Resource ID is valid INTEGER and exists in database
 if ($ref == null || $ref < 1 || $ref > sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')) {
+    session_unset();
     exit(json_encode(array("error" => $lang['ocr_error_1'])));
 }
 
@@ -55,11 +56,13 @@ $_SESSION['ocr_resource_path_' . $ref] = $resource_path;
 
 // Check if file extension is allowed for ocr processing
 if (!in_array($ext, $ocr_allowed_extensions)){
+    session_unset();
     exit(json_encode(array("error" => $lang['ocr_error_2'])));
 }
 
 // Check if resourcetype is document
 if (sql_value("select resource_type value from resource where ref ='$ref'", '') != 2){
+    session_unset();
     exit(json_encode(array("error" => $lang['ocr_error_4'])));
 }
 
@@ -69,6 +72,7 @@ if (sql_value("select resource_type value from resource where ref ='$ref'", '') 
 if ($ext !== 'pdf') {
     $density = run_command($imagemagick_path . '/identify -format "%y" ' . '' . $resource_path . ' 2>&1');
     if (intval($density) < $ocr_min_density && intval($density) !== 72) {
+        session_unset();
         exit(json_encode(array("error" => $lang['ocr_error_3'])));
     }
     if (intval($density) > $ocr_max_density) {
@@ -76,6 +80,7 @@ if ($ext !== 'pdf') {
     }
     $geometry = sql_value("SELECT width value FROM resource_dimensions WHERE resource ='$ref'", '');
     if (intval($geometry) < $ocr_min_geometry) {
+        session_unset();
         exit(json_encode(array("error" => $lang['ocr_error_5'])));
     }
     if (intval($geometry) > $ocr_max_geometry) {
@@ -102,4 +107,3 @@ $_SESSION["ocr_stage_1_time"] = $elapsed_1;
 
 $debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ref] . '/4 completed: ' .$ref. ' ext: ' .$ext . ' Time: ' . $elapsed_1);
 echo $debug; //debug
-//return($debug);

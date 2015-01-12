@@ -25,13 +25,19 @@ if (is_session_started() === FALSE) {
 }
 
 if ($_SESSION["ocr_stage_" . $ref] !== 3) {
-    exit(json_encode('Error: stage 3 not completed.'));
+    session_unset();
+    exit(json_encode(array("error" => $lang['ocr_error_stage_3'])));
 }
 
 $ocr_temp_dir = $_SESSION['ocr_temp_dir'];
 $ocr_output_file = $ocr_temp_dir . '/ocr_output_file_' . $ref . '.txt';
+if (!file_exists($ocr_output_file)) {
+    session_unset();
+    exit(json_encode(array("error" => $lang['ocr_error_7'])));
+}
 $tess_content = trim(file_get_contents($ocr_output_file));
 
+// Writing Keywords to database can take time so increase PHP timeout
 set_time_limit(1800);
 
 if ($use_ocr_db_filter == true) {
@@ -74,6 +80,3 @@ $end_of_queque = getval('lastqueued', '');
 if ($end_of_queque == true || !isset($_SESSION["ocr_start"])){
     session_unset();
 }
-
-//return($debug);
-
