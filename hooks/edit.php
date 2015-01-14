@@ -30,7 +30,7 @@ function HookOcrstreamEditAfterfileoptions() {
                 resourceId = <?php echo $ref ?>;
                 baseUrl = '<?php echo $baseurl ?>';
             </script>
-            <script src="../plugins/ocrstream/lib/utilities.js"></script>
+            <script src="../plugins/ocrstream/lib/ocrstream.single.js"></script>
             <div id="question_ocr" style="font-weight: normal">
                 <table>
                     <tr id = "ocr_start" style="height:37px">
@@ -106,93 +106,49 @@ function HookOcrstreamEditReplaceuploadoptions() {
     $choices = get_tesseract_languages();
     if (($ref < 0) && (is_tesseract_installed())){
         ?>
-        <script>
-            function setLanguage_1(selectedLanguage)
-                {
-                    ocr_lang = selectedLanguage;
-                    return ocr_lang;
-                }
-                ;
-            function setPsm_1(selectedPSM)
-                {
-                    ocr_psm = selectedPSM;
-                    return ocr_psm;
-                }
-                ;
-            function setOCRStart()
-                {
-                    ocr_start = jQuery('#ocr_upload_start').attr('checked');
-                    if (ocr_start === 'checked') {
-                        jQuery('#ocr_cron').fadeOut(200);
-                    }
-                    else {
-                        jQuery('#ocr_cron').fadeIn(200);
-                    }
-                    return ocr_start;
-                }
-                ;
-                function setOCRCron()
-                {
-                    ocr_cron = jQuery('#ocr_cron_start').attr('checked');
-                    if (ocr_cron === 'checked') {
-                        jQuery('#ocr_start').fadeOut(200);
-                        jQuery('#ocr_language_select').fadeOut(200);
-                        jQuery('#ocr_psm_select').fadeOut(200);
-                    }
-                    else {
-                        jQuery('#ocr_start').fadeIn(200);
-                        jQuery('#ocr_language_select').fadeIn(200);
-                        jQuery('#ocr_psm_select').fadeIn(200);
-                    }
-                    return ocr_cron;
-                }
-                ;
-            ocr_lang = jQuery('#ocr_lang :selected').text();
-            ocr_psm = jQuery('#ocr_psm :selected').val();
-            ocr_start = jQuery('#ocr_upload_start').attr('checked');
-        </script>
-    <div><h2 class="CollapsibleSectionHead"><?php echo $lang["ocr-upload-options"] ?></h2>
-        <div class="CollapsibleSection" id="OCROptionsSection">
-            <div class="Question" id="question_ocr" style="font-weight: normal">
-                <table>
-                    <tr id = "ocr_start" style="height:37px">
-                        <td><label for="ocr_single_resource"><?php echo $lang["ocr_single_resource"] ?></label></td>
-                        <td><input type="checkbox" name="ocr_upload_start" id= "ocr_upload_start" onchange="setOCRStart();"></td>
-                    </tr>
-                    <tr id = "ocr_language_select">
-                        <td><label for="ocr_language_select"><?php echo $lang["ocr_language_select"] ?></label></td>
-                        <td><select name="ocr_lang" id="ocr_lang" style="width:90px" onchange="setLanguage_1(this.form.ocr_lang.options[this.form.ocr_lang.selectedIndex].value);">
-                                <?php
-                                $usekeys_lang = false;
-                                foreach ($choices as $key => $choice) {
-                                    $value = $usekeys_lang ? $key : $choice;
-                                    echo '    <option value="' . $value . '"' . (($ocr_global_language == $value) ? ' selected' : '') . ">$choice</option>";
-                                }
-                                ?>
-                            </select></td>
-                    </tr>
-                    <tr id = "ocr_psm_select">
-                        <td><label for="ocr_psm_select"><?php echo $lang["ocr_psm"] ?></label></td>
-                        <td><select name="ocr_psm" id="ocr_psm" style="width:414px" onchange="setPsm_1(this.form.ocr_psm.options[this.form.ocr_psm.selectedIndex].value);">
-                                <?php
-                                $usekeys_psm = true;
-                                foreach ($ocr_psm_array as $key => $choice) {
-                                    $value = $usekeys_psm ? $key : $choice;
-                                    echo '    <option value="' . $value . '"' . (($ocr_psm_global == $value) ? ' selected' : '') . ">$choice</option>";
-                                }
-                                ?>
-                            </select></td>
-                    </tr>
-                    <?php if ($ocr_cronjob_enabled == true){?>
-                    <tr id = "ocr_cron" style="height:37px">
-                        <td><label for="ocr_upload_cronjob"><?php echo $lang["ocr_upload_cronjob"] ?></label></td>
-                        <td><input type="checkbox" name="ocr_cron_start" id= "ocr_cron_start" onchange="setOCRCron();"></td>
-                    </tr>
-                    <?php } ?>
-                </table>
+        <script src="../plugins/ocrstream/lib/ocrstream.upload.options.js"></script>
+        <div><h2 class="CollapsibleSectionHead"><?php echo $lang["ocr-upload-options"] ?></h2>
+            <div class="CollapsibleSection" id="OCROptionsSection">
+                <div class="Question" id="question_ocr" style="font-weight: normal">
+                    <table>
+                        <tr id = "ocr_start" style="height:37px">
+                            <td><label for="ocr_single_resource"><?php echo $lang["ocr_single_resource"] ?></label></td>
+                            <td><input type="checkbox" name="ocr_upload_start" id= "ocr_upload_start" onchange="setOCRStart();"></td>
+                        </tr>
+                        <tr id = "ocr_language_select">
+                            <td><label for="ocr_language_select"><?php echo $lang["ocr_language_select"] ?></label></td>
+                            <td><select name="ocr_lang" id="ocr_lang" style="width:90px" onchange="setLanguage_1(this.form.ocr_lang.options[this.form.ocr_lang.selectedIndex].value);">
+                                    <?php
+                                    $usekeys_lang = false;
+                                    foreach ($choices as $key => $choice) {
+                                        $value = $usekeys_lang ? $key : $choice;
+                                        echo '    <option value="' . $value . '"' . (($ocr_global_language == $value) ? ' selected' : '') . ">$choice</option>";
+                                    }
+                                    ?>
+                                </select></td>
+                        </tr>
+                        <tr id = "ocr_psm_select">
+                            <td><label for="ocr_psm_select"><?php echo $lang["ocr_psm"] ?></label></td>
+                            <td><select name="ocr_psm" id="ocr_psm" style="width:414px" onchange="setPsm_1(this.form.ocr_psm.options[this.form.ocr_psm.selectedIndex].value);">
+                                    <?php
+                                    $usekeys_psm = true;
+                                    foreach ($ocr_psm_array as $key => $choice) {
+                                        $value = $usekeys_psm ? $key : $choice;
+                                        echo '    <option value="' . $value . '"' . (($ocr_psm_global == $value) ? ' selected' : '') . ">$choice</option>";
+                                    }
+                                    ?>
+                                </select></td>
+                        </tr>
+                        <?php if ($ocr_cronjob_enabled == true){?>
+                        <tr id = "ocr_cron" style="height:37px">
+                            <td><label for="ocr_upload_cronjob"><?php echo $lang["ocr_upload_cronjob"] ?></label></td>
+                            <td><input type="checkbox" name="ocr_cron_start" id= "ocr_cron_start" onchange="setOCRCron();"></td>
+                        </tr>
+                        <?php } ?>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
     <?php
 
     }
