@@ -1,27 +1,26 @@
 <?php
+function HookOcrstreamUpload_pluploadUpload_page_top() { 
+    ?>
+    <script>
+    <link rel="stylesheet" href="../plugins/ocrstream/lib/ocrstream.upload.css" type="text/css" />
+    <div id="ocr_status_anim"></div>
+    <?php
+}
+
 
 function HookOcrstreamUpload_pluploadAfterpluploadfile() {
     global $ref;
-    global $lang;
     global $baseurl;
-    global $ocr_allowed_extensions;
-    global $ocr_global_language;
-    global $im_preset_1_density;
-    global $im_preset_1_geometry;
-    global $im_preset_1_quality;
-    global $im_preset_1_deskew;
-    global $im_preset_1_sharpen_r;
-    global $im_preset_1_sharpen_s;
-    global $use_ocr_db_filter;
-    global $ocr_db_filter_1;
-    global $ocr_db_filter_2;
-    global $ocr_ftype_1;
     session_start();
     if (isset($_SESSION["ocr_start"])) {
-        require "../plugins/ocrstream/include/stage_1.php";
-        require "../plugins/ocrstream/include/stage_2.php";
-        require "../plugins/ocrstream/include/stage_3.php";
-        require "../plugins/ocrstream/include/stage_4.php";
+        ?>
+        <script>
+            resourceId = <?php echo $ref ?>;
+            baseUrl = '<?php echo $baseurl ?>';
+            ocr_lang = '<?php echo $_SESSION['ocr_lang'] ?>';
+            ocr_psm = '<?php echo $_SESSION['ocr_psm'] ?>';
+        </script>
+        <script src="../plugins/ocrstream/lib/ocrstream.upload.js"></script> <?php
     }
     if (isset($_SESSION["ocr_cron"])) {
         $ocr_state = 1;

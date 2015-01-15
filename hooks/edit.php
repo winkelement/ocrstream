@@ -98,11 +98,9 @@ function HookOcrstreamEditReplaceuploadoptions() {
     global $lang;
     global $ref;
     global $ocr_global_language;
-    global $ocr_allowed_extensions;
     global $ocr_psm_array;
     global $ocr_psm_global;
     global $ocr_cronjob_enabled;
-    global $baseurl;
     $choices = get_tesseract_languages();
     if (($ref < 0) && (is_tesseract_installed())){
         ?>
