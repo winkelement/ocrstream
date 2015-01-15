@@ -1,7 +1,6 @@
 <?php
 function HookOcrstreamUpload_pluploadUpload_page_top() { 
     ?>
-    <script>
     <link rel="stylesheet" href="../plugins/ocrstream/lib/ocrstream.upload.css" type="text/css" />
     <div id="ocr_status_anim"></div>
     <?php
