@@ -4,6 +4,7 @@ top:0;
 left:0;
 width: 100%;
 z-index:5;
+display:none;
 }
  
 #ocr_status_anim div{
@@ -17,5 +18,10 @@ border-radius:5px;
 color: #FFF;
 width:150px;
 z-index: 6;
+text-align: center;
+}
+
+#ocr_status_anim img{
+    margin-top:10px
 }
 

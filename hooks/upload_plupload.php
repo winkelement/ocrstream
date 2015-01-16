@@ -1,11 +1,11 @@
 <?php
-function HookOcrstreamUpload_pluploadUpload_page_top() { 
+function HookOcrstreamUpload_pluploadUpload_page_top() {
+    global $lang;
     ?>
     <link rel="stylesheet" href="../plugins/ocrstream/lib/ocrstream.upload.css" type="text/css" />
-    <div id="ocr_status_anim"></div>
+    <div id="ocr_status_anim"><div><img src="../plugins/ocrstream/gfx/loader_2.gif" alt="Loading..." /><p><?php echo $lang['ocr_in_progress']?></p></div></div>
     <?php
 }
-
 
 function HookOcrstreamUpload_pluploadAfterpluploadfile() {
     global $ref;

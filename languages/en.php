@@ -51,4 +51,5 @@ $lang["ocr-upload-options"] = 'OCR Options';
 $lang['ocr_cronjob'] = 'Set cronjob for OCR processing.';
 $lang['ocr_cronjob_help'] = 'Marked resources (ocr_state = 1) will processed with default settings.';
 $lang["ocr_upload_cronjob"] = 'Set cronjob with global OCR settings';
+$lang['ocr_in_progress'] = 'OCR in progress...';
 ?>

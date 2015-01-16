@@ -1,5 +1,6 @@
 <?php
 require_once "../../../include/db.php";
+include_once "../../../include/authenticate.php";
 require_once "../../../include/general.php";
 
 $ref_filter_options = ["options" =>['min_range' => 1]];
