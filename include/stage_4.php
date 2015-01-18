@@ -60,13 +60,23 @@ $_SESSION["ocr_stage_4_time"] = $elapsed_4;
 $ocr_total_time = ($_SESSION["ocr_stage_1_time"]) + ($_SESSION["ocr_stage_2_time"]) + ($_SESSION["ocr_stage_3_time"]) + ($_SESSION["ocr_stage_4_time"]);
 $_SESSION["ocr_total_time"] = $ocr_total_time;
 
-$end_of_queque = getval('lastqueued', '');
+$nextID = ($ID +1);
 
-$debug = json_encode('OCR Stage ' . $_SESSION["ocr_stage_" . $ID] . '/4 completed: ' .$ID . ' Time: ' . $elapsed_4 . ' Total Time: ' . $ocr_total_time . ' End of Queque: ' .$end_of_queque);
-echo $debug; //debug
+if (isset($_SESSION['ocr_stage_' . $nextID])) {
+    if (($_SESSION['ocr_stage_' . $nextID]) < 4) {
+        $end_of_queue = false;
+    } else {
+        $end_of_queue = true;
+    }
+} else {
+    $end_of_queue = true;
+}
 
-// Clear all SESSION Variables for single resource OCR or if last file in queque has been uploaded
+$debug = ('OCR Stage ' . $_SESSION["ocr_stage_" . $ID] . '/4 completed: ' .$ID . ' Time: ' . $elapsed_4 . ' Total Time: ' . $ocr_total_time . ' End of Queue: ' .$end_of_queue);
+echo json_encode(array($end_of_queue, $debug));
 
-if ($end_of_queque == true || !isset($_SESSION["ocr_start"])){
+// Clear all SESSION Variables for single resource OCR or if all resources in queue are completed
+
+if ($end_of_queue == true || !isset($_SESSION["ocr_start"])){
     session_unset();
 }
