@@ -1,4 +1,5 @@
 <?php
+global $lang;
 /**
  * Checks if OS is Windows
  * 
@@ -150,10 +151,60 @@ function is_session_started()
 /**
  * Get the file extension from the original resource file
  * 
- * @param mixed $ref
+ * @param int $ref
  * @return string file extension
  */
 function get_file_extension ($ref) {
     $ext = sql_value("select file_extension value from resource where ref = '$ref'", '');
     return $ext;
+}
+
+/**
+ * Check if Resource ID is valid INTEGER and exists in database
+ * 
+ * @param int $ID
+ * @return boolean
+ */
+function is_resource_id_valid ($ID) {
+    if ($ID == null || $ID < 1 || $ID > sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')) {
+    session_unset();
+    return false;
+    } else {
+    return true;
+    }
+}
+
+/**
+ * Get Image density
+ * 
+ * @global string $imagemagick_path
+ * @param string $resource_path
+ * @return mixed Density value
+ */
+function get_image_density ($resource_path) {
+    global $imagemagick_path;
+    $density = run_command($imagemagick_path . '/convert -format %y ' . $resource_path . ' info:');
+    return $density;
+}
+
+/**
+ * Get image geometry
+ * 
+ * @param int $ID
+ * @return int Image geometry
+ */
+function get_image_geometry ($ID) {
+    $geometry = sql_value("SELECT width value FROM resource_dimensions WHERE resource ='$ID'", '');
+    return $geometry;
+}
+
+/**
+ * Get Resource Type
+ * 
+ * @param int $ID
+ * @return int Resource type
+ */
+function get_res_type ($ID) {
+    $res_type = sql_value("select resource_type value from resource where ref ='$ID'", '');
+    return $res_type;
 }
