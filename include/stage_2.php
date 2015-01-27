@@ -35,19 +35,7 @@ global $imagemagick_path;
 $ext = $_SESSION['ocr_file_extension_' . $ID];
 
 // Build IM-Preset Array
-$im_preset_1 = array(
-    'colorspace' => ('-colorspace gray'),
-    'type' => ('-type grayscale'),
-    'density' => ('-density ' . $im_preset_1_density),
-    'geometry' => ('-geometry ' . $im_preset_1_geometry),
-    'crop' => ('-crop ' . $im_preset_1_crop_w . 'x' . $im_preset_1_crop_h . '+' . $im_preset_1_crop_x . '+' . $im_preset_1_crop_y),
-    'quality' => ('-quality ' . $im_preset_1_quality),
-    'trim' => ('-trim'),
-    'deskew' => ('-deskew ' . $im_preset_1_deskew . '%'),
-    'normalize' => ('-normalize'),
-    'sharpen' => ('-sharpen ' . $im_preset_1_sharpen_r . 'x' . $im_preset_1_sharpen_s),
-//    'depth'     => ('-depth 8'),
-);
+$im_preset_1 = build_im_preset_1 ($im_preset_1_crop_w, $im_preset_1_crop_h, $im_preset_1_crop_x, $im_preset_1_crop_y);
 
 // Create intermediate image(s) for OCR
 $ocr_temp_dir = get_temp_dir();
@@ -65,7 +53,6 @@ if ($param_1 === 'pre_1' || $_SESSION["ocr_force_processing_" . $ID] === 1) {
     $process->run();
     debug ("CLI output: " . $process->getOutput());
     debug ("CLI errors: " . trim($process->getErrorOutput()));
-    // run_command($im_ocr_cmd);
     // Checking if temp image(s) were created
     if (!file_exists($ocr_temp_dir . '/im_tempfile_' . $ID . '.jpg') && !file_exists($ocr_temp_dir . '/im_tempfile_' . $ID . '-0.jpg')) {
         session_unset();

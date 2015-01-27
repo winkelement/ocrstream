@@ -1,5 +1,5 @@
 <?php
-global $lang;
+
 /**
  * Checks if OS is Windows
  * 
@@ -57,32 +57,16 @@ function is_tesseract_installed() {
  */
 function get_tesseract_version() {
     $tesseract_fullpath = get_tesseract_fullpath();
-    $tesseract_version_command = shell_exec($tesseract_fullpath . ' -v 2>&1');
+    $tesseract_version_command = run_command(escapeshellarg($tesseract_fullpath) . ' -v', true);
     $tesseract_version_output = explode("\n", $tesseract_version_command);
     if (stristr($tesseract_version_output [0], 'libtiff.so.5')) { // Skipping error output in first line if libftiff/liblept version mismatch
         $tesseract_version = $tesseract_version_output[1];
-    } else {
-        $tesseract_version = $tesseract_version_output[0];
-    }
-    return $tesseract_version;
-}
-
-/**
- * Get leptonica version
- * 
- * @return string Leptonica version output string
- * @todo remove if not needed
- */
-function get_leptonica_version() {
-    $tesseract_fullpath = get_tesseract_fullpath();
-    $tesseract_version_command = shell_exec($tesseract_fullpath . ' -v 2>&1');
-    $tesseract_version_output = explode("\n", $tesseract_version_command);
-    if (stristr($tesseract_version_output [0], 'libtiff.so.5')) { // Skipping error output in first line if libftiff/liblept version mismatch
         $leptonica_version = $tesseract_version_output[2];
     } else {
+        $tesseract_version = $tesseract_version_output[0];
         $leptonica_version = $tesseract_version_output[1];
     }
-    return $leptonica_version;
+    return array($tesseract_version, $leptonica_version);
 }
 
 /**
@@ -118,7 +102,7 @@ function get_tesseract_languages() {
  * @return boolean
  */
 function tesseract_version_is_old() {
-    $tesseract_version = get_tesseract_version();
+    $tesseract_version = get_tesseract_version()[0];
     if (substr($tesseract_version, 10, 1) < 3) {
         $tesseract_version_is_old = true;
     } else {
@@ -167,7 +151,6 @@ function get_file_extension ($ref) {
  */
 function is_resource_id_valid ($ID) {
     if ($ID == null || $ID < 1 || $ID > sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')) {
-    session_unset();
     return false;
     } else {
     return true;
@@ -208,3 +191,21 @@ function get_res_type ($ID) {
     $res_type = sql_value("select resource_type value from resource where ref ='$ID'", '');
     return $res_type;
 }
+
+function build_im_preset_1 ($im_preset_1_crop_w, $im_preset_1_crop_h, $im_preset_1_crop_x, $im_preset_1_crop_y) {
+    global $im_preset_1_density, $im_preset_1_geometry, $im_preset_1_quality, $im_preset_1_deskew, $im_preset_1_sharpen_r, $im_preset_1_sharpen_s;
+    $im_preset_1 = array(
+    'colorspace' => ('-colorspace gray'),
+    'type' => ('-type grayscale'),
+    'density' => ('-density ' . $im_preset_1_density),
+    'geometry' => ('-geometry ' . $im_preset_1_geometry),
+    'crop' => ('-crop ' . $im_preset_1_crop_w . 'x' . $im_preset_1_crop_h . '+' . $im_preset_1_crop_x . '+' . $im_preset_1_crop_y),
+    'quality' => ('-quality ' . $im_preset_1_quality),
+    'trim' => ('-trim'),
+    'deskew' => ('-deskew ' . $im_preset_1_deskew . '%'),
+    'normalize' => ('-normalize'),
+    'sharpen' => ('-sharpen ' . $im_preset_1_sharpen_r . 'x' . $im_preset_1_sharpen_s),
+    //'depth'     => ('-depth 8'),
+    );
+    return $im_preset_1;
+}   
