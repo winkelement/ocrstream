@@ -17,6 +17,7 @@ function HookOcrstreamEditAfterfileoptions() {
     global $ocr_psm_array;
     global $ocr_psm_global;
     global $ocr_cronjob_enabled;
+    global $ocr_ftype_1;
     if (is_tesseract_installed()) {
         // Hide OCR options for filetypes not allowed
         $ext = get_file_extension($ref);
@@ -29,6 +30,7 @@ function HookOcrstreamEditAfterfileoptions() {
                 // Initilaize Parameters
                 resourceId = <?php echo $ref ?>;
                 baseUrl = '<?php echo $baseurl ?>';
+                fieldNr = '<?php echo $ocr_ftype_1 ?>';                
             </script>
             <script src="../plugins/ocrstream/lib/ocrstream.single.js"></script>
             <div id="question_ocr" style="font-weight: normal">

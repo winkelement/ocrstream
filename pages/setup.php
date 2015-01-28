@@ -19,8 +19,9 @@ $page_intro = '<p>' . $lang['ocrstream_intro'] . '</p>';
 $page_def = array();
 
 if (is_tesseract_installed()) {
-    $tesseract_version = get_tesseract_version();
-    $leptonica_version = get_leptonica_version();
+    $tesseract_version_output = get_tesseract_version();
+    $tesseract_version = $tesseract_version_output[0];
+    $leptonica_version = $tesseract_version_output[1];
     $tesseract_languages = get_tesseract_languages();
     $page_def[] = config_add_text_input('tesseract_path', $lang['tesseract_path_info']);
     $page_def[] = config_add_html("<div id = 'tesseract_version'><p style=font-size:14px;>" . $tesseract_version . "<br>" . $leptonica_version . "</p></div>");

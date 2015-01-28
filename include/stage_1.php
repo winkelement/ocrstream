@@ -23,8 +23,8 @@ global $ocr_min_geometry;
 global $ocr_max_geometry;
 global $lang;
 
-// Checking if Resource ID is valid INTEGER and exists in database
-if ($ID == null || $ID < 1 || $ID > sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')) {
+// Check Resource ID
+if (!is_resource_id_valid($ID)){
     session_unset();
     exit(json_encode(array("error" => $lang['ocr_error_1'])));
 }
@@ -53,7 +53,7 @@ if (!in_array($ext, $ocr_allowed_extensions)){
 }
 
 // Check if resourcetype is document
-if (sql_value("select resource_type value from resource where ref ='$ID'", '') != 2){
+if (get_res_type ($ID) != 2){
     session_unset();
     exit(json_encode(array("error" => $lang['ocr_error_4'])));
 }
@@ -62,7 +62,7 @@ if (sql_value("select resource_type value from resource where ref ='$ID'", '') !
 // Ignore 72 dpi values (Screen resolution)
 // @todo check units (inch/centimeter) to prevent false detection
 if ($ext !== 'pdf') {
-    $density = run_command($imagemagick_path . '/identify -format "%y" ' . '' . $resource_path . ' 2>&1');
+    $density = get_image_density ($resource_path);
     if (intval($density) < $ocr_min_density && intval($density) !== 72) {
         session_unset();
         exit(json_encode(array("error" => $lang['ocr_error_3'])));
@@ -70,7 +70,7 @@ if ($ext !== 'pdf') {
     if (intval($density) > $ocr_max_density) {
         $_SESSION["ocr_force_processing_" . $ID] = 1; // Force image procesing if density too high
     }
-    $geometry = sql_value("SELECT width value FROM resource_dimensions WHERE resource ='$ID'", '');
+    $geometry = get_image_geometry ($ID);
     if (intval($geometry) < $ocr_min_geometry) {
         session_unset();
         exit(json_encode(array("error" => $lang['ocr_error_5'])));

@@ -34,8 +34,8 @@ set_time_limit(1800);
 if ($use_ocr_db_filter == true) {
 // Filter extracted content
     $filter1 = preg_replace($ocr_db_filter_1, '$1', $tess_content);
-    $filter2 = preg_replace($ocr_db_filter_2, '$1', $filter1);
-    update_field($ID, $ocr_ftype_1, $filter2);
+    $tess_content = preg_replace($ocr_db_filter_2, '$1', $filter1);
+    update_field($ID, $ocr_ftype_1, $tess_content);
 } else {
     update_field($ID, $ocr_ftype_1, $tess_content);
 }
@@ -73,7 +73,7 @@ if (isset($_SESSION['ocr_stage_' . $nextID])) {
 }
 
 $debug = ('OCR Stage ' . $_SESSION["ocr_stage_" . $ID] . '/4 completed: ' .$ID . ' Time: ' . $elapsed_4 . ' Total Time: ' . $ocr_total_time . ' End of Queue: ' .$end_of_queue);
-echo json_encode(array($end_of_queue, $debug));
+echo json_encode(array($end_of_queue, $debug, $tess_content));
 
 // Clear all SESSION Variables for single resource OCR or if all resources in queue are completed
 
