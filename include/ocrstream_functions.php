@@ -70,7 +70,7 @@ function get_tesseract_version() {
 }
 
 /**
- * Get available language for tesseract ocr
+ * Get available languages for tesseract-ocr
  * 
  * Returns an array of languages that are currently installed into the /TESSDATA directory.
  * Language codes use ISO 639-2 standard.
@@ -173,7 +173,7 @@ function get_image_density ($resource_path) {
 /**
  * Get image geometry
  * 
- * @param int $ID
+ * @param int $ID Resource ID
  * @return int Image geometry
  */
 function get_image_geometry ($ID) {
@@ -184,7 +184,7 @@ function get_image_geometry ($ID) {
 /**
  * Get Resource Type
  * 
- * @param int $ID
+ * @param int $ID Resource ID
  * @return int Resource type
  */
 function get_res_type ($ID) {
@@ -208,4 +208,88 @@ function build_im_preset_1 ($im_preset_1_crop_w, $im_preset_1_crop_h, $im_preset
     //'depth'     => ('-depth 8'),
     );
     return $im_preset_1;
-}   
+}
+
+/**
+ * Image pre-processing for OCR
+ * 
+ * @param int $ID Resource ID
+ * @param array $im_preset Array of imagemagick options for image processing
+ * @param string $ocr_temp_dir OCR temp directory
+ */
+function ocr_image_processing ($ID, $im_preset, $ocr_temp_dir) {
+    set_time_limit(1800);
+    $convert_fullpath = get_utility_path("im-convert");
+    $ext = get_file_extension ($ID);
+    $resource_path = get_resource_path($ID, true, "", false, $ext);
+    $im_ocr_cmd = $convert_fullpath . " " . implode(' ', $im_preset) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/im_tempfile_' . $ID . '.jpg');
+    debug("CLI command: $im_ocr_cmd");
+    $process = new Process($im_ocr_cmd);
+    $process->setTimeout(3600);
+    $process->run();
+    debug ("CLI output: " . $process->getOutput());
+    debug ("CLI errors: " . trim($process->getErrorOutput()));
+}
+
+/**
+ * Tesseract processing
+ * 
+ * @param int $ID Resource ID
+ * @param string $ocr_lang Language for OCR processing
+ * @param int $ocr_psm Tesseract page segmentation mode
+ * @param string $ocr_temp_dir Temp directory
+ * @param string $mode Resource OCR mode
+ * @param int $pg_num Number of pages 
+ */
+function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $pg_num) {
+    $tesseract_fullpath = get_tesseract_fullpath();
+    if ($mode === 'multipage_new') {
+        $n = 0;
+        set_time_limit(1800);
+        while ($n < $pg_num) {
+            file_put_contents($ocr_temp_dir . '/im_ocr_file_' . $ID, trim($ocr_temp_dir . '/im_tempfile_' . $ID . '-' . $n . '.jpg').PHP_EOL, FILE_APPEND);
+            $n++;
+        }
+        $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_temp_dir . '/im_ocr_file_' . $ID . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ID) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
+        debug("CLI command: $tess_cmd");
+        $process = new Process($tess_cmd);
+        $process->setTimeout(3600);
+        $process->setIdleTimeout(600);
+        $process->run();
+        debug ("CLI output: " . $process->getOutput());
+        debug ("CLI errors: " . trim($process->getErrorOutput()));
+    } elseif ($mode === 'multipage_old') {
+        $i = 0;
+        set_time_limit(1800);
+        while ($i < $pg_num) {
+            $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ID . '-' . $i . '.jpg');
+            $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocrtempfile_' . $ID) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
+            debug("CLI command: $tess_cmd");
+            $process = new Process($tess_cmd);
+            $process->setTimeout(3600);
+            $process->setIdleTimeout(600);
+            $process->run();
+            debug ("CLI output: " . $process->getOutput());
+            debug ("CLI errors: " . trim($process->getErrorOutput()));
+            file_put_contents($ocr_temp_dir . '/ocr_output_file_' . $ID . '.txt', file_get_contents($ocr_temp_dir . '/ocrtempfile_' . $ID . '.txt'), FILE_APPEND);
+            $i ++;
+        }
+    } elseif ($mode === 'single_processed') {
+        $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ID . '.jpg');
+        $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ID) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
+        debug("CLI command: $tess_cmd");
+        $process = new Process($tess_cmd);
+        $process->run();
+        debug ("CLI output: " . $process->getOutput());
+        debug ("CLI errors: " . trim($process->getErrorOutput()));
+    } elseif ($mode === 'single_original') {
+        $ext = get_file_extension ($ID);
+        $resource_path = get_resource_path($ID, true, "", false, $ext);
+        $tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ID) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
+        debug("CLI command: $tess_cmd");
+        $process = new Process($tess_cmd);
+        $process->run();
+        debug ("CLI output: " . $process->getOutput());
+        debug ("CLI errors: " . trim($process->getErrorOutput()));
+    }   
+}

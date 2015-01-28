@@ -43,17 +43,8 @@ $_SESSION['ocr_temp_dir'] = $ocr_temp_dir;
 
 // Image processing with Preset 1 settings
 if ($param_1 === 'pre_1' || $_SESSION["ocr_force_processing_" . $ID] === 1) {
-    set_time_limit(1800);
-    $convert_fullpath = get_utility_path("im-convert");
-    $resource_path = $_SESSION['ocr_resource_path_' . $ID];
-    $im_ocr_cmd = $convert_fullpath . " " . implode(' ', $im_preset_1) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/im_tempfile_' . $ID . '.jpg');
-    debug("CLI command: $im_ocr_cmd");
-    $process = new Process($im_ocr_cmd);
-    $process->setTimeout(3600);
-    $process->run();
-    debug ("CLI output: " . $process->getOutput());
-    debug ("CLI errors: " . trim($process->getErrorOutput()));
-    // Checking if temp image(s) were created
+    ocr_image_processing ($ID, $im_preset_1, $ocr_temp_dir);
+    // Check if temp image(s) were created
     if (!file_exists($ocr_temp_dir . '/im_tempfile_' . $ID . '.jpg') && !file_exists($ocr_temp_dir . '/im_tempfile_' . $ID . '-0.jpg')) {
         session_unset();
         exit(json_encode(array("error" => $lang['ocr_error_6'])));

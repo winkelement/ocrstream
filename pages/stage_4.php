@@ -50,7 +50,8 @@ sql_query("UPDATE resource SET ocr_state =  '$ocr_state' WHERE ref = '$ID'");
 
 // Delete temp files
 array_map('unlink', glob("$ocr_temp_dir/ocr_output_file_$ID.txt"));
-array_map('unlink', glob("$ocr_temp_dir/im_tempfile_$ID.*"));
+array_map('unlink', glob("$ocr_temp_dir/ocrtempfile_$ID.txt"));
+array_map('unlink', glob("$ocr_temp_dir/im_tempfile_$ID*.*"));
 
 $_SESSION['ocr_stage_' . $ID] = 4;
 
