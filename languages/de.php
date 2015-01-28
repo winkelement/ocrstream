@@ -8,7 +8,7 @@ $lang['ocrstream_language_select'] = 'Standardsprache für Texterkennung <br> (n
 $lang['tesseract_path_info'] = 'Pfad zu tesseract-ocr:';
 $lang['ocr_single_resource'] = 'Texterkennung durchführen';
 $lang['ocr_start'] = 'Starte OCR';
-$lang['tesseract_path_input'] = '<p style="color:red"><b> Tesseract-ocr nicht gefunden, bitte geben Sie den Pfad an:</b></p>';
+$lang['tesseract_path_input'] = '<p style="color:red"><b> Tesseract-ocr nicht gefunden, bitte geben Sie den Pfad an. Bitte die Seite neu laden nachdem die Konfiguration gespeichert wurde!</b></p>';
 $lang['tesseract_old_version_info'] = 'Bitte aktualisieren Sie Tesseract mindestens auf Version 3.03 für die beste Performance und erweiterte Funktionalität.';
 $lang['ocr_input_formats'] = 'Erlaubte Dateitypen:';
 $lang['ocr_psm'] = 'Tesseract page segmentation mode';
@@ -32,14 +32,14 @@ $lang["ocr_error_7"] = 'Fehler: Es wurden keine temporären Dateien erzeugt in S
 $lang["ocr_error_stage_1"] = 'Fehler: Etwas lief falsch, Stage 1 wurde nicht abgeschlossen.';
 $lang["ocr_error_stage_2"] = 'Fehler: Etwas lief falsch, Stage 2 wurde nicht abgeschlossen.';
 $lang["ocr_error_stage_3"] = 'Fehler: Etwas lief falsch, Stage 3 wurde nicht abgeschlossen.';
-$lang['im_processing_header'] = 'Bildbearbeitungseinstellungen';
+$lang['im_processing_header'] = '<div id= "im_processing_headerDIV">Bildbearbeitungseinstellungen</div>';
 $lang['im_processing_help'] = 'Bei einigen Resourcen muss ein zusätzlicher Bildbearbeitungsprozess durchgeführt werden, bevor die Texterkennung erfolgen kann. <br> Es wird eine temporäre Bilddatei erzeugt, die Originaldatei wird nicht verändert. <br> Die Einstellungen für den Prozess können hier angepasst werden.';
 $lang['im_preset_density'] = 'Auflösung (-density [dpi])';
-$lang['im_preset_density_help'] = "Legt die Auflösung des temporären Bildes fest, auf welches die Texterkennung angewendet wird. <br> Kleinere Werte können den Rechenprozess beschleunigen, führen aber zu schlechteren Ergebnissen.";
+$lang['im_preset_density_help'] = 'Legt die Auflösung des temporären Bildes fest, auf welches die Texterkennung angewendet wird. <br> Kleinere Werte können den Rechenprozess beschleunigen, führen aber zu schlechteren Ergebnissen.';
 $lang['im_preset_geometry'] = 'Bildgröße (-geometry [px])';
-$lang['im_preset_geometry_help'] = "Legt die maximale Breite des temporären Bildes fest. <br> Sehr große Werte können den Rechenprozess verlangsamen.";
+$lang['im_preset_geometry_help'] = 'Legt die maximale Breite des temporären Bildes fest. <br> Sehr große Werte können den Rechenprozess verlangsamen.';
 $lang['im_preset_quality'] = 'Qualität (-quality [Wert])';
-$lang['im_preset_quality_help'] = "Legt das zlib Kompressionslevel und den Filtertyp für das PNG Format fest. <br> Wertebereich 0-100, Standard PNG Qualität ist 75. Größere Werte bedeuten bessere Ergebnisse auf Kosten der Rechenzeit.";
+$lang['im_preset_quality_help'] = 'Legt das zlib Kompressionslevel und den Filtertyp für das PNG Format fest. <br> Wertebereich 0-100, Standard PNG Qualität ist 75. Größere Werte bedeuten bessere Ergebnisse auf Kosten der Rechenzeit.';
 $lang['im_preset_deskew'] = 'Begradigen (-deskew [%])';
 $lang['im_preset_deskew_help'] = 'Begradigt schiefe Scans. Funktioniert schlecht bei einem Winkel > 5%. <br> Ein Schwellenwert von 40% funktioniert für die meisten Bilder.';
 $lang['im_preset_sharpen_r'] = 'Scharfzeichen Radius <br> (-sharpen [radius]x[sigma])';

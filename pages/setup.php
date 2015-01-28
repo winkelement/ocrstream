@@ -23,41 +23,32 @@ if (is_tesseract_installed()) {
     $leptonica_version = get_leptonica_version();
     $tesseract_languages = get_tesseract_languages();
     $page_def[] = config_add_text_input('tesseract_path', $lang['tesseract_path_info']);
-    $page_def[] = config_add_html("<p style=font-size:14px;>$tesseract_version<br>$leptonica_version</p>");
+    $page_def[] = config_add_html("<div id = 'tesseract_version'><p style=font-size:14px;>" . $tesseract_version . "<br>" . $leptonica_version . "</p></div>");
     if (tesseract_version_is_old()) {
         $page_def[] = config_add_html($lang['tesseract_old_version_info']);
-        $page_def[] = config_add_html("<p<br></p>");
+        $page_def[] = config_add_html("<p><br></p>");
     }
     $page_def[] = config_add_single_select('ocr_global_language', $lang['ocrstream_language_select'], $tesseract_languages, false, 90);
-} else {
+} else { 
     $page_def[] = config_add_text_input('tesseract_path', $lang['tesseract_path_input']);
 }
 //$page_def[] = config_add_single_select('ocr_psm_global', $lang['ocr_psm'], $ocr_psm_array, true, 414); // not really needed here
 $page_def[] = config_add_single_ftype_select('ocr_ftype_1', $lang['ocr_ftype_1']);
 $page_def[] = config_add_boolean_select ('use_ocr_db_filter', $lang['ocr_db_filter'], '', 90);
-$page_def[] = config_add_html($lang['ocr_db_filter_help']);
 $page_def[] = config_add_text_list_input('ocr_allowed_extensions', $lang['ocr_input_formats']);
 $page_def[] = config_add_text_input('ocr_min_density', $lang['ocr_min_density'], false, 45);
 $page_def[] = config_add_text_input('ocr_max_density', $lang['ocr_max_density'], false, 45);
-$page_def[] = config_add_html($lang['ocr_max_density_help']);
 $page_def[] = config_add_text_input('ocr_min_geometry', $lang['ocr_min_geometry'], false, 45);
 $page_def[] = config_add_text_input('ocr_max_geometry', $lang['ocr_max_geometry'], false, 45);
 $page_def[] = config_add_boolean_select('ocr_cronjob_enabled', $lang['ocr_cronjob'], '', 90);
-$page_def[] = config_add_html($lang['ocr_cronjob_help']);
-$page_def[] = config_add_section_header($lang['im_processing_header'], $lang['im_processing_help']);
-$page_def[] = config_add_html("<p style=font-size:18px;>Preset 1</p>");
+$page_def[] = config_add_section_header($lang['im_processing_header']);
+$page_def[] = config_add_html("<div id= 'preset_1'><p style=font-size:18px;>Preset 1</p></div>");
 $page_def[] = config_add_text_input('im_preset_1_density', $lang['im_preset_density'], false, 45);
-$page_def[] = config_add_html($lang['im_preset_density_help']);
 $page_def[] = config_add_text_input('im_preset_1_geometry', $lang['im_preset_geometry'], false, 45);
-$page_def[] = config_add_html($lang['im_preset_geometry_help']);
 $page_def[] = config_add_text_input('im_preset_1_quality', $lang['im_preset_quality'], false, 45);
-$page_def[] = config_add_html($lang['im_preset_quality_help']);
 $page_def[] = config_add_text_input('im_preset_1_deskew', $lang['im_preset_deskew'], false, 45);
-$page_def[] = config_add_html($lang['im_preset_deskew_help']);
 $page_def[] = config_add_text_input('im_preset_1_sharpen_r', $lang['im_preset_sharpen_r'], false, 45);
-$page_def[] = config_add_html($lang['im_preset_sharpen_r_help']);
 $page_def[] = config_add_text_input('im_preset_1_sharpen_s', $lang['im_preset_sharpen_s'], false, 45);
-$page_def[] = config_add_html($lang['im_preset_sharpen_s_help']);
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 // Each element of $page_def describes one configuration variable. Each description is
@@ -68,6 +59,73 @@ $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $page_intro);
 include '../../../include/footer.php';
+    ?>
+<link rel="stylesheet" href="../lib/jquery-ui.css">
+<script src="../lib/jquery-ui.js"></script>
+<script>
+    jQuery(document).ready(function () {
+        if (jQuery('#tesseract_version').length === 0) {
+            jQuery('#ocr_ftype_1').parent().closest('div').hide();
+            jQuery('#use_ocr_db_filter').parent().closest('div').hide();
+            jQuery('#ocr_allowed_extensions').parent().closest('div').hide();
+            jQuery('#ocr_min_density').parent().closest('div').hide();
+            jQuery('#ocr_max_density').parent().closest('div').hide();
+            jQuery('#ocr_min_geometry').parent().closest('div').hide();
+            jQuery('#ocr_max_geometry').parent().closest('div').hide();
+            jQuery('#ocr_cronjob_enabled').parent().closest('div').hide();
+            jQuery('#im_processing_headerDIV').parent().closest('div').hide();
+            jQuery('#preset_1').hide();
+            jQuery('#im_preset_1_density').parent().closest('div').hide();
+            jQuery('#im_preset_1_geometry').parent().closest('div').hide();
+            jQuery('#im_preset_1_quality').parent().closest('div').hide();
+            jQuery('#im_preset_1_deskew').parent().closest('div').hide();
+            jQuery('#im_preset_1_sharpen_r').parent().closest('div').hide();
+            jQuery('#im_preset_1_sharpen_s').parent().closest('div').hide();
+
+        }
+        jQuery('#use_ocr_db_filter').tooltip({
+            items: "[name]",
+            content: '<?php echo $lang['ocr_db_filter_help'] ?>'
+        });
+        jQuery('#ocr_max_density').tooltip({
+            items: "[name]",
+            content: '<?php echo $lang['ocr_max_density_help'] ?>'
+        });
+        jQuery('#ocr_cronjob_enabled').tooltip({
+            items: "[name]",
+            content: '<?php echo $lang['ocr_cronjob_help'] ?>'
+        });
+        jQuery('#im_processing_headerDIV').tooltip({
+            items: "[id]",
+            content: '<?php echo $lang['im_processing_help'] ?>'
+        });
+        jQuery('#im_preset_1_density').tooltip({
+            items: "[name]",
+            content: '<?php echo $lang['im_preset_density_help'] ?>'
+        });
+        jQuery('#im_preset_1_geometry').tooltip({
+            items: "[name]",
+            content: '<?php echo $lang['im_preset_geometry_help'] ?>'
+        });
+        jQuery('#im_preset_1_quality').tooltip({
+            items: "[name]",
+            content: '<?php echo $lang['im_preset_quality_help'] ?>'
+        });
+        jQuery('#im_preset_1_deskew').tooltip({
+            items: "[name]",
+            content: '<?php echo $lang['im_preset_deskew_help'] ?>'
+        });
+        jQuery('#im_preset_1_sharpen_r').tooltip({
+            items: "[name]",
+            content: '<?php echo $lang['im_preset_sharpen_r_help'] ?>'
+        });
+        jQuery('#im_preset_1_sharpen_s').tooltip({
+            items: "[name]",
+            content: '<?php echo $lang['im_preset_sharpen_s_help'] ?>'
+        });
+    }); 
+</script> <?php
+
 ?>
 <script src="../lib/alphanum/jquery.alphanum.js"></script>
 <script>
