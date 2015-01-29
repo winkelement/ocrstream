@@ -1,4 +1,6 @@
 <?php
+require_once "../plugins/ocrstream/include/ocrstream_functions.php";
+
 function HookOcrstreamUpload_pluploadUpload_page_top() {
     global $lang;
     ?>
@@ -10,7 +12,9 @@ function HookOcrstreamUpload_pluploadUpload_page_top() {
 function HookOcrstreamUpload_pluploadAfterpluploadfile() {
     global $ref;
     global $baseurl;
-    session_start();
+    if (is_session_started() === FALSE) {
+        session_start();
+    }
     if (isset($_SESSION["ocr_start"])) {
         ?>
         <script>
