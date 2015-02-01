@@ -80,7 +80,7 @@ function get_tesseract_version() {
  */
 function get_tesseract_languages() {
     $tesseract_fullpath = get_tesseract_fullpath();
-    $tesseract_language_command = shell_exec($tesseract_fullpath . ' --list-langs 2>&1');
+    $tesseract_language_command = run_command(escapeshellarg($tesseract_fullpath) . ' --list-langs', true);
     $tesseract_languages = explode("\n", $tesseract_language_command);
     if (stristr($tesseract_languages [0], 'libtiff.so.5')) { // Skipping additional line if libftiff version does not match liblept version
         array_shift($tesseract_languages);
@@ -165,8 +165,8 @@ function is_resource_id_valid ($ID) {
  * @return mixed Density value
  */
 function get_image_density ($resource_path) {
-    global $imagemagick_path;
-    $density = run_command($imagemagick_path . '/convert -format %y ' . $resource_path . ' info:');
+    $convert_fullpath = get_utility_path("im-convert");
+    $density = run_command($convert_fullpath . ' -format %y ' . $resource_path . ' info:');
     return $density;
 }
 

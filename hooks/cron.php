@@ -1,5 +1,7 @@
 <?php
 
+require_once (dirname(__FILE__) . "../../include/ocrstream_functions.php");
+
 function HookOcrstreamCronAddplugincronjob() {
     global $ocr_cronjob_enabled;
     if ($ocr_cronjob_enabled == true) {        
