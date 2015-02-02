@@ -46,7 +46,7 @@ update_xml_metadump($ID);
 //  ocr_state = 1 : file flagged for ocr processing
 //  ocr_state = 2 : ocr on this file has been completed
 $ocr_state = 2;
-sql_query("UPDATE resource SET ocr_state =  '$ocr_state' WHERE ref = '$ID'");
+set_ocr_state($ID, $ocr_state);
 
 // Delete temp files
 array_map('unlink', glob("$ocr_temp_dir/ocr_output_file_$ID.txt"));

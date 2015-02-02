@@ -38,7 +38,7 @@ $ext = $_SESSION['ocr_file_extension_' . $ID];
 $im_preset_1 = build_im_preset_1 ($im_preset_1_crop_w, $im_preset_1_crop_h, $im_preset_1_crop_x, $im_preset_1_crop_y);
 
 // Create intermediate image(s) for OCR
-$ocr_temp_dir = get_temp_dir();
+$ocr_temp_dir = get_ocr_temp_dir();
 $_SESSION['ocr_temp_dir'] = $ocr_temp_dir;
 
 // Image processing with Preset 1 settings

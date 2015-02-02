@@ -27,8 +27,8 @@ function HookOcrstreamUpload_pluploadAfterpluploadfile() {
     }
     if (isset($_SESSION["ocr_cron"])) {
         $ocr_state = 1;
-        sql_query("UPDATE resource SET ocr_state =  '$ocr_state' WHERE ref = '$ref'");
-        echo "OCR state 1: $ref";
+        set_ocr_state($ref, $ocr_state);
+        echo "OCR state set to 1 for ID: $ref";
     }
 }
 
