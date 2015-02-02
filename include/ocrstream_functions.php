@@ -322,7 +322,7 @@ function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $
     } elseif ($mode === 'single_original') {
         $ext = get_file_extension ($ID);
         $resource_path = get_resource_path($ID, true, "", false, $ext);
-        $tess_cmd = ($tesseract_fullpath . ' ' . $resource_path . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ID) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
+        $tess_cmd = (escapeshellarg($tesseract_fullpath) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ID) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
         debug("CLI command: $tess_cmd");
         $process = new Process($tess_cmd);
         $process->run();

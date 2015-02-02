@@ -16,7 +16,6 @@ if (is_session_started() === FALSE) {
     session_start();
 }
 
-global $imagemagick_path;
 global $ocr_min_density;
 global $ocr_max_density;
 global $ocr_min_geometry;

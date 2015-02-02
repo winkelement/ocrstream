@@ -29,8 +29,6 @@ if ($_SESSION["ocr_stage_" . $ID] !== 1) {
     exit(json_encode(array("error" => $lang['ocr_error_stage_1'])));
 }
 
-global $imagemagick_path;
-
 // Get original file extension from stage 1
 $ext = $_SESSION['ocr_file_extension_' . $ID];
 
