@@ -3,9 +3,11 @@ require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 
 function HookOcrstreamEditEditbeforeheader() {
     // Start Session for Single Resource Edit and Upload
-    session_start();
     // Clear Session in case ocr processing failed before and old values are present
-    session_unset();
+    if (is_session_started() === FALSE) {
+        session_start();
+        session_unset();
+    }  
 }
 
 function HookOcrstreamEditAfterfileoptions() {
@@ -30,10 +32,13 @@ function HookOcrstreamEditAfterfileoptions() {
                 // Initilaize Parameters
                 resourceId = <?php echo $ref ?>;
                 baseUrl = '<?php echo $baseurl ?>';
-                fieldNr = '<?php echo $ocr_ftype_1 ?>';                
+                fieldNr = '<?php echo $ocr_ftype_1 ?>';
+                jQuery('#OCRSectionHead').addClass('collapsed');
             </script>
             <script src="../plugins/ocrstream/lib/ocrstream.single.js"></script>
-            <div id="question_ocr" style="font-weight: normal">
+            <div><h2 class="CollapsibleSectionHead" id="OCRSectionHead"><?php echo $lang["ocr-upload-options"] ?></h2>
+            <div class="CollapsibleSection" id="OCRSection">
+            <div class="Question" id="question_ocr" style="font-weight: normal">
                 <table>
                     <tr id = "ocr_start" style="height:37px">
                         <td><label for="ocr_single_resource"><?php echo $lang["ocr_single_resource"] ?></label></td>
@@ -90,6 +95,8 @@ function HookOcrstreamEditAfterfileoptions() {
                     </tr>
                     <?php } ?>
                 </table>
+            </div>
+            </div>
             </div>
             <?php
         }
