@@ -26,7 +26,9 @@ function HookOcrstreamEditAfterfileoptions() {
         if (in_array($ext, $ocr_allowed_extensions)) {
             $choices = get_tesseract_languages();
             ?>
-            <script src="../plugins/ocrstream/lib/jcrop/js/jquery.Jcrop.min.js"></script>            
+            <link rel="stylesheet" href="../plugins/ocrstream/lib/ocrstream.css" type="text/css" />
+            <div id="ocr_status_anim"><div style="margin-top: 66px;"><img src="../plugins/ocrstream/gfx/ocrstream_loader.gif" alt="Loading..." /><p><?php echo $lang['ocr_in_progress']?></p><p id="ocr_status_text"></p></div></div>
+            <script src="../plugins/ocrstream/lib/jcrop/js/jquery.Jcrop.min.js"></script>
             <link rel="stylesheet" href="../plugins/ocrstream/lib/jcrop/css/jquery.Jcrop.css" type="text/css" />
             <script>
                 // Initilaize Parameters
@@ -43,8 +45,6 @@ function HookOcrstreamEditAfterfileoptions() {
                     <tr id = "ocr_start" style="height:37px">
                         <td><label for="ocr_single_resource"><?php echo $lang["ocr_single_resource"] ?></label></td>
                         <td><input type="button" name="ocr_start" style="width:90px" value="<?php echo $lang["ocr_start"] ?>"></td>
-                        <td id="ocr_status_anim"></td>
-                        <td><div id = "ocr_status_text" style="width:400px"></div><span></span></td>
                     </tr>
                     <tr>
                         <td><label for="ocr_language_select"><?php echo $lang["ocr_language_select"] ?></label></td>
@@ -162,11 +162,11 @@ function HookOcrstreamEditReplaceuploadoptions() {
 }
 function HookOcrstreamEditEditbeforesave() {
     if (isset($_POST['ocr_upload_start'])) {
-        $_SESSION['ocr_lang'] = $_POST['ocr_lang'];
-        $_SESSION['ocr_start'] = $_POST['ocr_upload_start'];
-        $_SESSION['ocr_psm'] = $_POST['ocr_psm'];
+        $_SESSION['ocr_lang'] = getvalescaped('ocr_lang','');
+        $_SESSION['ocr_start'] = getvalescaped('ocr_upload_start','');
+        $_SESSION['ocr_psm'] = getvalescaped('ocr_psm','');
     }
     if (isset($_POST['ocr_cron_start'])) {
-        $_SESSION['ocr_cron'] = $_POST['ocr_cron_start'];
+        $_SESSION['ocr_cron'] = getvalescaped('ocr_cron_start','');
     }
 }

@@ -19,6 +19,7 @@ color: #FFF;
 width:150px;
 z-index: 6;
 text-align: center;
+font-size: 10pt;
 }
 
 #ocr_status_anim img{
