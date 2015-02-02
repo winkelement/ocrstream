@@ -19,11 +19,11 @@ function HookOcrstreamCronAddplugincronjob() {
     global $ocr_ftype_1;
     global $lang;
     if ($ocr_cronjob_enabled == true) {        
-        echo PHP_EOL . "OCR Cronjob dummy" . PHP_EOL;
+        echo PHP_EOL . "OCRStream Cronjob" . PHP_EOL;
         $ocr_flagged = sql_array("SELECT ref value from resource WHERE ocr_state = '1'", '');
         $n = count($ocr_flagged);
         if ($n === 0) {
-            exit ('No resources in queue');
+            exit ('No resources in queue' . PHP_EOL);
         }
         foreach($ocr_flagged as $ID) {
             $ext = get_file_extension($ID);
@@ -33,9 +33,7 @@ function HookOcrstreamCronAddplugincronjob() {
             $im_preset_1_crop_x = 0;
             $im_preset_1_crop_y = 0;
             $param_1 = 'none';
-            $error = '';
-            //$ext = 'bla'; //debug
-            
+            $error = '';            
             // Check file extension
             if (!in_array($ext, $ocr_allowed_extensions)){
                 $error = ("Resource ID: $ID".' '.$lang['ocr_error_2']. PHP_EOL);
@@ -65,13 +63,14 @@ function HookOcrstreamCronAddplugincronjob() {
             if ($ext === 'pdf') {
                 $param_1 = 'pre_1';
             }
-            // If no error yet start processing
+            // If no error yet then start processing
             if ($error === '') {
                 $im_preset_1 = build_im_preset_1 ($im_preset_1_crop_w, $im_preset_1_crop_h, $im_preset_1_crop_x, $im_preset_1_crop_y);
                 $ocr_temp_dir = get_ocr_temp_dir();
                 // Image pre-processing with preset 1
                 if ($param_1 === 'pre_1') {
                     ocr_image_processing ($ID, $im_preset_1, $ocr_temp_dir);
+                    // If image creation failed then abort all 
                     if (!file_exists($ocr_temp_dir . '/im_tempfile_' . $ID . '.jpg') && !file_exists($ocr_temp_dir . '/im_tempfile_' . $ID . '-0.jpg')) {
                         exit("Resource ID: $ID".' '.$lang['ocr_error_6']. PHP_EOL);
                     }
@@ -118,11 +117,11 @@ function HookOcrstreamCronAddplugincronjob() {
                 array_map('unlink', glob("$ocr_temp_dir/ocr_output_file_$ID.txt"));
                 array_map('unlink', glob("$ocr_temp_dir/ocrtempfile_$ID.txt"));
                 array_map('unlink', glob("$ocr_temp_dir/im_tempfile_$ID*.*"));
-                echo "Resource ID: $ID OK " . $ext  . PHP_EOL;
+                echo "Resource ID: $ID OK " . PHP_EOL;
             } else {
                 echo $error;
             }
         }
-        echo "Resources flagged for OCR processing: $n" . PHP_EOL;
+        echo "OCR processing done for $n Resources" . PHP_EOL;
     }        
 }
