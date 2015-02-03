@@ -22,6 +22,7 @@ function HookOcrstreamCronAddplugincronjob() {
         echo PHP_EOL . "OCRStream Cronjob" . PHP_EOL;
         $ocr_flagged = sql_array("SELECT ref value from resource WHERE ocr_state = '1'", '');
         $n = count($ocr_flagged);
+        $i = 0;
         if ($n === 0) {
             exit ('No resources in queue' . PHP_EOL);
         }
@@ -33,27 +34,27 @@ function HookOcrstreamCronAddplugincronjob() {
             $im_preset_1_crop_x = 0;
             $im_preset_1_crop_y = 0;
             $param_1 = 'none';
-            $error = '';            
+            $error = ''; 
             // Check file extension
             if (!in_array($ext, $ocr_allowed_extensions)){
-                $error = ("Resource ID: $ID".' '.$lang['ocr_error_2']. PHP_EOL);
+                $error .= ($lang['ocr_error_2']. PHP_EOL);
             }
             // Check resource type
             if (get_res_type ($ID) != 2){
-                $error = ("Resource ID: $ID".' '.$lang['ocr_error_4']. PHP_EOL);
+                $error .= ($lang['ocr_error_4']. PHP_EOL);
             }
             // Check density and geometry for images
-            if ($ext !== 'pdf') {
+            if ($ext !== 'pdf' && in_array($ext, $ocr_allowed_extensions)) {
                 $density = get_image_density ($resource_path);
                 if (intval($density) < $ocr_min_density && intval($density) !== 72) {
-                    $error = ("Resource ID: $ID".' '.$lang['ocr_error_3']. PHP_EOL);
+                    $error .= (['ocr_error_3']. PHP_EOL);
                 }
                 if (intval($density) > $ocr_max_density) {
                     $param_1 = 'pre_1';
                 }
                 $geometry = get_image_geometry ($ID);
                 if (intval($geometry) < $ocr_min_geometry) {
-                    $error = ("Resource ID: $ID".' '.$lang['ocr_error_5']. PHP_EOL);
+                    $error .= ($lang['ocr_error_5']. PHP_EOL);
                 }
                 if (intval($geometry) > $ocr_max_geometry) {
                     $param_1 = 'pre_1';
@@ -63,8 +64,10 @@ function HookOcrstreamCronAddplugincronjob() {
             if ($ext === 'pdf') {
                 $param_1 = 'pre_1';
             }
-            // If no error yet then start processing
-            if ($error === '') {
+            // If checks returned errors skip processing for this resource
+            if ($error !== '') {
+                echo ("Resource ID: $ID" . ' '. $error);
+            } else {
                 $im_preset_1 = build_im_preset_1 ($im_preset_1_crop_w, $im_preset_1_crop_h, $im_preset_1_crop_x, $im_preset_1_crop_y);
                 $ocr_temp_dir = get_ocr_temp_dir();
                 // Image pre-processing with preset 1
@@ -77,8 +80,8 @@ function HookOcrstreamCronAddplugincronjob() {
                 }
                 $resource = get_resource_data($ID);
                 $pg_num = get_page_count($resource, -1);
-                $ocr_lang = $ocr_global_language;
-                $ocr_psm = $ocr_psm_global;
+                $ocr_lang = trim($ocr_global_language);
+                $ocr_psm = trim($ocr_psm_global);
                 // OCR multi pages, processed, tesseract > v3.0.3
                 if ($pg_num > 1 && tesseract_version_is_old() === false) {
                     $mode = 'multipage_new';
@@ -118,10 +121,9 @@ function HookOcrstreamCronAddplugincronjob() {
                 array_map('unlink', glob("$ocr_temp_dir/ocrtempfile_$ID.txt"));
                 array_map('unlink', glob("$ocr_temp_dir/im_tempfile_$ID*.*"));
                 echo "Resource ID: $ID OK " . PHP_EOL;
-            } else {
-                echo $error;
+                $i++;
             }
         }
-        echo "OCR processing done for $n Resources" . PHP_EOL;
+        echo "OCR Processing successful for $i from $n queued resources." . PHP_EOL;
     }        
 }

@@ -35,7 +35,7 @@ $ocr_temp_dir = $_SESSION['ocr_temp_dir'];
 
 // Check for language override flag
 if ($_SESSION["ocr_force_language_" . $ID] === 1){
-    $ocr_lang = $ocr_global_language;
+    $ocr_lang = trim($ocr_global_language);
 }
 
 // OCR multi pages, processed, tesseract > v3.0.3
