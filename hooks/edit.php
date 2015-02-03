@@ -53,7 +53,7 @@ function HookOcrstreamEditAfterfileoptions() {
                                 $usekeys_lang = false;
                                 foreach ($choices as $key => $choice) {
                                     $value = $usekeys_lang ? $key : $choice;
-                                    echo '    <option value="' . $value . '"' . (($ocr_global_language == $value) ? ' selected' : '') . ">$choice</option>";
+                                    echo '    <option value="' . $value . '"' . ((trim($ocr_global_language) == $value) ? ' selected' : '') . ">$choice</option>";
                                 }
                                 ?>
                             </select></td>
@@ -65,7 +65,7 @@ function HookOcrstreamEditAfterfileoptions() {
                                 $usekeys_psm = true;
                                 foreach ($ocr_psm_array as $key => $choice) {
                                     $value = $usekeys_psm ? $key : $choice;
-                                    echo '    <option value="' . $value . '"' . (($ocr_psm_global == $value) ? ' selected' : '') . ">$choice</option>";
+                                    echo '    <option value="' . $value . '"' . ((trim($ocr_psm_global) == $value) ? ' selected' : '') . ">$choice</option>";
                                 }
                                 ?>
                             </select></td>
@@ -129,7 +129,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
                                     $usekeys_lang = false;
                                     foreach ($choices as $key => $choice) {
                                         $value = $usekeys_lang ? $key : $choice;
-                                        echo '    <option value="' . $value . '"' . (($ocr_global_language == $value) ? ' selected' : '') . ">$choice</option>";
+                                        echo '    <option value="' . $value . '"' . ((trim($ocr_global_language) == $value) ? ' selected' : '') . ">$choice</option>";
                                     }
                                     ?>
                                 </select></td>
@@ -141,7 +141,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
                                     $usekeys_psm = true;
                                     foreach ($ocr_psm_array as $key => $choice) {
                                         $value = $usekeys_psm ? $key : $choice;
-                                        echo '    <option value="' . $value . '"' . (($ocr_psm_global == $value) ? ' selected' : '') . ">$choice</option>";
+                                        echo '    <option value="' . $value . '"' . ((trim($ocr_psm_global) == $value) ? ' selected' : '') . ">$choice</option>";
                                     }
                                     ?>
                                 </select></td>

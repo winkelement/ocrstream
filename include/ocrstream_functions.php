@@ -104,7 +104,17 @@ function get_tesseract_languages() {
         array_shift($tesseract_languages); // Skipping first line output ("Available languages...")
         array_pop($tesseract_languages); // Skipping last line (empty)
     }
+    array_walk($tesseract_languages, 'trim_value');
     return $tesseract_languages;
+}
+
+/**
+ * Trim value, use for arrays
+ * 
+ * @param string $value
+ */
+function trim_value(&$value) {
+    $value = trim($value);
 }
 
 /**
@@ -134,8 +144,7 @@ function tesseract_version_is_old() {
  * 
  * @return boolean
  */
-function is_session_started()
-{
+function is_session_started() {
     if ( php_sapi_name() !== 'cli' ) {
         if ( version_compare(phpversion(), '5.4.0', '>=') ) {
             return session_status() === PHP_SESSION_ACTIVE ? TRUE : FALSE;
