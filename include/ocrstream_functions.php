@@ -339,3 +339,18 @@ function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $
         debug ("CLI errors: " . trim($process->getErrorOutput()));
     }   
 }
+
+function set_ocronjob_field () {
+    $ocronjob_fieldname = 'ocronjob';
+    $fieldnames = sql_array("SELECT name value FROM resource_type_field", '');
+    if (in_array($ocronjob_fieldname, $fieldnames)) {
+        return;
+    } else {
+        $last_field_number = sql_value("SELECT ref value FROM resource_type_field ORDER BY ref DESC LIMIT 1", '');
+        $last_field_number++;
+        sql_query("INSERT INTO resource_type_field "
+                . "(ref, name, title, type, options, resource_type, display_field) "
+                . "VALUES "
+                . "($last_field_number, 'ocronjob', 'OCR Cronjob', '2', 'Cronjob enabled', '2', '0')", '');
+    }
+}
