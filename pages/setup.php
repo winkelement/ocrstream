@@ -19,7 +19,7 @@ $page_intro = '<p>' . $lang['ocrstream_intro'] . '</p>';
 $page_def = array();
 
 if (is_tesseract_installed()) {
-    set_ocronjob_field (); 
+    set_ocronjob_field ();
     $tesseract_version_output = get_tesseract_version();
     $tesseract_version = $tesseract_version_output[0];
     $leptonica_version = $tesseract_version_output[1];

@@ -70,15 +70,27 @@ function is_tesseract_installed() {
  * @return string Tesseract version output string
  */
 function get_tesseract_version() {
-    $tesseract_fullpath = get_tesseract_fullpath();
-    $tesseract_version_command = run_command(escapeshellarg($tesseract_fullpath) . ' -v', true);
-    $tesseract_version_output = explode("\n", $tesseract_version_command);
-    if (stristr($tesseract_version_output [0], 'libtiff.so.5')) { // Skipping error output in first line if libftiff/liblept version mismatch
-        $tesseract_version = $tesseract_version_output[1];
-        $leptonica_version = $tesseract_version_output[2];
+    // Check if version information is already in plugin_config
+    $plugin_config = get_plugin_config('ocrstream');
+    if (isset($plugin_config['tesseract_version']) && isset($plugin_config['leptonica_version'])) {
+        // Read version from config and return array
+        $tesseract_version = $plugin_config['tesseract_version'];
+        $leptonica_version = $plugin_config['leptonica_version'];
     } else {
-        $tesseract_version = $tesseract_version_output[0];
-        $leptonica_version = $tesseract_version_output[1];
+        $tesseract_fullpath = get_tesseract_fullpath();
+        $tesseract_version_command = run_command(escapeshellarg($tesseract_fullpath) . ' -v', true);
+        $tesseract_version_output = explode("\n", $tesseract_version_command);
+        if (stristr($tesseract_version_output [0], 'libtiff.so.5')) { // Skipping error output in first line if libftiff/liblept version mismatch
+            $tesseract_version = $tesseract_version_output[1];
+            $leptonica_version = $tesseract_version_output[2];
+        } else {
+            $tesseract_version = $tesseract_version_output[0];
+            $leptonica_version = $tesseract_version_output[1];
+        }
+        // Add version to plugin_config and write it back to db
+        $plugin_config['tesseract_version'] = trim($tesseract_version);
+        $plugin_config['leptonica_version'] = trim($leptonica_version);
+        set_plugin_config('ocrstream', $plugin_config);
     }
     return array($tesseract_version, $leptonica_version);
 }
@@ -93,18 +105,29 @@ function get_tesseract_version() {
  * @return array 
  */
 function get_tesseract_languages() {
-    $tesseract_fullpath = get_tesseract_fullpath();
-    $tesseract_language_command = run_command(escapeshellarg($tesseract_fullpath) . ' --list-langs', true);
-    $tesseract_languages = explode("\n", $tesseract_language_command);
-    if (stristr($tesseract_languages [0], 'libtiff.so.5')) { // Skipping additional line if libftiff version does not match liblept version
-        array_shift($tesseract_languages);
-        array_shift($tesseract_languages);
-        array_pop($tesseract_languages);
+    // Check if languages are already in plugin_config
+    $plugin_config = get_plugin_config('ocrstream');
+    if (isset($plugin_config['tesseract_languages'])) {
+        // Read languages from config and return array
+        $tesseract_languages = $plugin_config['tesseract_languages'];
     } else {
-        array_shift($tesseract_languages); // Skipping first line output ("Available languages...")
-        array_pop($tesseract_languages); // Skipping last line (empty)
+        // Get languages via tesseract cli
+        $tesseract_fullpath = get_tesseract_fullpath();
+        $tesseract_language_command = run_command(escapeshellarg($tesseract_fullpath) . ' --list-langs', true);
+        $tesseract_languages = explode("\n", $tesseract_language_command);
+        if (stristr($tesseract_languages [0], 'libtiff.so.5')) { // Skipping additional line if libftiff version does not match liblept version
+            array_shift($tesseract_languages);
+            array_shift($tesseract_languages);
+            array_pop($tesseract_languages);
+        } else {
+            array_shift($tesseract_languages); // Skipping first line output ("Available languages...")
+            array_pop($tesseract_languages); // Skipping last line (empty)
+        }
+        array_walk($tesseract_languages, 'trim_value');
+        // Add langauges to plugin_config and write it back to db
+        $plugin_config['tesseract_languages'] = $tesseract_languages;
+        set_plugin_config('ocrstream', $plugin_config);        
     }
-    array_walk($tesseract_languages, 'trim_value');
     return $tesseract_languages;
 }
 
