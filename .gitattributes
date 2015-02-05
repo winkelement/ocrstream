@@ -1,0 +1,5 @@
+lib/Process/* linguist-vendored
+lib/alphanum/* linguist-vendored
+lib/jcrop/* linguist-vendored
+lib/jquery-ui.css linguist-vendored
+lib/jquery-ui.js linguist-vendored
