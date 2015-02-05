@@ -149,7 +149,8 @@ function trim_value(&$value) {
  * @return boolean
  */
 function tesseract_version_is_old() {
-    $tesseract_version = get_tesseract_version()[0];
+    $tesseract_version_array = get_tesseract_version();
+    $tesseract_version = $tesseract_version_array[0];
     if (substr($tesseract_version, 10, 1) < 3) {
         $tesseract_version_is_old = true;
     } else {
