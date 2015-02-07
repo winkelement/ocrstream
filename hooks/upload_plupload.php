@@ -25,6 +25,7 @@ function HookOcrstreamUpload_pluploadAfterpluploadfile() {
         </script>
         <script src="../plugins/ocrstream/lib/ocrstream.upload.js"></script> <?php
     }
+    // @todo ######## Remove ############
     if (isset($_SESSION["ocr_cron"])) {
         $ocr_state = 1;
         set_ocr_state($ref, $ocr_state);

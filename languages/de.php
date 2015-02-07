@@ -51,5 +51,6 @@ $lang["ocr-upload-options"] = 'OCR Optionen';
 $lang['ocr_cronjob'] = 'Erstellt einen Cronjob für die Texterkennung.';
 $lang['ocr_cronjob_help'] = 'Markierte Resourcen (ocr_state = 1) werden mit Standardeinstellungen verarbeitet.';
 $lang["ocr_upload_cronjob"] = 'Cronjob mit globalen OCR Einstellungen erstellen';
+$lang['ocronjob_enabled'] = 'Cronjob gesetzt';
 $lang['ocr_in_progress'] = 'Texterkennung läuft...';
 ?>

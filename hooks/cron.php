@@ -20,13 +20,15 @@ function HookOcrstreamCronAddplugincronjob() {
     global $lang;
     if ($ocr_cronjob_enabled == true) {        
         echo PHP_EOL . "OCRStream Cronjob" . PHP_EOL;
-        $ocr_flagged = sql_array("SELECT ref value from resource WHERE ocr_state = '1'", '');
+        $start_ocron_total = microtime(true);
+        $ocr_flagged = get_ocronjob_resources();
         $n = count($ocr_flagged);
         $i = 0;
         if ($n === 0) {
             exit ('No resources in queue' . PHP_EOL);
         }
         foreach($ocr_flagged as $ID) {
+            $start_ocron_resource = microtime(true);
             $ext = get_file_extension($ID);
             $resource_path = get_resource_path($ID, true, "", false, $ext);
             $im_preset_1_crop_w = 0;
@@ -116,14 +118,17 @@ function HookOcrstreamCronAddplugincronjob() {
                 update_xml_metadump($ID);
                 $ocr_state = 2;
                 set_ocr_state($ID, $ocr_state);
+                set_ocronjob($ID, $ocr_state);
                 // Delete temp files
                 array_map('unlink', glob("$ocr_temp_dir/ocr_output_file_$ID.txt"));
                 array_map('unlink', glob("$ocr_temp_dir/ocrtempfile_$ID.txt"));
                 array_map('unlink', glob("$ocr_temp_dir/im_tempfile_$ID*.*"));
-                echo "Resource ID: $ID OK " . PHP_EOL;
+                $elapsed_ocron_resource = round((microtime(true) - $start_ocron_resource), 3);
+                echo "Resource ID $ID: OK (Time: $elapsed_ocron_resource)" . PHP_EOL;
                 $i++;
             }
         }
-        echo "OCR Processing successful for $i from $n queued resources." . PHP_EOL;
+        $elapsed_ocron_total = round((microtime(true) - $start_ocron_total), 3);
+        echo "OCR Processing successful for $i from $n queued resources. Total time $elapsed_ocron_total (s)." . PHP_EOL;
     }        
 }

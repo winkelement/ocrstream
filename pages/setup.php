@@ -19,7 +19,6 @@ $page_intro = '<p>' . $lang['ocrstream_intro'] . '</p>';
 $page_def = array();
 
 if (is_tesseract_installed()) {
-    set_ocronjob_field ();
     $tesseract_version_output = get_tesseract_version();
     $tesseract_version = $tesseract_version_output[0];
     $leptonica_version = $tesseract_version_output[1];
@@ -61,6 +60,9 @@ $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $page_intro);
 include '../../../include/footer.php';
+if ($ocr_cronjob_enabled) {
+    set_ocronjob_field ();
+}
     ?>
 <link rel="stylesheet" href="../lib/jquery-ui.css">
 <script src="../lib/jquery-ui.js"></script>

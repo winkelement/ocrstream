@@ -365,16 +365,46 @@ function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $
 }
 
 function set_ocronjob_field () {
+    global $lang;
     $ocronjob_fieldname = 'ocronjob';
     $fieldnames = sql_array("SELECT name value FROM resource_type_field", '');
+    // Check if field is already there, initialize if not
     if (in_array($ocronjob_fieldname, $fieldnames)) {
         return;
     } else {
         $last_field_number = sql_value("SELECT ref value FROM resource_type_field ORDER BY ref DESC LIMIT 1", '');
         $last_field_number++;
+        $options = $lang['ocronjob_enabled'];
         sql_query("INSERT INTO resource_type_field "
                 . "(ref, name, title, type, options, resource_type, display_field) "
                 . "VALUES "
-                . "($last_field_number, 'ocronjob', 'OCR Cronjob', '2', 'Cronjob enabled', '2', '0')", '');
+                . "($last_field_number, 'ocronjob', 'OCR Cronjob', '2', '$options', '2', '0')", '');
+    }
+}
+
+function get_ocronjob_resources() {
+    $ocronjob_field_array = sql_query("select ref,options from resource_type_field where name = 'ocronjob'", '');
+    $ocronjob_field_array = $ocronjob_field_array[0];
+    $ocr_flagged = sql_array("select resource value from resource_data where resource_type_field = $ocronjob_field_array[ref] and value = ',$ocronjob_field_array[options]'", '');
+    return $ocr_flagged;
+}
+
+function set_ocronjob($ID, $ocr_state) {
+    $ID_filter_options = ["options" =>['min_range' => 1, 'max_range' => sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')]];
+    $ID_filtered = filter_var($ID, FILTER_VALIDATE_INT, $ID_filter_options);
+    $ocr_state_filter_options = ["options" =>['min_range' => 0, 'max_range' => 2]];
+    $ocr_state_filtered = filter_var($ocr_state, FILTER_VALIDATE_INT, $ocr_state_filter_options);
+    if (!$ID_filtered || !$ocr_state_filtered) {
+        $error_msg = "Error: OCR state ($ocr_state) Resource ID ($ID).";
+        debug("OCRStream: $error_msg");
+        return($error_msg);
+    }
+    if ($ocr_state === 2) {
+        // Reset ocronjob field
+        sql_query("UPDATE resource_data SET value =  '' WHERE resource = '$ID_filtered'");
+    } elseif ($ocr_state === 1) {
+        // Set ocronjob field
+        $ocronjob_options = sql_value("select options value from resource_type_field where name = 'ocronjob'", '');
+        sql_query("UPDATE resource_data SET value =  ',$ocronjob_options' WHERE resource = '$ID_filtered'");
     }
 }

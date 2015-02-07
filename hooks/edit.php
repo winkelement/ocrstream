@@ -88,12 +88,13 @@ function HookOcrstreamEditAfterfileoptions() {
                                 ?>
                             </select></td>
                     </tr>
-                    <?php if ($ocr_cronjob_enabled == true){?>
-                    <tr id = "ocr_cron" style="height:37px">
-                        <td><label for="ocr_upload_cronjob"><?php echo $lang["ocr_upload_cronjob"] ?></label></td>
-                        <td><input type="checkbox" name="ocr_cron_start" id= "ocr_cron_start" onchange="setOCRCron(<?php echo $ref; ?>);"></td>
-                    </tr>
-                    <?php } ?>
+                    <?php// @todo ###### Remove ######
+                    //if ($ocr_cronjob_enabled == true){?>
+<!--                    <tr id = "ocr_cron" style="height:37px">
+                        <td><label for="ocr_upload_cronjob"><?php //echo $lang["ocr_upload_cronjob"] ?></label></td>
+                        <td><input type="checkbox" name="ocr_cron_start" id= "ocr_cron_start" onchange="setOCRCron(<?php //echo $ref; ?>);"></td>
+                    </tr>-->
+                    <?php //} ?>
                 </table>
             </div>
             </div>
@@ -146,12 +147,13 @@ function HookOcrstreamEditReplaceuploadoptions() {
                                     ?>
                                 </select></td>
                         </tr>
-                        <?php if ($ocr_cronjob_enabled == true){?>
-                        <tr id = "ocr_cron" style="height:37px">
-                            <td><label for="ocr_upload_cronjob"><?php echo $lang["ocr_upload_cronjob"] ?></label></td>
+                        <?php//@todo ###### Remove ####### 
+                        //if ($ocr_cronjob_enabled == true){?>
+<!--                        <tr id = "ocr_cron" style="height:37px">
+                            <td><label for="ocr_upload_cronjob"><?php// echo $lang["ocr_upload_cronjob"] ?></label></td>
                             <td><input type="checkbox" name="ocr_cron_start" id= "ocr_cron_start" onchange="setOCRCron();"></td>
-                        </tr>
-                        <?php } ?>
+                        </tr>-->
+                        <?php// } ?>
                     </table>
                 </div>
             </div>
