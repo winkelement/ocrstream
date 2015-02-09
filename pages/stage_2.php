@@ -20,7 +20,7 @@ $im_preset_1_crop_x = filter_input(INPUT_GET, 'x');
 $im_preset_1_crop_y = filter_input(INPUT_GET, 'y');
 $ID = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
 
-if (is_session_started() === FALSE) {
+if (is_session_started() === false) {
     session_start();
 }
 

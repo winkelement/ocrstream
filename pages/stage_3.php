@@ -18,7 +18,7 @@ $ocr_lang = filter_input(INPUT_GET, 'ocr_lang');
 $ocr_psm = filter_input(INPUT_GET, 'ocr_psm');
 $param_1 = filter_input(INPUT_GET, 'param_1');
 
-if (is_session_started() === FALSE) {
+if (is_session_started() === false) {
     session_start();
 }
 

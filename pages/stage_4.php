@@ -11,7 +11,7 @@ require_once "../../../include/resource_functions.php";
 require_once "../include/ocrstream_functions.php";
 $ID = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
 
-if (is_session_started() === FALSE) {
+if (is_session_started() === false) {
     session_start();
 }
 

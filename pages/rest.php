@@ -11,6 +11,7 @@ $ocr_state_query = filter_input(INPUT_GET, 'ocr_state_query', FILTER_VALIDATE_BO
 $get_true_size = filter_input(INPUT_GET, 'get_true_size', FILTER_VALIDATE_BOOLEAN);
 
 // Set ocr_state flag in database
+//@todo #### Remove ####
 if (isset($ref) && isset($ocr_state)) {
     sql_query("UPDATE resource SET ocr_state =  '$ocr_state' WHERE ref = '$ref'");
 }

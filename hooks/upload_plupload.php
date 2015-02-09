@@ -12,7 +12,7 @@ function HookOcrstreamUpload_pluploadUpload_page_top() {
 function HookOcrstreamUpload_pluploadAfterpluploadfile() {
     global $ref;
     global $baseurl;
-    if (is_session_started() === FALSE) {
+    if (is_session_started() === false) {
         session_start();
     }
     if (isset($_SESSION["ocr_start"])) {
@@ -26,10 +26,10 @@ function HookOcrstreamUpload_pluploadAfterpluploadfile() {
         <script src="../plugins/ocrstream/lib/ocrstream.upload.js"></script> <?php
     }
     // @todo ######## Remove ############
-    if (isset($_SESSION["ocr_cron"])) {
-        $ocr_state = 1;
-        set_ocr_state($ref, $ocr_state);
-        echo "OCR state set to 1 for ID: $ref";
-    }
+//    if (isset($_SESSION["ocr_cron"])) {
+//        $ocr_state = 1;
+//        set_ocr_state($ref, $ocr_state);
+//        echo "OCR state set to 1 for ID: $ref";
+//    }
 }
 

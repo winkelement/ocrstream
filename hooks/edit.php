@@ -4,7 +4,7 @@ require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 function HookOcrstreamEditEditbeforeheader() {
     // Start Session for Single Resource Edit and Upload
     // Clear Session in case ocr processing failed before and old values are present
-    if (is_session_started() === FALSE) {
+    if (is_session_started() === false) {
         session_start();
         session_unset();
     }  
@@ -18,7 +18,7 @@ function HookOcrstreamEditAfterfileoptions() {
     global $ocr_allowed_extensions;
     global $ocr_psm_array;
     global $ocr_psm_global;
-    global $ocr_cronjob_enabled;
+    //global $ocr_cronjob_enabled;
     global $ocr_ftype_1;
     if (is_tesseract_installed()) {
         // Hide OCR options for filetypes not allowed
@@ -110,7 +110,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
     global $ocr_global_language;
     global $ocr_psm_array;
     global $ocr_psm_global;
-    global $ocr_cronjob_enabled;
+    //global $ocr_cronjob_enabled;
     $choices = get_tesseract_languages();
     if (($ref < 0) && (is_tesseract_installed())){
         ?>
@@ -163,12 +163,14 @@ function HookOcrstreamEditReplaceuploadoptions() {
     }
 }
 function HookOcrstreamEditEditbeforesave() {
-    if (isset($_POST['ocr_upload_start'])) {
+    $ocr_upload_start = getvalescaped('ocr_upload_start','');
+    if (isset($ocr_upload_start)) {
         $_SESSION['ocr_lang'] = getvalescaped('ocr_lang','');
         $_SESSION['ocr_start'] = getvalescaped('ocr_upload_start','');
         $_SESSION['ocr_psm'] = getvalescaped('ocr_psm','');
     }
-    if (isset($_POST['ocr_cron_start'])) {
-        $_SESSION['ocr_cron'] = getvalescaped('ocr_cron_start','');
-    }
+    //@todo  ##### REMOVE #####
+//    if (isset($_POST['ocr_cron_start'])) {
+//        $_SESSION['ocr_cron'] = getvalescaped('ocr_cron_start','');
+//    }
 }
