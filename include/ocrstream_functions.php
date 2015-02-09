@@ -171,12 +171,12 @@ function tesseract_version_is_old() {
 function is_session_started() {
     if ( php_sapi_name() !== 'cli' ) {
         if ( version_compare(phpversion(), '5.4.0', '>=') ) {
-            return session_status() === PHP_SESSION_ACTIVE ? TRUE : FALSE;
+            return session_status() === PHP_SESSION_ACTIVE ? true : false;
         } else {
-            return session_id() === '' ? FALSE : TRUE;
+            return session_id() === '' ? false : true;
         }
     }
-    return FALSE;
+    return true;
 }
 
 /**
@@ -205,16 +205,17 @@ function is_resource_id_valid ($ID) {
 }
 
 /**
- * Get Image density
+ * Get Image density and Units
  * 
  * @global string $imagemagick_path
  * @param string $resource_path
- * @return mixed Density value
+ * @return array Density value and units
  */
 function get_image_density ($resource_path) {
     $convert_fullpath = get_utility_path("im-convert");
-    $density = run_command($convert_fullpath . ' -format %y ' . $resource_path . ' info:');
-    return $density;
+    $density_output = run_command($convert_fullpath . ' -format %y,%U ' . $resource_path . ' info:');
+    $density_array = explode(",", $density_output);
+    return $density_array;
 }
 
 /**
@@ -288,11 +289,12 @@ function build_im_preset_1 ($im_preset_1_crop_w, $im_preset_1_crop_h, $im_preset
  * @param string $ocr_temp_dir OCR temp directory
  */
 function ocr_image_processing ($ID, $im_preset, $ocr_temp_dir) {
+    global $ocr_im_ext;
     set_time_limit(1800);
     $convert_fullpath = get_utility_path("im-convert");
     $ext = get_file_extension ($ID);
     $resource_path = get_resource_path($ID, true, "", false, $ext);
-    $im_ocr_cmd = $convert_fullpath . " " . implode(' ', $im_preset) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/im_tempfile_' . $ID . '.jpg');
+    $im_ocr_cmd = $convert_fullpath . " " . implode(' ', $im_preset) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/im_tempfile_' . $ID . '.' . $ocr_im_ext);
     debug("CLI command: $im_ocr_cmd");
     $process = new Process($im_ocr_cmd);
     $process->setTimeout(3600);
@@ -312,12 +314,13 @@ function ocr_image_processing ($ID, $im_preset, $ocr_temp_dir) {
  * @param int $pg_num Number of pages 
  */
 function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $pg_num) {
+    global $ocr_im_ext;
     $tesseract_fullpath = get_tesseract_fullpath();
     if ($mode === 'multipage_new') {
         $n = 0;
         set_time_limit(1800);
         while ($n < $pg_num) {
-            file_put_contents($ocr_temp_dir . '/im_ocr_file_' . $ID, trim($ocr_temp_dir . '/im_tempfile_' . $ID . '-' . $n . '.jpg').PHP_EOL, FILE_APPEND);
+            file_put_contents($ocr_temp_dir . '/im_ocr_file_' . $ID, trim($ocr_temp_dir . '/im_tempfile_' . $ID . '-' . $n . '.' . $ocr_im_ext).PHP_EOL, FILE_APPEND);
             $n++;
         }
         $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_temp_dir . '/im_ocr_file_' . $ID . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ID) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
@@ -332,7 +335,7 @@ function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $
         $i = 0;
         set_time_limit(1800);
         while ($i < $pg_num) {
-            $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ID . '-' . $i . '.jpg');
+            $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ID . '-' . $i . '.' . $ocr_im_ext);
             $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocrtempfile_' . $ID) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
             debug("CLI command: $tess_cmd");
             $process = new Process($tess_cmd);
@@ -345,7 +348,7 @@ function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $
             $i ++;
         }
     } elseif ($mode === 'single_processed') {
-        $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ID . '.jpg');
+        $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ID . '.' . $ocr_im_ext);
         $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ID) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
         debug("CLI command: $tess_cmd");
         $process = new Process($tess_cmd);
@@ -395,7 +398,7 @@ function set_ocronjob($ID, $ocr_state) {
     $ocr_state_filter_options = ["options" =>['min_range' => 0, 'max_range' => 2]];
     $ocr_state_filtered = filter_var($ocr_state, FILTER_VALIDATE_INT, $ocr_state_filter_options);
     if (!$ID_filtered || !$ocr_state_filtered) {
-        $error_msg = "Error: OCR state ($ocr_state) Resource ID ($ID).";
+        $error_msg = "Error setting cronjob: OCR state ($ocr_state) Resource ID ($ID).";
         debug("OCRStream: $error_msg");
         return($error_msg);
     }
