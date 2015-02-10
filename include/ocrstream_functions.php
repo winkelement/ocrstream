@@ -197,7 +197,7 @@ function get_file_extension ($ref) {
  * @return boolean
  */
 function is_resource_id_valid ($ID) {
-    if ($ID == null || $ID < 1 || $ID > sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')) {
+    if ($ID === null || $ID < 1 || $ID > sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')) {
     return false;
     } else {
     return true;
@@ -402,12 +402,13 @@ function set_ocronjob($ID, $ocr_state) {
         debug("OCRStream: $error_msg");
         return($error_msg);
     }
+    $ocronjob_field = sql_value("select ref value from resource_type_field where name = 'ocronjob'", '');
     if ($ocr_state === 2) {
         // Reset ocronjob field
-        sql_query("UPDATE resource_data SET value =  '' WHERE resource = '$ID_filtered'");
+        sql_query("UPDATE resource_data SET value =  '' WHERE resource = '$ID_filtered' AND resource_type_field = '$ocronjob_field'");
     } elseif ($ocr_state === 1) {
         // Set ocronjob field
         $ocronjob_options = sql_value("select options value from resource_type_field where name = 'ocronjob'", '');
-        sql_query("UPDATE resource_data SET value =  ',$ocronjob_options' WHERE resource = '$ID_filtered'");
+        sql_query("UPDATE resource_data SET value =  ',$ocronjob_options' WHERE resource = '$ID_filtered' AND resource_type_field = '$ocronjob_field'");
     }
 }
