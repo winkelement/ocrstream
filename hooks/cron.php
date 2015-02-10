@@ -47,7 +47,12 @@ function HookOcrstreamCronAddplugincronjob() {
             }
             // Check density and geometry for images
             if ($ext !== 'pdf' && in_array($ext, $ocr_allowed_extensions)) {
-                $density = get_image_density ($resource_path);
+                $density_array = get_image_density ($resource_path);
+                if ($density_array[1] == 'PixelsPerCentimeter') {
+                    $density = $density_array[0] * 2.54;
+                } else {
+                    $density = $density_array[0];
+                }
                 if (intval($density) < $ocr_min_density && intval($density) !== 72) {
                     $error .= (['ocr_error_3']. PHP_EOL);
                 }
