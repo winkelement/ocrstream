@@ -110,9 +110,10 @@ function HookOcrstreamEditReplaceuploadoptions() {
     global $ocr_global_language;
     global $ocr_psm_array;
     global $ocr_psm_global;
-    //global $ocr_cronjob_enabled;
-    $choices = get_tesseract_languages();
-    if (($ref < 0) && (is_tesseract_installed())){
+    global $resource;
+    //global $ocr_cronjob_enabled; 
+    if (($ref < 0) && (is_tesseract_installed()) && ($resource['resource_type'] == '2')){        
+        $choices = get_tesseract_languages();
         ?>
         <script src="../plugins/ocrstream/lib/ocrstream.upload.options.js"></script>
         <div><h2 class="CollapsibleSectionHead"><?php echo $lang["ocr-upload-options"] ?></h2>
