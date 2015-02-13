@@ -15,7 +15,7 @@ function HookOcrstreamUpload_pluploadAfterpluploadfile() {
     if (is_session_started() === false) {
         session_start();
     }
-    if (isset($_SESSION["ocr_start"])) {
+    if (isset($_SESSION["ocr_start"]) && $_SESSION["ocr_start"] == 'on') {
         ?>
         <script>
             resourceId = <?php echo $ref ?>;

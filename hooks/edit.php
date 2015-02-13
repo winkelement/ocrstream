@@ -164,7 +164,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
 }
 function HookOcrstreamEditEditbeforesave() {
     $ocr_upload_start = getvalescaped('ocr_upload_start','');
-    if (isset($ocr_upload_start)) {
+    if (isset($ocr_upload_start) && $ocr_upload_start == 'on') {
         $_SESSION['ocr_lang'] = getvalescaped('ocr_lang','');
         $_SESSION['ocr_start'] = getvalescaped('ocr_upload_start','');
         $_SESSION['ocr_psm'] = getvalescaped('ocr_psm','');
