@@ -39,13 +39,13 @@ if ($_SESSION["ocr_force_language_" . $ID] === 1){
 }
 
 // OCR multi pages, processed, tesseract > v3.0.3
-if ($pg_num > 1 && tesseract_version_is_old() === false) {
-    $mode = 'multipage_new';
+if ($pg_num > 1) {
+    $mode = 'multipage';
 }
-// OCR multi pages, processed, tesseract < v3.0.3
-elseif ($pg_num > 1 && tesseract_version_is_old() === true) { 
-    $mode = 'multipage_old';
-}
+//// OCR multi pages, processed, tesseract < v3.0.3
+//elseif ($pg_num > 1 && tesseract_version_is_old() === true) { 
+//    $mode = 'multipage_old';
+//}
 // OCR single page processed
 elseif (($param_1 === 'pre_1' && $pg_num === '1') || ($_SESSION["ocr_force_processing_" . $ID] === 1 && $pg_num === '1')) {
     $mode = 'single_processed';

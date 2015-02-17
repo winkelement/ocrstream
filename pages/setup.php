@@ -24,8 +24,8 @@ if (is_tesseract_installed()) {
     $leptonica_version = $tesseract_version_output[1];
     $tesseract_languages = get_tesseract_languages();
     $page_def[] = config_add_text_input('tesseract_path', $lang['tesseract_path_info']);
-    $page_def[] = config_add_html("<div id = 'tesseract_version'><p style=font-size:14px;>" . $tesseract_version . "<br>" . $leptonica_version . "</p></div>");
-    if (tesseract_version_is_old()) {
+    $page_def[] = config_add_html("<div id = 'tesseract_version'><p style=font-size:14px;>Tesseract version: ". $tesseract_version . "<br> Leptonica version: " . $leptonica_version . "</p></div>");
+    if ($tesseract_version_output[2]) {
         $page_def[] = config_add_html($lang['tesseract_old_version_info']);
         $page_def[] = config_add_html("<p><br></p>");
     }
@@ -94,6 +94,14 @@ if ($ocr_cronjob_enabled) {
         jQuery('#ocr_max_density').tooltip({
             items: "[name]",
             content: '<?php echo $lang['ocr_max_density_help'] ?>'
+        });
+        jQuery('#ocr_min_geometry').tooltip({
+            items: "[name]",
+            content: '<?php echo $lang['ocr_min_geometry_help'] ?>'
+        });
+        jQuery('#ocr_max_geometry').tooltip({
+            items: "[name]",
+            content: '<?php echo $lang['ocr_max_geometry_help'] ?>'
         });
         jQuery('#ocr_cronjob_enabled').tooltip({
             items: "[name]",

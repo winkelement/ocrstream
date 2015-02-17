@@ -65,9 +65,9 @@ function is_tesseract_installed() {
 }
 
 /**
- * Get tesseract version
+ * Get tesseract and leptonica version information
  * 
- * @return string Tesseract version output string
+ * @return array tesseract version, leptonica version, tesseract_is_old
  */
 function get_tesseract_version() {
     // Check if version information is already in plugin_config
@@ -87,12 +87,22 @@ function get_tesseract_version() {
             $tesseract_version = $tesseract_version_output[0];
             $leptonica_version = $tesseract_version_output[1];
         }
+        $version_regex = "/([0-9.]+)/mi"; 
+        preg_match_all($version_regex, $tesseract_version, $tess_matches);
+        preg_match_all($version_regex, $leptonica_version, $lept_matches);
+        $tesseract_version = trim($tess_matches[0][0]);
+        $leptonica_version = trim($lept_matches[0][0]);
         // Add version to plugin_config and write it back to db
-        $plugin_config['tesseract_version'] = trim($tesseract_version);
-        $plugin_config['leptonica_version'] = trim($leptonica_version);
+        $plugin_config['tesseract_version'] = $tesseract_version;
+        $plugin_config['leptonica_version'] = $leptonica_version;
         set_plugin_config('ocrstream', $plugin_config);
     }
-    return array($tesseract_version, $leptonica_version);
+    if (version_compare($tesseract_version, '3.03') >= 0) {
+        $tesseract_version_is_old = false;
+    } else {
+        $tesseract_version_is_old = true;
+    }       
+    return array($tesseract_version, $leptonica_version, $tesseract_version_is_old);
 }
 
 /**
@@ -138,29 +148,6 @@ function get_tesseract_languages() {
  */
 function trim_value(&$value) {
     $value = trim($value);
-}
-
-/**
- * Check if tesseract version is old
- * 
- * Version 3.0.3 of tesseract includes many improvements and optimizations.
- * Older Versions do not support image input via textfile (list of imagepaths) for multipage processing and don't support pdf output.
- * 
- * @return boolean
- */
-function tesseract_version_is_old() {
-    $tesseract_version_array = get_tesseract_version();
-    $tesseract_version = $tesseract_version_array[0];
-    if (substr($tesseract_version, 10, 1) < 3) {
-        $tesseract_version_is_old = true;
-    } else {
-        if (substr($tesseract_version, 13, 1) < 3) {
-            $tesseract_version_is_old = true;
-        } else {
-            $tesseract_version_is_old = false;
-        }
-    }
-    return $tesseract_version_is_old;
 }
 
 /**
@@ -219,13 +206,18 @@ function get_image_density ($resource_path) {
 }
 
 /**
- * Get image geometry
+ * Get image geometry in pixels
  * 
  * @param int $ID Resource ID
- * @return int Image geometry
+ * @return int Image geometry (px)
  */
 function get_image_geometry ($ID) {
-    $geometry = sql_value("SELECT width value FROM resource_dimensions WHERE resource ='$ID'", '');
+    $geometry_array = sql_query("SELECT width, height FROM resource_dimensions WHERE resource ='$ID'", '');
+    if ($geometry_array[0]['width'] < $geometry_array[0]['height']) {
+        $geometry = $geometry_array[0]['width'];
+    } else {
+        $geometry = $geometry_array[0]['height'];
+    }
     return $geometry;
 }
 
@@ -284,6 +276,8 @@ function build_im_preset_1 ($im_preset_1_crop_w, $im_preset_1_crop_h, $im_preset
 /**
  * Image pre-processing for OCR
  * 
+ * Using Symfony Process component for executing convert
+ * 
  * @param int $ID Resource ID
  * @param array $im_preset Array of imagemagick options for image processing
  * @param string $ocr_temp_dir OCR temp directory
@@ -306,6 +300,8 @@ function ocr_image_processing ($ID, $im_preset, $ocr_temp_dir) {
 /**
  * Tesseract processing
  * 
+ * Using Symfony Process component for executing tesseract
+ * 
  * @param int $ID Resource ID
  * @param string $ocr_lang Language for OCR processing
  * @param int $ocr_psm Tesseract page segmentation mode
@@ -316,7 +312,8 @@ function ocr_image_processing ($ID, $im_preset, $ocr_temp_dir) {
 function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $pg_num) {
     global $ocr_im_ext;
     $tesseract_fullpath = get_tesseract_fullpath();
-    if ($mode === 'multipage_new') {
+    $tesseract_version_array = get_tesseract_version();
+    if ($mode === 'multipage' && $tesseract_version_array[2] === false) {
         $n = 0;
         set_time_limit(1800);
         while ($n < $pg_num) {
@@ -331,7 +328,7 @@ function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $
         $process->run();
         debug ("CLI output: " . $process->getOutput());
         debug ("CLI errors: " . trim($process->getErrorOutput()));
-    } elseif ($mode === 'multipage_old') {
+    } elseif ($mode === 'multipage' && $tesseract_version_array[2] === true) {
         $i = 0;
         set_time_limit(1800);
         while ($i < $pg_num) {
