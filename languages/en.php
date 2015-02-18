@@ -11,6 +11,7 @@ $lang['ocr_start'] = 'Start OCR';
 $lang['tesseract_path_input'] = '<p style="color:red"><b>Tesseract-ocr not found, please specify path to tesseract-ocr executable. Reload page after saving configuration!</b></p>';
 $lang['tesseract_old_version_info'] = 'Please update tesseract to minimum version 3.03 for best performance and extended functionality.';
 $lang['ocr_input_formats'] = 'Allowed filetypes:';
+$lang['ocr_rtype'] = 'Allowed resource type';
 $lang['ocr_psm'] = 'Tesseract page segmentation mode';
 $lang['ocr_ftype_1'] = 'Select field the extracted text should be written to:';
 $lang['ocr_db_filter'] = 'Filter text before writing to DB.';

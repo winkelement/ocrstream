@@ -13,6 +13,7 @@ $lang['tesseract_old_version_info'] = 'Bitte aktualisieren Sie Tesseract mindest
 $lang['ocr_input_formats'] = 'Erlaubte Dateitypen:';
 $lang['ocr_psm'] = 'Tesseract page segmentation mode';
 $lang['ocr_ftype_1'] = 'Feld in welches der extrahierte Text geschrieben werden soll:';
+$lang['ocr_rtype'] = 'Erlaubter Resourcentyp';
 $lang['ocr_db_filter'] = 'Text filtern bevor er in die Datenbank geschrieben wird.';
 $lang['ocr_db_filter_help'] = 'Zahlen und Sonderzeichen werden entfernt um bessere Schlüsselwörter zu generieren.';
 $lang['ocr_min_density'] = 'Mindestauflösung des Bildes für Texterkennung (dpi/ppi)';

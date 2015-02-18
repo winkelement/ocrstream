@@ -52,7 +52,7 @@ if (!in_array($ext, $ocr_allowed_extensions)){
 }
 
 // Check if resourcetype is document
-if (get_res_type ($ID) != 2){
+if (get_res_type ($ID) != $ocr_rtype){
     session_unset();
     exit(json_encode(array("error" => $lang['ocr_error_4'])));
 }

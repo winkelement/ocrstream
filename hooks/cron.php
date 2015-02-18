@@ -17,6 +17,7 @@ function HookOcrstreamCronAddplugincronjob() {
     global $ocr_db_filter_1;
     global $ocr_db_filter_2;
     global $ocr_ftype_1;
+    global $ocr_rtype;
     global $lang;
     if ($ocr_cronjob_enabled == true) {        
         echo PHP_EOL . "OCRStream Cronjob" . PHP_EOL;
@@ -42,7 +43,7 @@ function HookOcrstreamCronAddplugincronjob() {
                 $error .= ($lang['ocr_error_2']. PHP_EOL);
             }
             // Check resource type
-            if (get_res_type ($ID) != 2){
+            if (get_res_type ($ID) != $ocr_rtype){
                 $error .= ($lang['ocr_error_4']. PHP_EOL);
             }
             // Check density and geometry for images
@@ -90,12 +91,8 @@ function HookOcrstreamCronAddplugincronjob() {
                 $ocr_lang = trim($ocr_global_language);
                 $ocr_psm = trim($ocr_psm_global);
                 // OCR multi pages, processed, tesseract > v3.0.3
-                if ($pg_num > 1 && tesseract_version_is_old() === false) {
-                    $mode = 'multipage_new';
-                }
-                // OCR multi pages, processed, tesseract < v3.0.3
-                elseif ($pg_num > 1 && tesseract_version_is_old() === true) { 
-                    $mode = 'multipage_old';
+                if ($pg_num > 1) {
+                    $mode = 'multipage';
                 }
                 // OCR single page processed
                 elseif ($param_1 === 'pre_1' && $pg_num === '1') {

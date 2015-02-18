@@ -10,6 +10,7 @@ $ocr_global_language = 'eng';
 $tesseract_path = '/usr/bin';
 $ocr_cronjob_enabled = false;
 $ocr_allowed_extensions = array('tif', 'tiff', 'jpg', 'jpeg', 'png', 'gif', 'bmp', 'pdf');
+$ocr_rtype = 2;
 $ocr_min_density = '300';
 $ocr_max_density = '600';
 $ocr_min_geometry = '1000';

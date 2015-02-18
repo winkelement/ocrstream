@@ -20,10 +20,11 @@ function HookOcrstreamEditAfterfileoptions() {
     global $ocr_psm_global;
     //global $ocr_cronjob_enabled;
     global $ocr_ftype_1;
+    global $ocr_rtype;
     if (is_tesseract_installed()) {
-        // Hide OCR options for filetypes not allowed
+        // Hide OCR options for filetypes and resourcetypes not allowed
         $ext = get_file_extension($ref);
-        if (in_array($ext, $ocr_allowed_extensions)) {
+        if (in_array($ext, $ocr_allowed_extensions) && get_res_type ($ref) == $ocr_rtype) {
             $choices = get_tesseract_languages();
             ?>
             <link rel="stylesheet" href="../plugins/ocrstream/lib/ocrstream.css" type="text/css" />
@@ -111,8 +112,9 @@ function HookOcrstreamEditReplaceuploadoptions() {
     global $ocr_psm_array;
     global $ocr_psm_global;
     global $resource;
+    global $ocr_rtype;
     //global $ocr_cronjob_enabled; 
-    if (($ref < 0) && (is_tesseract_installed()) && ($resource['resource_type'] == '2')){        
+    if (($ref < 0) && (is_tesseract_installed()) && ($resource['resource_type'] == $ocr_rtype)){        
         $choices = get_tesseract_languages();
         ?>
         <script src="../plugins/ocrstream/lib/ocrstream.upload.options.js"></script>

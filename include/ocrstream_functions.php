@@ -325,7 +325,9 @@ function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $
         $process = new Process($tess_cmd);
         $process->setTimeout(3600);
         $process->setIdleTimeout(600);
-        $process->run();
+        $process->start();
+        $_SESSION["ocr_tess_pid_" . $ID] = $process->getPid();
+        $process->wait();
         debug ("CLI output: " . $process->getOutput());
         debug ("CLI errors: " . trim($process->getErrorOutput()));
     } elseif ($mode === 'multipage' && $tesseract_version_array[2] === true) {
@@ -338,7 +340,9 @@ function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $
             $process = new Process($tess_cmd);
             $process->setTimeout(3600);
             $process->setIdleTimeout(600);
-            $process->run();
+            $process->start();
+            $_SESSION["ocr_tess_pid_" . $ID] = $process->getPid();
+            $process->wait();
             debug ("CLI output: " . $process->getOutput());
             debug ("CLI errors: " . trim($process->getErrorOutput()));
             file_put_contents($ocr_temp_dir . '/ocr_output_file_' . $ID . '.txt', file_get_contents($ocr_temp_dir . '/ocrtempfile_' . $ID . '.txt'), FILE_APPEND);
@@ -349,7 +353,9 @@ function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $
         $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ID) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
         debug("CLI command: $tess_cmd");
         $process = new Process($tess_cmd);
-        $process->run();
+        $process->start();
+        $_SESSION["ocr_tess_pid_" . $ID] = $process->getPid();
+        $process->wait();
         debug ("CLI output: " . $process->getOutput());
         debug ("CLI errors: " . trim($process->getErrorOutput()));
     } elseif ($mode === 'single_original') {
@@ -358,7 +364,10 @@ function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $
         $tess_cmd = (escapeshellarg($tesseract_fullpath) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ID) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
         debug("CLI command: $tess_cmd");
         $process = new Process($tess_cmd);
-        $process->run();
+        $process->start();
+        $_SESSION["ocr_tess_pid_" . $ID] = $process->getPid();
+        $process->wait();
+        unset ($_SESSION["ocr_tess_pid_" . $ID]);
         debug ("CLI output: " . $process->getOutput());
         debug ("CLI errors: " . trim($process->getErrorOutput()));
     }   
