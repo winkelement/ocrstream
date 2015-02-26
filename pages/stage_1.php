@@ -11,6 +11,7 @@ require_once "../../../include/resource_functions.php";
 require_once "../include/ocrstream_functions.php";
 
 $ID = filter_input(INPUT_GET, 'ref', FILTER_VALIDATE_INT);
+$param_1 = filter_input(INPUT_GET, 'param_1');
 
 if (is_session_started() === false) {
     session_start();
@@ -57,9 +58,10 @@ if (get_res_type ($ID) != $ocr_rtype){
     exit(json_encode(array("error" => $lang['ocr_error_4'])));
 }
 
-// Check if density (dpi) and geometry (px) is in margin for ocr processing, skip for pdf
+// Check if density (dpi) and geometry (px) is in margin for ocr processing, 
+// skip for pdf and images that will be processed
 // Ignore 72 dpi values (Screen resolution)
-if ($ext !== 'pdf') {
+if ($ext !== 'pdf' && $param_1 === 'none') {
     $density_array = get_image_density ($resource_path);
     if ($density_array[1] == 'PixelsPerCentimeter') {
         $density = $density_array[0] * 2.54;
