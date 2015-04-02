@@ -10,7 +10,7 @@ function HookOcrstreamEditEditbeforeheader() {
     }
 }
 
-function HookOcrstreamEditAfterfileoptions() {
+function HookOcrstreamEditBeforeimagecorrection() {
     global $ref;
     global $lang;
     global $baseurl;
@@ -113,7 +113,7 @@ function HookOcrstreamEditAfterfileoptions() {
                         $('#buttonStartOcr').click(function(){
                             payload = {
                                 "path": ressourcePath,
-                                "type": "text"
+                                "type": "ocr"
                             };
                             socket.emit('extract', payload);
                             console.log('Send extract request', payload);
