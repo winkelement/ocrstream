@@ -7,7 +7,7 @@ function HookOcrstreamEditEditbeforeheader() {
     if (is_session_started() === false) {
         session_start();
         session_unset();
-    }  
+    }
 }
 
 function HookOcrstreamEditAfterfileoptions() {
@@ -98,6 +98,29 @@ function HookOcrstreamEditAfterfileoptions() {
                     <?php //} ?>
                 </table>
             </div>
+            <div>
+                <input type="button" id="buttonStartOcr" value="Start Extraction">
+
+                <script src="../plugins/ocrstream/ext/socket.io.js" type="text/javascript"></script>
+                <script src="../plugins/ocrstream/ext/socket.client.js" type="text/javascript"></script>
+                <script src="../plugins/ocrstream/ext/socket.client.js" type="text/javascript"></script>
+                <?php $ressourcePath = get_resource_path($ref,true,"",true,"pdf",-1,1,false,"",-1,true); ?>
+                <script type="text/javascript">
+
+                    var ressourcePath = "<?php echo $ressourcePath;?>";
+                    $ = jQuery;
+                    $(document).ready(function(){
+                        $('#buttonStartOcr').click(function(){
+                            payload = {
+                                "path": ressourcePath,
+                                "type": "text"
+                            };
+                            socket.emit('extract', payload);
+                            console.log('Send extract request', payload);
+                        });
+                    });
+                </script>
+            </div>
             </div>
             </div>
             <?php
@@ -113,8 +136,8 @@ function HookOcrstreamEditReplaceuploadoptions() {
     global $ocr_psm_global;
     global $resource;
     global $ocr_rtype;
-    //global $ocr_cronjob_enabled; 
-    if (($ref < 0) && (is_tesseract_installed()) && ($resource['resource_type'] == $ocr_rtype)){        
+    //global $ocr_cronjob_enabled;
+    if (($ref < 0) && (is_tesseract_installed()) && ($resource['resource_type'] == $ocr_rtype)){
         $choices = get_tesseract_languages();
         ?>
         <script src="../plugins/ocrstream/lib/ocrstream.upload.options.js"></script>
@@ -150,7 +173,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
                                     ?>
                                 </select></td>
                         </tr>
-                        <?php//@todo ###### Remove ####### 
+                        <?php//@todo ###### Remove #######
                         //if ($ocr_cronjob_enabled == true){?>
 <!--                        <tr id = "ocr_cron" style="height:37px">
                             <td><label for="ocr_upload_cronjob"><?php// echo $lang["ocr_upload_cronjob"] ?></label></td>
