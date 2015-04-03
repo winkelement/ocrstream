@@ -1,19 +1,9 @@
-var http = require('http');
-var fs = require('fs');
 var pdf_extract = require('pdf-extract');
 var path = require('path');
-//var debug = require('debug')('jra.websocket.server')
-
-var server = http.createServer(function(req, res){
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.end('');
-}).listen(3000, function(){
-    console.log("Server running");
-});
-var io = require('socket.io')(server);
+var io = require('socket.io').listen(3000);
 
 io.on('connection', function extractPDF(socket){
-    console.log('a user connected');
+    console.log('a user connected with SID: ' + socket.id);
     socket.on('extract', function(payload) {
         console.log ('I have received a request!');
         console.log(payload);
@@ -31,6 +21,9 @@ io.on('connection', function extractPDF(socket){
                 console.log(err);
                 return io.emit('error', err);
             }
+        });
+        processor.on('log', function(data) {
+            console.log(data);
         });
         processor.on('page', function(data) {
             io.emit("progress", data.index);
