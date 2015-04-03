@@ -103,7 +103,6 @@ function HookOcrstreamEditBeforeimagecorrection() {
 
                 <script src="../plugins/ocrstream/ext/socket.io.js" type="text/javascript"></script>
                 <script src="../plugins/ocrstream/ext/socket.client.js" type="text/javascript"></script>
-                <script src="../plugins/ocrstream/ext/socket.client.js" type="text/javascript"></script>
                 <?php $ressourcePath = get_resource_path($ref,true,"",true,"pdf",-1,1,false,"",-1,true); ?>
                 <script type="text/javascript">
 
