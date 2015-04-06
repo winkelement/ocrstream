@@ -4,6 +4,7 @@ var io = require('socket.io').listen(3000);
 
 io.on('connection', function extractPDF(socket){
     console.log('a user connected with SID: ' + socket.id);
+    socket.emit('socketID', socket.id);
     socket.on('extract', function(payload) {
         console.log ('I have received a request!');
         console.log(payload);
