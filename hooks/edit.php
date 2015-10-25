@@ -10,7 +10,7 @@ function HookOcrstreamEditEditbeforeheader() {
     }  
 }
 
-function HookOcrstreamEditAfterfileoptions() {
+function HookOcrstreamEditBeforeimagecorrection() {
     global $ref;
     global $lang;
     global $baseurl;
