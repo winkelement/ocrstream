@@ -11,11 +11,15 @@
             <input type="button" id="buttonConnect" value="Connect to Server" style="width:140px;margin-right: 10px;margin-bottom: 10px">
             <input type="button" id="buttonDisconnect" value="Disconnect from Server" style="width:140px;margin-right: 10px;margin-bottom: 10px">
         </div>
+        <div>
+            <input type="button" id="buttonExecTest" value="Test Exec" style="width:140px;margin-right: 10px;margin-bottom: 10px">
+        </div>
         <div id="status">
             <pre id="statusLog"></pre>
         </div>
         <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
         <script src="socket.io.js"></script>
+        <script src="execTest.js"></script>
         
         <script>
             WEBSOCKET_PORT = 3000;
