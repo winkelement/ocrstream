@@ -85,10 +85,15 @@ if ($ext !== 'pdf' && $param_1 === 'none') {
     }
 }
 
-// Force image processing if filetype is pdf
-// Needs to be set for file uploads where param_1 = none
+// Check if pdf contains Fonts 
+// Force image processing if no Fonts are found
 if ($ext === 'pdf') {
-    $_SESSION["ocr_force_processing_" . $ID] = 1;
+    $has_font = checkPDF($resource_path);
+    if ($has_font === 1) {
+        exit(json_encode(array("error" => $lang['ocr_error_8'])));
+    } else {
+        $_SESSION["ocr_force_processing_" . $ID] = 1;
+    }
 }
 // If language parameter is not valid, choose global ocr language setting
 $tesseract_languages = get_tesseract_languages();

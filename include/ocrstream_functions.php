@@ -418,3 +418,9 @@ function set_ocronjob($ID, $ocr_state) {
         sql_query("UPDATE resource_data SET value =  ',$ocronjob_options' WHERE resource = '$ID_filtered' AND resource_type_field = '$ocronjob_field'");
     }
 }
+
+function checkPDF($filename) {
+    $contents = file_get_contents($filename, NULL, NULL, 0, 1000);
+    $has_font = preg_match("/Font/m", $contents);
+    return $has_font;
+} 
