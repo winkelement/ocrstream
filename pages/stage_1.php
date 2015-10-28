@@ -90,6 +90,7 @@ if ($ext !== 'pdf' && $param_1 === 'none') {
 if ($ext === 'pdf') {
     $has_font = checkPDF($resource_path);
     if ($has_font === 1) {
+        session_unset();
         exit(json_encode(array("error" => $lang['ocr_error_8'])));
     } else {
         $_SESSION["ocr_force_processing_" . $ID] = 1;
