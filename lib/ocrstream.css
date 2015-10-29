@@ -15,7 +15,7 @@
     border: 1px solid #666;
     background-color: #FFF;
     border-radius:5px;
-    color: #FFF;
+    color: #555;
     width:150px;
     z-index: 6;
     text-align: center;
@@ -25,8 +25,4 @@
 
 #ocr_status_anim img{
     margin-top:10px
-}
-
-#ocr_status_text {
-    color: #555;
 }
