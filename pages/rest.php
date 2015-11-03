@@ -29,6 +29,9 @@ if (isset($ref) && isset($get_true_size)) {
     global $im_preset_1_geometry;
     $w_thumb = sql_value("select thumb_width value from resource where ref = '$ref'", '');
     $h_thumb = sql_value("select thumb_height value from resource where ref = '$ref'", '');
+    if (!$w_thumb || !$h_thumb) {
+        exit(json_encode(array("error" => 'No thumbnail found!')));
+    }
     $ar = ($w_thumb / $h_thumb);
     $w = intval($im_preset_1_geometry);
     $h = intval($w / $ar);
