@@ -22,8 +22,9 @@ function HookOcrstreamUpload_pluploadAfterpluploadfile() {
             baseUrl = '<?php echo $baseurl ?>';
             ocr_lang = '<?php echo $_SESSION['ocr_lang'] ?>';
             ocr_psm = '<?php echo $_SESSION['ocr_psm'] ?>';
+            ocrUpload();
         </script>
-        <script src="../plugins/ocrstream/lib/ocrstream.upload.js"></script> <?php
+         <?php
     }
     // @todo ######## Remove ############
 //    if (isset($_SESSION["ocr_cron"])) {
