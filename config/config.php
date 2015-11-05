@@ -23,6 +23,7 @@ $im_preset_1_quality = '90';
 $im_preset_1_deskew = '40';
 $im_preset_1_sharpen_r = '0';
 $im_preset_1_sharpen_s = '1';
+$ocr_keep_tempfiles = false;
 
 /**
  * Additional configuration
