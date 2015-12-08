@@ -128,10 +128,8 @@ function get_tesseract_languages() {
         if (stristr($tesseract_languages [0], 'libtiff.so.5')) { // Skipping additional line if libftiff version does not match liblept version
             array_shift($tesseract_languages);
             array_shift($tesseract_languages);
-            array_pop($tesseract_languages);
         } else {
             array_shift($tesseract_languages); // Skipping first line output ("Available languages...")
-            array_pop($tesseract_languages); // Skipping last line (empty)
         }
         array_walk($tesseract_languages, 'trim_value');
         // Add langauges to plugin_config and write it back to db
