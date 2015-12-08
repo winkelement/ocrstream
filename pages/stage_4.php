@@ -54,6 +54,7 @@ if (!$ocr_keep_tempfiles) {
     array_map('unlink', glob("$ocr_temp_dir/ocr_output_file_$ID.txt"));
     array_map('unlink', glob("$ocr_temp_dir/ocrtempfile_$ID.txt"));
     array_map('unlink', glob("$ocr_temp_dir/im_tempfile_$ID*.*"));
+    array_map('unlink', glob("$ocr_temp_dir/im_ocr_file_$ID"));
 }
 
 $_SESSION['ocr_stage_' . $ID] = 4;
