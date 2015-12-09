@@ -51,6 +51,8 @@ $page_def[] = config_add_text_input('im_preset_1_quality', $lang['im_preset_qual
 $page_def[] = config_add_text_input('im_preset_1_deskew', $lang['im_preset_deskew'], false, 45);
 $page_def[] = config_add_text_input('im_preset_1_sharpen_r', $lang['im_preset_sharpen_r'], false, 45);
 $page_def[] = config_add_text_input('im_preset_1_sharpen_s', $lang['im_preset_sharpen_s'], false, 45);
+$page_def[] = config_add_section_header($lang['im_advanced_options_header']);
+$page_def[] = config_add_boolean_select('ocr_keep_tempfiles', $lang['ocr_keep_tempfiles'], '', 90);
 
 // Build the $page_def array of descriptions of each configuration variable the plugin uses.
 // Each element of $page_def describes one configuration variable. Each description is

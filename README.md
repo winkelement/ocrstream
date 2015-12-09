@@ -2,6 +2,8 @@
 
 OCRstream is a plugin for the [ResourceSpace](http://resourcespace.org/) Digital Asset Management to integrate Optical Character Recognition through tesseract-ocr.
 
+*OCRstream is still under development and should be considered experimental. If you plan to use it in production it is highly advised to install it in a test environment first.*
+
 ## Requirements
 
 * ResourceSpace
@@ -31,7 +33,7 @@ There is a default resource field set for the extracted text ("Extracted text") 
 There are three modes for OCRStream to operate in RS
 * Single resource edit - when editing a resource you can do complete or partial OCR processing with custom settings
 * Upload - when uploading resources you can select to do OCR processing for each resource after the upload completes with custom settings
-* Cronjob - you can set a custom "ocronjob" field to put resources in queue for OCR processing with default (global) settings. If you configured the RS cronjob properly ocronjob will be executed too.
+* ~~Cronjob - you can set a custom "ocronjob" field to put resources in queue for OCR processing with default (global) settings. If you configured the RS cronjob properly ocronjob will be executed too.~~ *Not properly implemented yet*
 
 [...]
 

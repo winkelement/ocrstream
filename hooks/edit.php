@@ -7,10 +7,13 @@ function HookOcrstreamEditEditbeforeheader() {
     if (is_session_started() === false) {
         session_start();
         session_unset();
-    }  
+    }
+    ?>
+    <script src="../plugins/ocrstream/lib/ocrstream.upload.js"></script>
+    <?php
 }
 
-function HookOcrstreamEditAfterfileoptions() {
+function HookOcrstreamEditBeforeimagecorrection() {
     global $ref;
     global $lang;
     global $baseurl;

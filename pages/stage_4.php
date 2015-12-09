@@ -1,4 +1,5 @@
 <?php
+
 //  Stage 4 - The Texter
 //
 //
@@ -49,9 +50,12 @@ $ocr_state = 2;
 set_ocr_state($ID, $ocr_state);
 
 // Delete temp files
-array_map('unlink', glob("$ocr_temp_dir/ocr_output_file_$ID.txt"));
-array_map('unlink', glob("$ocr_temp_dir/ocrtempfile_$ID.txt"));
-array_map('unlink', glob("$ocr_temp_dir/im_tempfile_$ID*.*"));
+if (!$ocr_keep_tempfiles) {
+    array_map('unlink', glob("$ocr_temp_dir/ocr_output_file_$ID.txt"));
+    array_map('unlink', glob("$ocr_temp_dir/ocrtempfile_$ID.txt"));
+    array_map('unlink', glob("$ocr_temp_dir/im_tempfile_$ID*.*"));
+    array_map('unlink', glob("$ocr_temp_dir/im_ocr_file_$ID"));
+}
 
 $_SESSION['ocr_stage_' . $ID] = 4;
 
@@ -61,7 +65,7 @@ $_SESSION["ocr_stage_4_time"] = $elapsed_4;
 $ocr_total_time = ($_SESSION["ocr_stage_1_time"]) + ($_SESSION["ocr_stage_2_time"]) + ($_SESSION["ocr_stage_3_time"]) + ($_SESSION["ocr_stage_4_time"]);
 $_SESSION["ocr_total_time"] = $ocr_total_time;
 
-$nextID = ($ID +1);
+$nextID = ($ID + 1);
 
 if (isset($_SESSION['ocr_stage_' . $nextID])) {
     if (($_SESSION['ocr_stage_' . $nextID]) < 4) {
@@ -73,11 +77,11 @@ if (isset($_SESSION['ocr_stage_' . $nextID])) {
     $end_of_queue = true;
 }
 
-$debug = ('OCR Stage ' . $_SESSION["ocr_stage_" . $ID] . '/4 completed: ' .$ID . ' Time: ' . $elapsed_4 . ' Total Time: ' . $ocr_total_time . ' End of Queue: ' .$end_of_queue);
+$debug = ('OCR Stage ' . $_SESSION["ocr_stage_" . $ID] . '/4 completed: ' . $ID . ' Time: ' . $elapsed_4 . ' Total Time: ' . $ocr_total_time . ' End of Queue: ' . $end_of_queue);
 echo json_encode(array($end_of_queue, $debug, $tess_content));
 
 // Clear all SESSION Variables for single resource OCR or if all resources in queue are completed
 
-if ($end_of_queue == true || !isset($_SESSION["ocr_start"])){
+if ($end_of_queue == true || !isset($_SESSION["ocr_start"])) {
     session_unset();
 }

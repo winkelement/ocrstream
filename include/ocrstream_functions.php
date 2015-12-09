@@ -128,10 +128,8 @@ function get_tesseract_languages() {
         if (stristr($tesseract_languages [0], 'libtiff.so.5')) { // Skipping additional line if libftiff version does not match liblept version
             array_shift($tesseract_languages);
             array_shift($tesseract_languages);
-            array_pop($tesseract_languages);
         } else {
             array_shift($tesseract_languages); // Skipping first line output ("Available languages...")
-            array_pop($tesseract_languages); // Skipping last line (empty)
         }
         array_walk($tesseract_languages, 'trim_value');
         // Add langauges to plugin_config and write it back to db
@@ -418,3 +416,9 @@ function set_ocronjob($ID, $ocr_state) {
         sql_query("UPDATE resource_data SET value =  ',$ocronjob_options' WHERE resource = '$ID_filtered' AND resource_type_field = '$ocronjob_field'");
     }
 }
+
+function checkPDF($filename) {
+    $contents = file_get_contents($filename, NULL, NULL, 0, 1000);
+    $has_font = preg_match("/Font/m", $contents);
+    return $has_font;
+} 
