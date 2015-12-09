@@ -9,7 +9,7 @@ OCRstream is a plugin for the [ResourceSpace](http://resourcespace.org/) Digital
 * ResourceSpace
 * ImageMagick
 * PHP 5.3+
-* Tesseract OCR
+* Tesseract OCR 3.x
 
 Tesseract OCR needs to be installed for the plugin to work. See the Wiki [Links](https://github.com/andirotter/ocrstream/wiki/Links) for places to find downloads and/or instructions to build tesseract-ocr.  
 
@@ -24,7 +24,9 @@ Once the plugin appears in you list of plugins you need to activate it.
 It is important to go to the plugin "options" page right after activation.
 You have to set the path to tesseract-ocr manually. Save the configuration and reload the page after that.
 
-There is a default resource field set for the extracted text ("Extracted text") which means all recognized text of a resource will be written to it. You should consider changing that field according to you needs. Keep in mind that the default field will be indexed by RS meaning all extracted content will become indexed keywords. You might want to create a new custom field which is not indexed and select that to write the content to it if you first want to check out the results of OCRstream before populating you DB with new keywords.
+![Setup](https://cloud.githubusercontent.com/assets/3525191/11685971/6210693a-9e7d-11e5-911b-1e341d974ad2.png)
+
+There is a default resource field set for the extracted text ("Extracted text") which means all recognized text of a resource will be written to it. You should consider changing that field according to you needs. Keep in mind that the default field will be indexed by RS meaning all extracted content will become indexed keywords. You might want to create a new custom field (e.g. "OCR text") which is not indexed and select that to write the content to it if you first want to check out the results of OCRstream before populating you DB with new keywords.
 
 [...]
 

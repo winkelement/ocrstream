@@ -89,6 +89,8 @@ if ($ocr_cronjob_enabled) {
             jQuery('#im_preset_1_sharpen_r').parent().closest('div').hide();
             jQuery('#im_preset_1_sharpen_s').parent().closest('div').hide();
             jQuery('#ocr_rtype').parent().closest('div').hide();
+            jQuery('#im_advanced_options_headerDIV').parent().closest('div').hide();
+            jQuery('#ocr_keep_tempfiles').parent().closest('div').hide();
 
         }
         jQuery('#use_ocr_db_filter').tooltip({

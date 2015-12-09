@@ -50,7 +50,7 @@ $lang['im_preset_sharpen_r'] = 'Scharfzeichen Radius <br> (-sharpen [radius]x[si
 $lang['im_preset_sharpen_r_help'] = 'Legt den Radius für den verwendeten Gauss-Filter fest.';
 $lang['im_preset_sharpen_s'] = 'Scharfzeichen Sigma <br> (-sharpen [radius]x[sigma])';
 $lang['im_preset_sharpen_s_help'] = 'Legt die Standardabweichung für den verwendeten Gauss-Filter fest. Standard ist 1.';
-$lang['im_advanced_options_header'] = 'Erweiterte Einstellungen';
+$lang['im_advanced_options_header'] = '<div id= "im_advanced_options_headerDIV">Erweiterte Einstellungen';
 $lang['ocr_keep_tempfiles'] = 'Temporäre Dateien behalten (/tmp/ocrstream_plugin)';
 $lang["im_preset_select"] = 'Bildbearbeitung';
 $lang["ocr-upload-options"] = 'OCR Optionen';
