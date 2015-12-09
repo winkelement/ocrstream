@@ -9,7 +9,7 @@ function HookOcrstreamEditEditbeforeheader() {
         session_unset();
     }
     ?>
-    <script src="../plugins/ocrstream/lib/ocrstream.upload.js"></script>
+    <script src="../plugins/ocrstream/include/js/ocrstream.upload.js"></script>
     <?php
 }
 
@@ -30,10 +30,10 @@ function HookOcrstreamEditBeforeimagecorrection() {
         if (in_array($ext, $ocr_allowed_extensions) && get_res_type ($ref) == $ocr_rtype) {
             $choices = get_tesseract_languages();
             ?>
-            <link rel="stylesheet" href="../plugins/ocrstream/lib/ocrstream.css" type="text/css" />
-            <div id="ocr_status_anim"><div style="margin-top: 66px;"><img src="../plugins/ocrstream/gfx/ocrstream_loader.gif" alt="Loading..." /><p><?php echo $lang['ocr_in_progress']?></p><p id="ocr_status_text"></p></div></div>
-            <script src="../plugins/ocrstream/lib/jcrop/js/jquery.Jcrop.min.js"></script>
-            <link rel="stylesheet" href="../plugins/ocrstream/lib/jcrop/css/jquery.Jcrop.css" type="text/css" />
+            <link rel="stylesheet" href="../plugins/ocrstream/assets/css/ocrstream.css" type="text/css" />
+            <div id="ocr_status_anim"><div style="margin-top: 66px;"><img src="../plugins/ocrstream/assets/images/ocrstream_loader.gif" alt="Loading..." /><p><?php echo $lang['ocr_in_progress']?></p><p id="ocr_status_text"></p></div></div>
+            <script src="../plugins/ocrstream/vendor/monstrum/jcrop/dist/min/jquery.Jcrop.min.js"></script>
+            <link rel="stylesheet" href="../plugins/ocrstream/vendor/monstrum/jcrop/dist/min/jquery.Jcrop.min.css" type="text/css" />
             <script>
                 // Initilaize Parameters
                 resourceId = <?php echo $ref ?>;
@@ -41,7 +41,7 @@ function HookOcrstreamEditBeforeimagecorrection() {
                 fieldNr = '<?php echo $ocr_ftype_1 ?>';
                 jQuery('#OCRSectionHead').addClass('collapsed');
             </script>
-            <script src="../plugins/ocrstream/lib/ocrstream.single.js"></script>
+            <script src="../plugins/ocrstream/include/js/ocrstream.single.js"></script>
             <div><h2 class="CollapsibleSectionHead" id="OCRSectionHead"><?php echo $lang["ocr-upload-options"] ?></h2>
             <div class="CollapsibleSection" id="OCRSection">
             <div class="Question" id="question_ocr" style="font-weight: normal">
@@ -120,7 +120,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
     if (($ref < 0) && (is_tesseract_installed()) && ($resource['resource_type'] == $ocr_rtype)){        
         $choices = get_tesseract_languages();
         ?>
-        <script src="../plugins/ocrstream/lib/ocrstream.upload.options.js"></script>
+        <script src="../plugins/ocrstream/include/js/ocrstream.upload.options.js"></script>
         <div><h2 class="CollapsibleSectionHead"><?php echo $lang["ocr-upload-options"] ?></h2>
             <div class="CollapsibleSection" id="OCROptionsSection">
                 <div class="Question" id="question_ocr" style="font-weight: normal">

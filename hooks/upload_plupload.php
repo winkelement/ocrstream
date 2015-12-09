@@ -4,8 +4,8 @@ require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 function HookOcrstreamUpload_pluploadUpload_page_top() {
     global $lang;
     ?>
-    <link rel="stylesheet" href="../plugins/ocrstream/lib/ocrstream.css" type="text/css" />
-    <div id="ocr_status_anim"><div><img src="../plugins/ocrstream/gfx/ocrstream_loader.gif" alt="Loading..." /><p><?php echo $lang['ocr_in_progress']?></p></div></div>
+    <link rel="stylesheet" href="../plugins/ocrstream/assets/css/ocrstream.css" type="text/css" />
+    <div id="ocr_status_anim"><div><img src="../plugins/ocrstream/assets/images/ocrstream_loader.gif" alt="Loading..." /><p><?php echo $lang['ocr_in_progress']?></p></div></div>
     <?php
 }
 
