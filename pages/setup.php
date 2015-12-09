@@ -67,8 +67,8 @@ if ($ocr_cronjob_enabled) {
     set_ocronjob_field ();
 }
     ?>
-<link rel="stylesheet" href="../lib/jquery-ui.css">
-<script src="../lib/jquery-ui.js"></script>
+<link rel="stylesheet" href="../vendor/components/jqueryui/themes/base/jquery-ui.css">
+<script src="../vendor/components/jqueryui/jquery-ui.min.js"></script>
 <script>
     jQuery(document).ready(function () {
         if (jQuery('#tesseract_version').length === 0) {

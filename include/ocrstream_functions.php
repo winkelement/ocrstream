@@ -1,4 +1,5 @@
 <?php
+use Symfony\Component\Process\Process;
 
 /**
  * Get temp dir for ocrstream, create one if none exists
