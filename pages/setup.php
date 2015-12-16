@@ -63,7 +63,7 @@ $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $page_intro);
 ?>
-<input type="submit" id="purge" value="Purge Configuration">
+<input type="submit" id="purge" value="<?php echo $lang['purge_config']?>" style="display: none;">
 <?php
 include '../../../include/footer.php';
 if ($ocr_cronjob_enabled) {

@@ -59,4 +59,5 @@ $lang['ocr_cronjob_help'] = 'Marked resources (ocr_state = 1) will processed wit
 $lang["ocr_upload_cronjob"] = 'Set cronjob with global OCR settings';
 $lang['ocronjob_enabled'] = 'Cronjob enabled';
 $lang['ocr_in_progress'] = 'OCR in progress...';
+$lang['purge_config'] = 'Purge configuration';
 ?>
