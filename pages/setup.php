@@ -62,6 +62,9 @@ $page_def[] = config_add_boolean_select('ocr_keep_tempfiles', $lang['ocr_keep_te
 $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $page_intro);
+?>
+<input type="submit" id="purge" value="Purge Configuration">
+<?php
 include '../../../include/footer.php';
 if ($ocr_cronjob_enabled) {
     set_ocronjob_field ();
@@ -93,6 +96,17 @@ if ($ocr_cronjob_enabled) {
             jQuery('#ocr_keep_tempfiles').parent().closest('div').hide();
 
         }
+        jQuery('#save').parent().closest('div').append(jQuery('#purge').show());
+        var pluginName = '<?php echo $plugin_name?>';
+        var baseUrl = '<?php echo $baseurl?>';
+        jQuery('#purge').click(function () {
+            console.log('purging...'); // debug
+            jQuery.get(baseUrl + '/plugins/ocrstream/include/rest.php', {name: pluginName, purge_config: 1}, function (data) {
+                status = JSON.parse(data);
+                console.log('status: ', status); // debug
+                location.reload();
+            });
+        });
         jQuery('#use_ocr_db_filter').tooltip({
             items: "[name]",
             content: '<?php echo $lang['ocr_db_filter_help'] ?>'

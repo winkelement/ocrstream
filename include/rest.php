@@ -9,6 +9,8 @@ $ocr_state_filter_options = ["options" =>['min_range' => 0, 'max_range' => 2]];
 $ocr_state = filter_input(INPUT_GET, 'ocr_state', FILTER_VALIDATE_INT, $ocr_state_filter_options);
 $ocr_state_query = filter_input(INPUT_GET, 'ocr_state_query', FILTER_VALIDATE_BOOLEAN);
 $get_true_size = filter_input(INPUT_GET, 'get_true_size', FILTER_VALIDATE_BOOLEAN);
+$purge_config = filter_input(INPUT_GET, 'purge_config', FILTER_VALIDATE_BOOLEAN);
+$plugin_name = filter_input(INPUT_GET, 'name');
 
 // Set ocr_state flag in database
 //@todo #### Remove ####
@@ -36,4 +38,9 @@ if (isset($ref) && isset($get_true_size)) {
     $w = intval($im_preset_1_geometry);
     $h = intval($w / $ar);
     echo json_encode([$w, $h]);
+}
+
+if (isset($purge_config) && $purge_config && isset($plugin_name)) {
+    purge_plugin_config($plugin_name);
+    echo json_encode('config purged');
 }

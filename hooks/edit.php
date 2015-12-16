@@ -8,9 +8,6 @@ function HookOcrstreamEditEditbeforeheader() {
         session_start();
         session_unset();
     }
-    ?>
-    <script src="../plugins/ocrstream/include/js/ocrstream.upload.js"></script>
-    <?php
 }
 
 function HookOcrstreamEditBeforeimagecorrection() {
@@ -29,8 +26,7 @@ function HookOcrstreamEditBeforeimagecorrection() {
         $ext = get_file_extension($ref);
         if (in_array($ext, $ocr_allowed_extensions) && get_res_type ($ref) == $ocr_rtype) {
             $choices = get_tesseract_languages();
-            ?>
-            <link rel="stylesheet" href="../plugins/ocrstream/assets/css/ocrstream.css" type="text/css" />
+            ?>            
             <div id="ocr_status_anim"><div style="margin-top: 66px;"><img src="../plugins/ocrstream/assets/images/ocrstream_loader.gif" alt="Loading..." /><p><?php echo $lang['ocr_in_progress']?></p><p id="ocr_status_text"></p></div></div>
             <script src="../plugins/ocrstream/vendor/monstrum/jcrop/dist/min/jquery.Jcrop.min.js"></script>
             <link rel="stylesheet" href="../plugins/ocrstream/vendor/monstrum/jcrop/dist/min/jquery.Jcrop.min.css" type="text/css" />
