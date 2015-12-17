@@ -33,13 +33,21 @@ $tess_content = trim(file_get_contents($ocr_output_file));
 set_time_limit(1800);
 
 if ($use_ocr_db_filter == true) {
-// Filter extracted content
-    $filter1 = preg_replace($ocr_db_filter_1, '$1', $tess_content);
-    $tess_content = preg_replace($ocr_db_filter_2, '$1', $filter1);
-    update_field($ID, $ocr_ftype_1, $tess_content);
-} else {
-    update_field($ID, $ocr_ftype_1, $tess_content);
+    // Filter extracted content using regular expressions by ocrstream
+    $tess_content_f1 = preg_replace($ocr_db_filter_1, '$1', $tess_content);
+    $tess_content_f2 = preg_replace($ocr_db_filter_2, '$1', $tess_content_f1);
+    // Filter keywords using global $noadd array
+    $tess_content_array = preg_split('/\s+/', $tess_content_f2);
+    $tess_keywords = "";
+    foreach ($tess_content_array as $value) {
+        if (!in_array($value, $noadd)) {
+        $tess_keywords .= $value . " ";
+        }
+    }
+    $tess_content = trim($tess_keywords);
 }
+
+update_field($ID, $ocr_ftype_1, $tess_content);
 
 update_xml_metadump($ID);
 
