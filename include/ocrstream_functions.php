@@ -199,7 +199,7 @@ function is_resource_id_valid ($ID) {
  */
 function get_image_density ($resource_path) {
     $convert_fullpath = get_utility_path("im-convert");
-    $density_output = run_command($convert_fullpath . ' -format %y,%U ' . $resource_path . ' info:');
+    $density_output = run_command("{$convert_fullpath} -format %y,%U {$resource_path} info:");
     $density_array = explode(",", $density_output);
     return $density_array;
 }
@@ -259,14 +259,14 @@ function build_im_preset_1 ($im_preset_1_crop_w, $im_preset_1_crop_h, $im_preset
     $im_preset_1 = array(
     'colorspace' => ('-colorspace gray'),
     'type' => ('-type grayscale'),
-    'density' => ('-density ' . $im_preset_1_density),
-    'geometry' => ('-geometry ' . $im_preset_1_geometry),
-    'crop' => ('-crop ' . $im_preset_1_crop_w . 'x' . $im_preset_1_crop_h . '+' . $im_preset_1_crop_x . '+' . $im_preset_1_crop_y),
-    'quality' => ('-quality ' . $im_preset_1_quality),
+    'density' => ("-density {$im_preset_1_density}"),
+    'geometry' => ("-geometry {$im_preset_1_geometry}"),
+    'crop' => ("-crop {$im_preset_1_crop_w}x{$im_preset_1_crop_h}+{$im_preset_1_crop_x}+{$im_preset_1_crop_y}"),
+    'quality' => ("-quality {$im_preset_1_quality}"),
     'trim' => ('-trim'),
-    'deskew' => ('-deskew ' . $im_preset_1_deskew . '%'),
+    'deskew' => ("-deskew {$im_preset_1_deskew}%"),
     'normalize' => ('-normalize'),
-    'sharpen' => ('-sharpen ' . $im_preset_1_sharpen_r . 'x' . $im_preset_1_sharpen_s),
+    'sharpen' => ("-sharpen {$im_preset_1_sharpen_r}x{$im_preset_1_sharpen_s}"),
     //'depth'     => ('-depth 8'),
     );
     return $im_preset_1;
@@ -287,7 +287,7 @@ function ocr_image_processing ($ID, $im_preset, $ocr_temp_dir) {
     $convert_fullpath = get_utility_path("im-convert");
     $ext = get_file_extension ($ID);
     $resource_path = get_resource_path($ID, true, "", false, $ext);
-    $im_ocr_cmd = $convert_fullpath . " " . implode(' ', $im_preset) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/im_tempfile_' . $ID . '.' . $ocr_im_ext);
+    $im_ocr_cmd = ("{$convert_fullpath} " . implode(' ', $im_preset) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg("{$ocr_temp_dir}/im_tempfile_{$ID}.{$ocr_im_ext}"));
     debug("CLI command: $im_ocr_cmd");
     $process = new Process($im_ocr_cmd);
     $process->setTimeout(3600);
@@ -316,10 +316,10 @@ function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $
         $n = 0;
         set_time_limit(1800);
         while ($n < $pg_num) {
-            file_put_contents($ocr_temp_dir . '/im_ocr_file_' . $ID, trim($ocr_temp_dir . '/im_tempfile_' . $ID . '-' . $n . '.' . $ocr_im_ext).PHP_EOL, FILE_APPEND);
+            file_put_contents("{$ocr_temp_dir}/im_ocr_file_{$ID}", trim("{$ocr_temp_dir}/im_tempfile_{$ID}-{$n}.{$ocr_im_ext}").PHP_EOL, FILE_APPEND);
             $n++;
         }
-        $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_temp_dir . '/im_ocr_file_' . $ID . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ID) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
+        $tess_cmd = ("{$tesseract_fullpath} {$ocr_temp_dir}/im_ocr_file_{$ID} " . escapeshellarg("{$ocr_temp_dir}/ocr_output_file_{$ID}") . " -l {$ocr_lang} -psm {$ocr_psm}");
         debug("CLI command: $tess_cmd");
         $process = new Process($tess_cmd);
         $process->setTimeout(3600);
@@ -333,8 +333,8 @@ function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $
         $i = 0;
         set_time_limit(1800);
         while ($i < $pg_num) {
-            $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ID . '-' . $i . '.' . $ocr_im_ext);
-            $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocrtempfile_' . $ID) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
+            $ocr_input_file = ("{$ocr_temp_dir}/im_tempfile_{$ID}-{$i}.{$ocr_im_ext}");
+            $tess_cmd = ("{$tesseract_fullpath} {$ocr_input_file} " . escapeshellarg("{$ocr_temp_dir}/ocrtempfile_{$ID}") . " -l {$ocr_lang} -psm {$ocr_psm}");
             debug("CLI command: $tess_cmd");
             $process = new Process($tess_cmd);
             $process->setTimeout(3600);
@@ -344,12 +344,12 @@ function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $
             $process->wait();
             debug ("CLI output: " . $process->getOutput());
             debug ("CLI errors: " . trim($process->getErrorOutput()));
-            file_put_contents($ocr_temp_dir . '/ocr_output_file_' . $ID . '.txt', file_get_contents($ocr_temp_dir . '/ocrtempfile_' . $ID . '.txt'), FILE_APPEND);
+            file_put_contents("{$ocr_temp_dir}/ocr_output_file_{$ID}.txt", file_get_contents("{$ocr_temp_dir}/ocrtempfile_{$ID}.txt"), FILE_APPEND);
             $i ++;
         }
     } elseif ($mode === 'single_processed') {
-        $ocr_input_file = ($ocr_temp_dir . '/im_tempfile_' . $ID . '.' . $ocr_im_ext);
-        $tess_cmd = ($tesseract_fullpath . ' ' . $ocr_input_file . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ID) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
+        $ocr_input_file = ("{$ocr_temp_dir}/im_tempfile_{$ID}.{$ocr_im_ext}");
+        $tess_cmd = ("{$tesseract_fullpath} {$ocr_input_file} " . escapeshellarg("{$ocr_temp_dir}/ocr_output_file_{$ID}") . " -l {$ocr_lang} -psm {$ocr_psm}");
         debug("CLI command: $tess_cmd");
         $process = new Process($tess_cmd);
         $process->start();
@@ -360,7 +360,7 @@ function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $
     } elseif ($mode === 'single_original') {
         $ext = get_file_extension ($ID);
         $resource_path = get_resource_path($ID, true, "", false, $ext);
-        $tess_cmd = (escapeshellarg($tesseract_fullpath) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg($ocr_temp_dir . '/ocr_output_file_' . $ID) . ' -l ' . $ocr_lang.' -psm ' . $ocr_psm);
+        $tess_cmd = (escapeshellarg($tesseract_fullpath) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg("{$ocr_temp_dir}/ocr_output_file_{$ID}") . " -l {$ocr_lang} -psm {$ocr_psm}");
         debug("CLI command: $tess_cmd");
         $process = new Process($tess_cmd);
         $process->start();
