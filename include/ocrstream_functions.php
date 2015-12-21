@@ -254,6 +254,21 @@ function set_ocr_state($ID, $ocr_state) {
     sql_query("UPDATE resource SET ocr_state =  '$ocr_state_filtered' WHERE ref = '$ID_filtered'");
 }
 
+/**
+ * Build Preset for Imagemagick options
+ * 
+ * @global string $im_preset_1_density
+ * @global string $im_preset_1_geometry
+ * @global string $im_preset_1_quality
+ * @global string $im_preset_1_deskew
+ * @global string $im_preset_1_sharpen_r
+ * @global string $im_preset_1_sharpen_s
+ * @param string $im_preset_1_crop_w
+ * @param string $im_preset_1_crop_h
+ * @param string $im_preset_1_crop_x
+ * @param string $im_preset_1_crop_y
+ * @return array IM Options array
+ */
 function build_im_preset_1 ($im_preset_1_crop_w, $im_preset_1_crop_h, $im_preset_1_crop_x, $im_preset_1_crop_y) {
     global $im_preset_1_density, $im_preset_1_geometry, $im_preset_1_quality, $im_preset_1_deskew, $im_preset_1_sharpen_r, $im_preset_1_sharpen_s;
     $im_preset_1 = array(
@@ -281,25 +296,25 @@ function build_im_preset_1 ($im_preset_1_crop_w, $im_preset_1_crop_h, $im_preset
  * @param array $im_preset Array of imagemagick options for image processing
  * @param string $ocr_temp_dir OCR temp directory
  */
-function ocr_image_processing ($ID, $im_preset, $ocr_temp_dir) {
+function ocr_image_processing($ID, $im_preset, $ocr_temp_dir) {
     global $ocr_im_ext;
     set_time_limit(1800);
     $convert_fullpath = get_utility_path("im-convert");
-    $ext = get_file_extension ($ID);
+    $ext = get_file_extension($ID);
     $resource_path = get_resource_path($ID, true, "", false, $ext);
     $im_ocr_cmd = ("{$convert_fullpath} " . implode(' ', $im_preset) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg("{$ocr_temp_dir}/im_tempfile_{$ID}.{$ocr_im_ext}"));
     debug("CLI command: $im_ocr_cmd");
     $process = new Process($im_ocr_cmd);
     $process->setTimeout(3600);
     $process->run();
-    debug ("CLI output: " . $process->getOutput());
-    debug ("CLI errors: " . trim($process->getErrorOutput()));
+    debug("CLI output: " . $process->getOutput());
+    debug("CLI errors: " . trim($process->getErrorOutput()));
 }
 
 /**
  * Tesseract processing
  * 
- * Using Symfony Process component for executing tesseract
+ * Generates and execute tesseract command for given usecase
  * 
  * @param int $ID Resource ID
  * @param string $ocr_lang Language for OCR processing
@@ -308,68 +323,63 @@ function ocr_image_processing ($ID, $im_preset, $ocr_temp_dir) {
  * @param string $mode Resource OCR mode
  * @param int $pg_num Number of pages 
  */
-function tesseract_processing($ID, $ocr_lang , $ocr_psm, $ocr_temp_dir, $mode, $pg_num) {
+function tesseract_processing($ID, $ocr_lang, $ocr_psm, $ocr_temp_dir, $mode, $pg_num) {
     global $ocr_im_ext;
     $tesseract_fullpath = get_tesseract_fullpath();
     $tesseract_version_array = get_tesseract_version();
+    // Case [1]: multiple pages and tesseract version is >= 3.03
+    // Will create a text file (im_ocr_file_[n]) with a list of filepaths for tesseract to run in batch mode
     if ($mode === 'multipage' && $tesseract_version_array[2] === false) {
         $n = 0;
         set_time_limit(1800);
         while ($n < $pg_num) {
-            file_put_contents("{$ocr_temp_dir}/im_ocr_file_{$ID}", trim("{$ocr_temp_dir}/im_tempfile_{$ID}-{$n}.{$ocr_im_ext}").PHP_EOL, FILE_APPEND);
+            file_put_contents("{$ocr_temp_dir}/im_ocr_file_{$ID}", trim("{$ocr_temp_dir}/im_tempfile_{$ID}-{$n}.{$ocr_im_ext}") . PHP_EOL, FILE_APPEND);
             $n++;
         }
         $tess_cmd = ("{$tesseract_fullpath} {$ocr_temp_dir}/im_ocr_file_{$ID} " . escapeshellarg("{$ocr_temp_dir}/ocr_output_file_{$ID}") . " -l {$ocr_lang} -psm {$ocr_psm}");
-        debug("CLI command: $tess_cmd");
-        $process = new Process($tess_cmd);
-        $process->setTimeout(3600);
-        $process->setIdleTimeout(600);
-        $process->start();
-        $_SESSION["ocr_tess_pid_" . $ID] = $process->getPid();
-        $process->wait();
-        debug ("CLI output: " . $process->getOutput());
-        debug ("CLI errors: " . trim($process->getErrorOutput()));
+        run_tess_cmd($tess_cmd, $ID);
+        // Case [2]: multiple pages and tesseract version is < 3.03
+        // Tesseract will be initialized and run for each page  
     } elseif ($mode === 'multipage' && $tesseract_version_array[2] === true) {
         $i = 0;
         set_time_limit(1800);
         while ($i < $pg_num) {
             $ocr_input_file = ("{$ocr_temp_dir}/im_tempfile_{$ID}-{$i}.{$ocr_im_ext}");
             $tess_cmd = ("{$tesseract_fullpath} {$ocr_input_file} " . escapeshellarg("{$ocr_temp_dir}/ocrtempfile_{$ID}") . " -l {$ocr_lang} -psm {$ocr_psm}");
-            debug("CLI command: $tess_cmd");
-            $process = new Process($tess_cmd);
-            $process->setTimeout(3600);
-            $process->setIdleTimeout(600);
-            $process->start();
-            $_SESSION["ocr_tess_pid_" . $ID] = $process->getPid();
-            $process->wait();
-            debug ("CLI output: " . $process->getOutput());
-            debug ("CLI errors: " . trim($process->getErrorOutput()));
+            run_tess_cmd($tess_cmd, $ID);
             file_put_contents("{$ocr_temp_dir}/ocr_output_file_{$ID}.txt", file_get_contents("{$ocr_temp_dir}/ocrtempfile_{$ID}.txt"), FILE_APPEND);
             $i ++;
         }
+        // Case [3]: Single page (processed temp image) 
     } elseif ($mode === 'single_processed') {
         $ocr_input_file = ("{$ocr_temp_dir}/im_tempfile_{$ID}.{$ocr_im_ext}");
         $tess_cmd = ("{$tesseract_fullpath} {$ocr_input_file} " . escapeshellarg("{$ocr_temp_dir}/ocr_output_file_{$ID}") . " -l {$ocr_lang} -psm {$ocr_psm}");
-        debug("CLI command: $tess_cmd");
-        $process = new Process($tess_cmd);
-        $process->start();
-        $_SESSION["ocr_tess_pid_" . $ID] = $process->getPid();
-        $process->wait();
-        debug ("CLI output: " . $process->getOutput());
-        debug ("CLI errors: " . trim($process->getErrorOutput()));
+        run_tess_cmd($tess_cmd, $ID);
+        // Case [4]: Single page (original resource)
     } elseif ($mode === 'single_original') {
-        $ext = get_file_extension ($ID);
+        $ext = get_file_extension($ID);
         $resource_path = get_resource_path($ID, true, "", false, $ext);
         $tess_cmd = (escapeshellarg($tesseract_fullpath) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg("{$ocr_temp_dir}/ocr_output_file_{$ID}") . " -l {$ocr_lang} -psm {$ocr_psm}");
-        debug("CLI command: $tess_cmd");
-        $process = new Process($tess_cmd);
-        $process->start();
-        $_SESSION["ocr_tess_pid_" . $ID] = $process->getPid();
-        $process->wait();
-        unset ($_SESSION["ocr_tess_pid_" . $ID]);
-        debug ("CLI output: " . $process->getOutput());
-        debug ("CLI errors: " . trim($process->getErrorOutput()));
-    }   
+        run_tess_cmd($tess_cmd, $ID);
+    }
+}
+
+/**
+ * Run and log tesseract command using symfony process
+ * 
+ * @param string $tess_cmd tesseract command string to execute
+ * @param string $ID Resource ID
+ */
+function run_tess_cmd($tess_cmd, $ID) {
+    debug("CLI command: $tess_cmd");
+    $process = new Process($tess_cmd);
+    $process->setTimeout(3600);
+    $process->setIdleTimeout(600);
+    $process->start();
+    $_SESSION["ocr_tess_pid_" . $ID] = $process->getPid();
+    $process->wait();
+    debug("CLI output: " . $process->getOutput());
+    debug("CLI errors: " . trim($process->getErrorOutput()));
 }
 
 function set_ocronjob_field () {
@@ -418,6 +428,13 @@ function set_ocronjob($ID, $ocr_state) {
     }
 }
 
+/**
+ * Quick and dirty check for fonts in the first 1000 bytes of a pdf
+ * Fonts most probably indicate a non-scanned pdf
+ * 
+ * @param string $filename
+ * @return boolean 
+ */
 function checkPDF($filename) {
     $contents = file_get_contents($filename, NULL, NULL, 0, 1000);
     $has_font = preg_match("/Font/m", $contents);
