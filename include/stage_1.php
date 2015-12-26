@@ -17,6 +17,11 @@ if (is_session_started() === false) {
     session_start();
 }
 
+// Check if OCRStream is already running for this resource
+if (isset ($_SESSION["ocr_stage_" . $ID]) && ($_SESSION["ocr_stage_" . $ID] != 0)) {
+    exit(json_encode(array("error" => $lang["ocr_error_9"])));
+}
+
 global $ocr_min_density;
 global $ocr_max_density;
 global $ocr_min_geometry;

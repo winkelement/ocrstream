@@ -33,6 +33,7 @@ $lang["ocr_error_5"] = 'Fehler: Bildbreite (px) zu gering für Texterkennung.';
 $lang["ocr_error_6"] = 'Fehler: Es wurden keine temporären Dateien erzeugt in Stage 2 (Bildbearbeitung).';
 $lang["ocr_error_7"] = 'Fehler: Es wurden keine temporären Dateien erzeugt in Stage 3 (Texterkennung).';
 $lang["ocr_error_8"] = 'Fehler: Im PDF Dokument ist kein Bild vorhanden und/oder es enthält bereits Text';
+$lang["ocr_error_9"] = 'Achtung: Texterkennung für diese Resource läuft bereits.';
 $lang["ocr_error_stage_1"] = 'Fehler: Etwas lief falsch, Stage 1 wurde nicht abgeschlossen.';
 $lang["ocr_error_stage_2"] = 'Fehler: Etwas lief falsch, Stage 2 wurde nicht abgeschlossen.';
 $lang["ocr_error_stage_3"] = 'Fehler: Etwas lief falsch, Stage 3 wurde nicht abgeschlossen.';

@@ -33,6 +33,7 @@ $lang["ocr_error_5"] = 'Error: Image width (px) too low for OCR processing.';
 $lang["ocr_error_6"] = 'Error: No temp files were created in stage 2 (image processing).';
 $lang["ocr_error_7"] = 'Error: No temp files were created in stage 3 (text recognition).';
 $lang["ocr_error_8"] = 'Error: No Image found in PDF Document and/or it already contains text.';
+$lang["ocr_error_9"] = 'Attention: Text recognition for this resource already running.';
 $lang["ocr_error_stage_1"] = 'Error: Something went wrong. Stage 1 did not complete.';
 $lang["ocr_error_stage_2"] = 'Error: Something went wrong. Stage 2 did not complete.';
 $lang["ocr_error_stage_3"] = 'Error: Something went wrong. Stage 3 did not complete.';
