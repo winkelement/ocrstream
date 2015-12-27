@@ -47,3 +47,7 @@ $ocr_psm_array = array(
     9 => '9 - Treat the image as a single word in a circle.',
     10 => '10 - Treat the image as a single character.');
 
+## Specify stopword lists to be loaded from /ocrstream/include/stopwords
+## Get more lists here https://code.google.com/p/stop-words/
+$ocr_load_stopwords = array ('stop-words_german_1_de', 'stop-words_english_1_en');
+

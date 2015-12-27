@@ -36,11 +36,14 @@ if ($use_ocr_db_filter == true) {
     // Filter extracted content using regular expressions by ocrstream
     $tess_content_f1 = preg_replace($ocr_db_filter_1, '$1', $tess_content);
     $tess_content_f2 = preg_replace($ocr_db_filter_2, '$1', $tess_content_f1);
-    // Filter keywords using global $noadd array
+    // Remove duplicate keywords
     $tess_content_array = preg_split('/\s+/', $tess_content_f2);
+    $tess_content_array = array_keys(array_flip($tess_content_array));
+    // Filter keywords using $stopwords array
+    $stopwords = getStopWords();
     $tess_keywords = "";
     foreach ($tess_content_array as $value) {
-        if (!in_array($value, $noadd)) {
+        if (!in_array($value, $stopwords)) {
         $tess_keywords .= $value . " ";
         }
     }

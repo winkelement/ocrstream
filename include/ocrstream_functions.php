@@ -440,3 +440,20 @@ function checkPDF($filename) {
     $has_font = preg_match("/Font/m", $contents);
     return $has_font;
 } 
+
+/**
+ * Get stopwords from files and return stopwords array
+ * 
+ * @global array $ocr_load_stopwords
+ * @return array $stopwords 
+ */
+function getStopWords() {
+    global $ocr_load_stopwords;
+    $stopwords = array();
+    foreach ($ocr_load_stopwords as $n) {
+        $string = file_get_contents(__DIR__ . '/stopwords/' . $n . '.txt');
+        $array = array_map('trim', explode(PHP_EOL, $string));
+        $stopwords = array_merge($stopwords, $array);
+    }
+    return $stopwords;
+}
