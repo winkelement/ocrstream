@@ -27,6 +27,9 @@ if ($_SESSION["ocr_stage_" . $ID] !== 1) {
     exit(json_encode(array("error" => $lang['ocr_error_stage_1'])));
 }
 
+$debug = '';
+$_SESSION["retry_on_preview_" . $ID] = false;
+
 // Get original file extension from stage 1
 $ext = $_SESSION['ocr_file_extension_' . $ID];
 
@@ -34,28 +37,44 @@ $ext = $_SESSION['ocr_file_extension_' . $ID];
 $im_preset_1 = build_im_preset_1 ($im_preset_1_crop_w, $im_preset_1_crop_h, $im_preset_1_crop_x, $im_preset_1_crop_y);
 
 // Create intermediate image(s) for OCR
-$ocr_temp_dir = get_ocr_temp_dir();
-$_SESSION['ocr_temp_dir'] = $ocr_temp_dir;
-
+$ocr_temp_dir = $_SESSION['ocr_temp_dir'];
 // Image processing with Preset 1 settings
-if ($param_1 === 'pre_1' || $_SESSION["ocr_force_processing_" . $ID] === 1) {
+if (($param_1 === 'pre_1' || $_SESSION["ocr_force_processing_" . $ID] === 1) && !$force_on_preview) {
     ocr_image_processing ($ID, $im_preset_1, $ocr_temp_dir);
     // Check if temp image(s) were created
-    if (!file_exists($ocr_temp_dir . '/im_tempfile_' . $ID . '.jpg') && !file_exists($ocr_temp_dir . '/im_tempfile_' . $ID . '-0.jpg')) {
+    $multi_filepath = ($ocr_temp_dir . '/im_tempfile_' . $ID . '-0.jpg');
+    $single_filepath = ($ocr_temp_dir . '/im_tempfile_' . $ID . '.jpg');
+    if (!file_exists($single_filepath) && !file_exists($multi_filepath)) {
         session_unset();
         exit(json_encode(array("error" => $lang['ocr_error_6'])));
+    }
+    // Check if images are completely black
+    if (file_exists($multi_filepath)) {
+        $filename = $multi_filepath;
+    } else {
+        $filename = $single_filepath;
+    }
+    $is_black = checkImage($filename);
+    if ($is_black) {
+        if ($retry_on_preview) {
+            $_SESSION["retry_on_preview_" . $ID] = true;
+            $debug .= '(Retrying on preview image) ';
+        } else {
+            session_unset();
+            exit(json_encode(array("error" => $lang['ocr_error_10'])));   
+        }
     }
     $_SESSION["ocr_stage_" . $ID] = 2;
     // Measure execution time for stage 2
     $elapsed_2 = round((microtime(true) - $start_2), 3);
     $_SESSION["ocr_stage_2_time"] = $elapsed_2;
-    $debug = ('OCR Stage ' . $_SESSION["ocr_stage_" . $ID] . '/4 completed: ' . $ID . ' ext: ' . $ext . ' im_preset: ' . $param_1 . ' Time: ' . $elapsed_2);
+    $debug .= ('OCR Stage ' . $_SESSION["ocr_stage_" . $ID] . '/4 completed: ' . $ID . ' ext: ' . $ext . ' im_preset: ' . $param_1 . ' Time: ' . $elapsed_2);
 } else {
     $_SESSION["ocr_stage_" . $ID] = 2;
     // Measure execution time for stage 2
     $elapsed_2 = round((microtime(true) - $start_2), 3);
     $_SESSION["ocr_stage_2_time"] = $elapsed_2;
-    $debug = ('OCR Stage ' . $_SESSION["ocr_stage_" . $ID] . '/4 skipped: ' . $ID . ' im_preset: ' . $param_1 . ' Time: ' . $elapsed_2);
+    $debug .= ('OCR Stage ' . $_SESSION["ocr_stage_" . $ID] . '/4 skipped: ' . $ID . ' im_preset: ' . $param_1 . ' Time: ' . $elapsed_2);
 }
 
 echo json_encode(array($ID, $debug));

@@ -22,6 +22,12 @@ if (isset ($_SESSION["ocr_stage_" . $ID]) && ($_SESSION["ocr_stage_" . $ID] != 0
     exit(json_encode(array("error" => $lang["ocr_error_9"])));
 }
 
+$ocr_temp_dir = get_ocr_temp_dir();
+$_SESSION['ocr_temp_dir'] = $ocr_temp_dir;
+
+// If any old tempfiles for this resource are present, delete them
+array_map('unlink', glob("$ocr_temp_dir/*_$ID*"));
+
 global $ocr_min_density;
 global $ocr_max_density;
 global $ocr_min_geometry;

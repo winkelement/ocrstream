@@ -36,11 +36,13 @@ if ($_SESSION["ocr_force_language_" . $ID] === 1){
     $ocr_lang = trim($ocr_global_language);
 }
 
+if ($_SESSION["retry_on_preview_" . $ID] === true || $force_on_preview) {
+    $mode = 'ocr_on_preview';
+}
 // OCR multi pages, processed
-if ($pg_num > 1) {
+elseif ($pg_num > 1) {
     $mode = 'multipage';
 }
-
 // OCR single page processed
 elseif (($param_1 === 'pre_1' && $pg_num === '1') || ($_SESSION["ocr_force_processing_" . $ID] === 1 && $pg_num === '1')) {
     $mode = 'single_processed';

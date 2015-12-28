@@ -51,3 +51,11 @@ $ocr_psm_array = array(
 ## Get more lists here https://code.google.com/p/stop-words/
 $ocr_load_stopwords = array ('stop-words_german_1_de', 'stop-words_english_1_en');
 
+## Treshold for [fx:mean] to determine if the temp image is black
+$image_mean_treshold = 0.02;
+
+## If the temp image is corrupted try ocr on the preview created by RS
+$retry_on_preview = false;
+
+## Option to force OCR processing on preview created by RS without additional image processing
+$force_on_preview = false;

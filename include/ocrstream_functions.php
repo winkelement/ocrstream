@@ -356,8 +356,12 @@ function tesseract_processing($ID, $ocr_lang, $ocr_psm, $ocr_temp_dir, $mode, $p
         $tess_cmd = ("{$tesseract_fullpath} {$ocr_input_file} " . escapeshellarg("{$ocr_temp_dir}/ocr_output_file_{$ID}") . " -l {$ocr_lang} -psm {$ocr_psm}");
         run_tess_cmd($tess_cmd, $ID);
         // Case [4]: Single page (original resource)
-    } elseif ($mode === 'single_original') {
-        $ext = get_file_extension($ID);
+    } elseif ($mode === 'single_original' || $mode === 'ocr_on_preview') {
+        if ($mode === 'ocr_on_preview') {
+            $ext = 'jpg';
+        } else {
+            $ext = get_file_extension($ID);
+        }
         $resource_path = get_resource_path($ID, true, "", false, $ext);
         $tess_cmd = (escapeshellarg($tesseract_fullpath) . ' ' . escapeshellarg($resource_path) . ' ' . escapeshellarg("{$ocr_temp_dir}/ocr_output_file_{$ID}") . " -l {$ocr_lang} -psm {$ocr_psm}");
         run_tess_cmd($tess_cmd, $ID);
@@ -439,7 +443,24 @@ function checkPDF($filename) {
     $contents = file_get_contents($filename, NULL, NULL, 0, 1000);
     $has_font = preg_match("/Font/m", $contents);
     return $has_font;
-} 
+}
+
+function checkImage($filename) {
+    global $image_mean_treshold;
+    $convert_fullpath = get_utility_path("im-convert");
+    $check_cmd = ($convert_fullpath . ' ' . escapeshellarg($filename) . ' -format "%[fx:mean]" info:');
+    debug("CLI command: $check_cmd");
+    $process = new Process($check_cmd);
+    $process->run();
+    debug("CLI output: " . $process->getOutput());
+    debug("CLI errors: " . trim($process->getErrorOutput()));
+    if ($process->getOutput() < $image_mean_treshold) {
+        $is_black = true;
+    } else {
+        $is_black = false;
+    }
+    return $is_black;
+}
 
 /**
  * Get stopwords from files and return stopwords array
