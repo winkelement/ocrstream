@@ -1,8 +1,6 @@
 <?php
 require_once (dirname(__FILE__) . "../../include/ocrstream_functions.php");
-spl_autoload_register(function ($class) {
-    include (dirname(__FILE__) . "../../lib/Process/" . $class . ".php");
-});
+require_once (dirname(__FILE__) . "../../vendor/autoload.php");
 
 function HookOcrstreamCronAddplugincronjob() {
     global $ocr_cronjob_enabled;

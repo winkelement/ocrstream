@@ -1,6 +1,6 @@
 <?php
 
-// Do the include and authorization checking ritual -- don't change this section.
+# Do the include and authorization checking ritual -- don't change this section.
 include '../../../include/db.php';
 include '../../../include/authenticate.php';
 if (!checkperm('a')) {
@@ -10,9 +10,9 @@ include '../../../include/general.php';
 
 require "../include/ocrstream_functions.php";
 
-// Specify the name of this plugin, the heading to display for the page and the
-// optional introductory text. Set $page_intro to "" for no intro text
-// Change to match your plugin.
+# Specify the name of this plugin, the heading to display for the page and the
+# optional introductory text. Set $page_intro to "" for no intro text
+# Change to match your plugin.
 $plugin_name = 'ocrstream';
 $page_heading = $lang['ocrstream_title'];
 $page_intro = '<p>' . $lang['ocrstream_intro'] . '</p>';
@@ -42,7 +42,8 @@ $page_def[] = config_add_text_input('ocr_min_density', $lang['ocr_min_density'],
 $page_def[] = config_add_text_input('ocr_max_density', $lang['ocr_max_density'], false, 45);
 $page_def[] = config_add_text_input('ocr_min_geometry', $lang['ocr_min_geometry'], false, 45);
 $page_def[] = config_add_text_input('ocr_max_geometry', $lang['ocr_max_geometry'], false, 45);
-$page_def[] = config_add_boolean_select('ocr_cronjob_enabled', $lang['ocr_cronjob'], '', 90);
+## Disabled until properly implemented
+//$page_def[] = config_add_boolean_select('ocr_cronjob_enabled', $lang['ocr_cronjob'], '', 90);
 $page_def[] = config_add_section_header($lang['im_processing_header']);
 $page_def[] = config_add_html("<div id= 'preset_1'><p style=font-size:18px;>Preset 1</p></div>");
 $page_def[] = config_add_text_input('im_preset_1_density', $lang['im_preset_density'], false, 45);
@@ -54,11 +55,11 @@ $page_def[] = config_add_text_input('im_preset_1_sharpen_s', $lang['im_preset_sh
 $page_def[] = config_add_section_header($lang['im_advanced_options_header']);
 $page_def[] = config_add_boolean_select('ocr_keep_tempfiles', $lang['ocr_keep_tempfiles'], '', 90);
 
-// Build the $page_def array of descriptions of each configuration variable the plugin uses.
-// Each element of $page_def describes one configuration variable. Each description is
-// created by one of the config_add_xxxx helper functions. See their definitions and
-// descriptions in include/plugin_functions for more information.
-// Do the page generation ritual -- don't change this section.
+# Build the $page_def array of descriptions of each configuration variable the plugin uses.
+# Each element of $page_def describes one configuration variable. Each description is
+# created by one of the config_add_xxxx helper functions. See their definitions and
+# descriptions in include/plugin_functions for more information.
+# Do the page generation ritual -- don't change this section.
 $upload_status = config_gen_setup_post($page_def, $plugin_name);
 include '../../../include/header.php';
 config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $page_intro);
@@ -66,10 +67,7 @@ config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $p
 <input type="submit" id="purge" value="<?php echo $lang['purge_config']?>" style="display: none;">
 <?php
 include '../../../include/footer.php';
-if ($ocr_cronjob_enabled) {
-    set_ocronjob_field ();
-}
-    ?>
+?>
 <link rel="stylesheet" href="../vendor/components/jqueryui/themes/base/jquery-ui.css">
 <script src="../vendor/components/jqueryui/jquery-ui.min.js"></script>
 <script>

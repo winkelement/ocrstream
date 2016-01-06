@@ -235,7 +235,7 @@ function get_res_type ($ID) {
  * Set the OCR state flag for a Resource
  * 
  * ocr_state = 1 : file flagged for ocr processing
- * ocr_state = 2 : ocr on this file has been completed
+ * ocr_state = 3 : ocr on this file has been completed
  * 
  * @param int $ID Resource ID
  * @param int $ocr_state OCR state flag
@@ -244,14 +244,21 @@ function get_res_type ($ID) {
 function set_ocr_state($ID, $ocr_state) {
     $ID_filter_options = ["options" =>['min_range' => 1, 'max_range' => sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')]];
     $ID_filtered = filter_var($ID, FILTER_VALIDATE_INT, $ID_filter_options);
-    $ocr_state_filter_options = ["options" =>['min_range' => 0, 'max_range' => 2]];
+    $ocr_state_filter_options = ["options" =>['min_range' => 0, 'max_range' => 3]];
     $ocr_state_filtered = filter_var($ocr_state, FILTER_VALIDATE_INT, $ocr_state_filter_options);
-    if (!$ID_filtered || !$ocr_state_filtered) {
+    if (!$ID_filtered || (!$ocr_state_filtered && $ocr_state_filtered !== 0)) {
         $error_msg = "Error setting OCR state ($ocr_state) for Resource ID ($ID).";
         debug("OCRStream: $error_msg");
         return($error_msg);
     }
     sql_query("UPDATE resource SET ocr_state =  '$ocr_state_filtered' WHERE ref = '$ID_filtered'");
+}
+
+
+function get_ocr_state($ID) {
+    $ocr_db_state = sql_value("SELECT ocr_state value FROM resource WHERE ref = '$ID'", '');
+    $ocr_db_state === '' ? $ocr_state = 0 : $ocr_state = $ocr_db_state;
+    return($ocr_state);
 }
 
 /**
@@ -386,6 +393,7 @@ function run_tess_cmd($tess_cmd, $ID) {
     debug("CLI errors: " . trim($process->getErrorOutput()));
 }
 
+## @TODO: Remove unused function when cronjob is implemented
 function set_ocronjob_field () {
     global $lang;
     $ocronjob_fieldname = 'ocronjob';
@@ -414,7 +422,7 @@ function get_ocronjob_resources() {
 function set_ocronjob($ID, $ocr_state) {
     $ID_filter_options = ["options" =>['min_range' => 1, 'max_range' => sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')]];
     $ID_filtered = filter_var($ID, FILTER_VALIDATE_INT, $ID_filter_options);
-    $ocr_state_filter_options = ["options" =>['min_range' => 0, 'max_range' => 2]];
+    $ocr_state_filter_options = ["options" =>['min_range' => 0, 'max_range' => 3]];
     $ocr_state_filtered = filter_var($ocr_state, FILTER_VALIDATE_INT, $ocr_state_filter_options);
     if (!$ID_filtered || !$ocr_state_filtered) {
         $error_msg = "Error setting cronjob: OCR state ($ocr_state) Resource ID ($ID).";

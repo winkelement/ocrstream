@@ -26,11 +26,11 @@ function HookOcrstreamUpload_pluploadAfterpluploadfile() {
         </script>
          <?php
     }
-    // @todo ######## Remove ############
-//    if (isset($_SESSION["ocr_cron"])) {
-//        $ocr_state = 1;
-//        set_ocr_state($ref, $ocr_state);
-//        echo "OCR state set to 1 for ID: $ref";
-//    }
+
+    if (isset($_SESSION["ocr_cron"])) {
+        $ocr_state = 1;
+        set_ocr_state($ref, $ocr_state);
+        echo "OCR state set to 1 for ID: $ref";
+    }
 }
 

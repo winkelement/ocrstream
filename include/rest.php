@@ -12,21 +12,20 @@ $get_true_size = filter_input(INPUT_GET, 'get_true_size', FILTER_VALIDATE_BOOLEA
 $purge_config = filter_input(INPUT_GET, 'purge_config', FILTER_VALIDATE_BOOLEAN);
 $plugin_name = filter_input(INPUT_GET, 'name');
 
-// Set ocr_state flag in database
-//@todo #### Remove ####
+# Set ocr_state flag in database
 if (isset($ref) && isset($ocr_state)) {
     sql_query("UPDATE resource SET ocr_state =  '$ocr_state' WHERE ref = '$ref'");
 }
 
-// Get ocr_state flag from database and return
-// If empty return 0 (default)
+# Get ocr_state flag from database and return
+# If empty return 0 (default)
 if (isset($ref) && isset($ocr_state_query)) {
     $ocr_db_state =  sql_value("SELECT ocr_state value FROM resource WHERE ref = '$ref'", '');
     $ocr_db_state === '' ? $ocr_state = 0 : $ocr_state = $ocr_db_state;
     echo json_encode(intval($ocr_state));
 }
 
-// Return true size image dimensions for jCrop
+# Return true size image dimensions for jCrop
 if (isset($ref) && isset($get_true_size)) {
     global $im_preset_1_geometry;
     $w_thumb = sql_value("select thumb_width value from resource where ref = '$ref'", '');
@@ -42,5 +41,5 @@ if (isset($ref) && isset($get_true_size)) {
 
 if (isset($purge_config) && $purge_config && isset($plugin_name)) {
     purge_plugin_config($plugin_name);
-    echo json_encode('config purged');
+    //echo json_encode('config purged');
 }

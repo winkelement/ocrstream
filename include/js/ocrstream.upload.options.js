@@ -15,7 +15,7 @@ function setOCRStart() {
     }
     return ocr_start;
 };
-//@todo #### Remove ####
+
 function setOCRCron() {
     var ocr_cron = jQuery('#ocr_cron_start').attr('checked');
     if (ocr_cron === 'checked') {
@@ -29,7 +29,7 @@ function setOCRCron() {
     }
     return ocr_cron;
 };
-// ####
+
 var ocr_lang = jQuery('#ocr_lang :selected').text();
 var ocr_psm = jQuery('#ocr_psm :selected').val();
 var ocr_start = jQuery('#ocr_upload_start').attr('checked');

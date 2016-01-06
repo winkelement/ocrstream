@@ -54,7 +54,7 @@ function setParams(selectedParam) {
     }
     return param_1;
 };
-//@todo #### Remove ####
+
 function setOCRCron(resourceId) {
     ocr_cron = jQuery('#ocr_cron_start').attr('checked');
     if (ocr_cron === 'checked') {
@@ -73,7 +73,7 @@ function setOCRCron(resourceId) {
     console.log(ocr_cron);// debug
     return ocr_cron;
 };
-// ####
+
 function showLoadingImage() {
     jQuery('#ocr_status_anim').show(400);
 };

@@ -2,11 +2,9 @@
 require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 
 function HookOcrstreamEditEditbeforeheader() {
-    // Start Session for Single Resource Edit and Upload
-    // Clear Session in case ocr processing failed before and old values are present
+    # Start Session for Single Resource Edit and Upload
     if (is_session_started() === false) {
         session_start();
-        session_unset();
     }
 }
 
@@ -18,11 +16,11 @@ function HookOcrstreamEditBeforeimagecorrection() {
     global $ocr_allowed_extensions;
     global $ocr_psm_array;
     global $ocr_psm_global;
-    //global $ocr_cronjob_enabled;
+    global $ocr_cronjob_enabled;
     global $ocr_ftype_1;
     global $ocr_rtype;
     if (is_tesseract_installed()) {
-        // Hide OCR options for filetypes and resourcetypes not allowed
+        # Hide OCR options for filetypes and resourcetypes not allowed
         $ext = get_file_extension($ref);
         if (in_array($ext, $ocr_allowed_extensions) && get_res_type ($ref) == $ocr_rtype) {
             $choices = get_tesseract_languages();
@@ -74,7 +72,7 @@ function HookOcrstreamEditBeforeimagecorrection() {
                         <td><label for="im_preset_select"><?php echo $lang["im_preset_select"] ?></label></td>
                         <td><select name="im_preset" id="im_preset" style="width:90px" onchange="setParams(this.form.im_preset.options[this.form.im_preset.selectedIndex].value);">
                                 <?php
-                                // Force PDF documents to be processed (Autoselect Preset 1)
+                                # Force PDF documents to be processed (Autoselect Preset 1)
                                 if ($ext === 'pdf') {
                                     ?>
                                     <option value="pre_1" selected>Preset 1</option>
@@ -88,13 +86,13 @@ function HookOcrstreamEditBeforeimagecorrection() {
                                 ?>
                             </select></td>
                     </tr>
-                    <?php// @todo ###### Remove ######
-                    //if ($ocr_cronjob_enabled == true){?>
-<!--                    <tr id = "ocr_cron" style="height:37px">
-                        <td><label for="ocr_upload_cronjob"><?php //echo $lang["ocr_upload_cronjob"] ?></label></td>
-                        <td><input type="checkbox" name="ocr_cron_start" id= "ocr_cron_start" onchange="setOCRCron(<?php //echo $ref; ?>);"></td>
-                    </tr>-->
-                    <?php //} ?>
+                    <?php
+                    if ($ocr_cronjob_enabled == true){?>
+                    <tr id = "ocr_cron" style="height:37px">
+                        <td><label for="ocr_upload_cronjob"><?php echo $lang["ocr_upload_cronjob"] ?></label></td>
+                        <td><input type="checkbox" name="ocr_cron_start" id= "ocr_cron_start" onchange="setOCRCron(<?php echo $ref; ?>);"></td>
+                    </tr>
+                    <?php } ?>
                 </table>
             </div>
             </div>
@@ -112,7 +110,7 @@ function HookOcrstreamEditReplaceuploadoptions() {
     global $ocr_psm_global;
     global $resource;
     global $ocr_rtype;
-    //global $ocr_cronjob_enabled; 
+    global $ocr_cronjob_enabled; 
     if (($ref < 0) && (is_tesseract_installed()) && ($resource['resource_type'] == $ocr_rtype)){        
         $choices = get_tesseract_languages();
         ?>
@@ -149,13 +147,13 @@ function HookOcrstreamEditReplaceuploadoptions() {
                                     ?>
                                 </select></td>
                         </tr>
-                        <?php//@todo ###### Remove ####### 
-                        //if ($ocr_cronjob_enabled == true){?>
-<!--                        <tr id = "ocr_cron" style="height:37px">
-                            <td><label for="ocr_upload_cronjob"><?php// echo $lang["ocr_upload_cronjob"] ?></label></td>
+                        <?php
+                        if ($ocr_cronjob_enabled == true){?>
+                        <tr id = "ocr_cron" style="height:37px">
+                            <td><label for="ocr_upload_cronjob"><?php echo $lang["ocr_upload_cronjob"] ?></label></td>
                             <td><input type="checkbox" name="ocr_cron_start" id= "ocr_cron_start" onchange="setOCRCron();"></td>
-                        </tr>-->
-                        <?php// } ?>
+                        </tr>
+                        <?php } ?>
                     </table>
                 </div>
             </div>
@@ -171,8 +169,7 @@ function HookOcrstreamEditEditbeforesave() {
         $_SESSION['ocr_start'] = getvalescaped('ocr_upload_start','');
         $_SESSION['ocr_psm'] = getvalescaped('ocr_psm','');
     }
-    //@todo  ##### REMOVE #####
-//    if (isset($_POST['ocr_cron_start'])) {
-//        $_SESSION['ocr_cron'] = getvalescaped('ocr_cron_start','');
-//    }
+    if (isset($_POST['ocr_cron_start'])) {
+        $_SESSION['ocr_cron'] = getvalescaped('ocr_cron_start','');
+    }
 }
