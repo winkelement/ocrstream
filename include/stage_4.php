@@ -60,6 +60,7 @@ update_xml_metadump($ID);
 
 # OCR processing finished for this resource (unlock)
 set_ocr_state($ID, 3);
+set_resource_lock($ID, true);
 
 # Delete temp files
 if (!$ocr_keep_tempfiles) {

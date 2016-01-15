@@ -104,7 +104,9 @@ jQuery(document).ready(function () {
         ocr_crop();
     }
     // Send parameters to stage 1 - 4 for OCR processing
-    jQuery('[name="ocr_start"]').click(function () {
+    jQuery('[name="ocr_start"]').on("click", ocrStart);
+    function ocrStart (event) {
+        jQuery( this ).off( event );
         showLoadingImage();
         console.log(status + '1/4 .'); // debug
         jQuery('#ocr_status_text').html(status + '1/4 .');
@@ -148,10 +150,11 @@ jQuery(document).ready(function () {
                         }
                         jQuery('#ocr_status_text').html(stageFourOutput[1]);
                         hideLoadingImage();
+                        jQuery('[name="ocr_start"]').on("click", ocrStart);
                         jQuery('#field_' + fieldNr).html(stageFourOutput[2]);
                     });
                 });
             });
         });
-    });
+    };
 });

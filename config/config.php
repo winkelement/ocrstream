@@ -61,3 +61,6 @@ $force_on_preview = false;
 
 ## Disabled for now, not properly implemented yet!
 $ocr_cronjob_enabled = false;
+
+## Max time for a resource to be locked (default: 30 minutes)
+$ocr_locks_max_seconds = 60*30;

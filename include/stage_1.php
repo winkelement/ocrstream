@@ -22,15 +22,16 @@ if (!is_resource_id_valid($ID)){
     exit(json_encode(array("error" => $lang['ocr_error_1'])));
 }
 
-# Check if OCRStream is already running for this resource
-$ocr_state = get_ocr_state($ID);
-if ($ocr_state == 2 ) {
-    session_unset();
-    exit(json_encode(array("error" => $lang["ocr_error_9"])));
+# Check if resource is locked
+$resource_lock = is_resource_lock($ID);
+if ($resource_lock[0]) {
+    $lock_time = round((time()-$resource_lock[1])/60, 1);
+    exit(json_encode(array("error" => $lang["ocr_error_9"] . $lock_time . '(m)')));
 }
 
-# Set ocr_state while processing (lock)
+# Set ocr_state while processing and lock resource
 set_ocr_state($ID, 2);
+set_resource_lock($ID, false);
 
 $ocr_temp_dir = get_ocr_temp_dir();
 $_SESSION['ocr_temp_dir'] = $ocr_temp_dir;

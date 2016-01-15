@@ -261,6 +261,32 @@ function get_ocr_state($ID) {
     return($ocr_state);
 }
 
+function is_resource_lock($ID) {
+    global $ocr_locks_max_seconds;
+    $resource_lock_time = sql_value("SELECT UNIX_TIMESTAMP(ocr_lock_date) value FROM resource WHERE ref = '$ID'", '');
+    if ($resource_lock_time == '' || (time()-$resource_lock_time)>$ocr_locks_max_seconds) {
+        return array(false, $resource_lock_time);        
+    } else {
+        return array(true, $resource_lock_time);
+    }
+}
+
+function set_resource_lock($ID, $clear) {
+    $ID_filter_options = ["options" => ['min_range' => 1, 'max_range' => sql_value("SELECT ref value FROM resource ORDER BY ref DESC LIMIT 1", '')]];
+    $ID_filtered = filter_var($ID, FILTER_VALIDATE_INT, $ID_filter_options);
+    if (!$ID_filtered) {
+        $error_msg = "Error setting resource lock date for Resource ID ($ID).";
+        debug("OCRStream: $error_msg");
+        return($error_msg);
+    }
+    if ($clear) {
+        sql_query("UPDATE resource SET ocr_lock_date =  NULL WHERE ref = '$ID_filtered'");
+    } else {
+        $time = time();
+        sql_query("UPDATE resource SET ocr_lock_date =  FROM_UNIXTIME($time) WHERE ref = '$ID_filtered'");
+    }
+}
+
 /**
  * Build Preset for Imagemagick options
  * 
