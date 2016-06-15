@@ -148,7 +148,6 @@ jQuery(document).ready(function () {
                             alert(stageFourOutput["error"]);
                             return;
                         }
-                        jQuery('#ocr_status_text').html(stageFourOutput[1]);
                         hideLoadingImage();
                         jQuery('[name="ocr_start"]').on("click", ocrStart);
                         jQuery('#field_' + fieldNr).html(stageFourOutput[2]);
