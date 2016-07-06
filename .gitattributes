@@ -1,2 +1,2 @@
 vendor/* linguist-vendored
-lib/alphanum/* linguist-vendored
+lib/* linguist-vendored
