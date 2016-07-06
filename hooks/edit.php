@@ -1,5 +1,5 @@
 <?php
-require_once "../plugins/ocrstream/include/ocrstream_functions.php";
+require_once dirname(__DIR__) . "/include/ocrstream_functions.php";
 
 function HookOcrstreamEditEditbeforeheader()
     {
@@ -31,8 +31,8 @@ function HookOcrstreamEditBeforeimagecorrection()
             $choices = get_tesseract_languages();
             ?>
             <div id="ocr_status_anim"><div style="margin-top: 66px;"><i class="fa fa-spinner fa-pulse fa-2x fa-fw" style="margin-top: 10px;margin-bottom: 10px;"></i><p><?php echo $lang['ocr_in_progress']?></p><p id="ocr_status_text"></p></div></div>
-            <script src="../plugins/ocrstream/vendor/monstrum/jcrop/dist/min/jquery.Jcrop.min.js"></script>
-            <link rel="stylesheet" href="../plugins/ocrstream/vendor/monstrum/jcrop/dist/min/jquery.Jcrop.min.css" type="text/css" />
+            <script src="<?php echo $baseurl;?>/plugins/ocrstream/lib/jcrop/min/jquery.Jcrop.min.js"></script>
+            <link rel="stylesheet" href="<?php echo $baseurl;?>/plugins/ocrstream/lib/jcrop/min/jquery.Jcrop.min.css" type="text/css" />
             <script>
                 // Initilaize Parameters
                 resourceId = <?php echo $ref ?>;
@@ -40,7 +40,7 @@ function HookOcrstreamEditBeforeimagecorrection()
                 fieldNr = '<?php echo $ocr_ftype_1 ?>';
                 jQuery('#OCRSectionHead').addClass('collapsed');
             </script>
-            <script src="../plugins/ocrstream/include/js/ocrstream.single.js"></script>
+            <script src="<?php echo $baseurl;?>/plugins/ocrstream/include/js/ocrstream.single.js"></script>
             <div><h2 class="CollapsibleSectionHead" id="OCRSectionHead"><?php echo $lang["ocr-upload-options"] ?></h2>
             <div class="CollapsibleSection" id="OCRSection">
             <div class="Question" id="question_ocr" style="font-weight: normal">
@@ -118,6 +118,7 @@ function HookOcrstreamEditBeforeimagecorrection()
 
 function HookOcrstreamEditReplaceuploadoptions()
     {
+    global $baseurl;
     global $lang;
     global $ref;
     global $ocr_global_language;
@@ -130,7 +131,7 @@ function HookOcrstreamEditReplaceuploadoptions()
         {
         $choices = get_tesseract_languages();
         ?>
-        <script src="../plugins/ocrstream/include/js/ocrstream.upload.options.js"></script>
+        <script src="<?php echo $baseurl;?>/plugins/ocrstream/include/js/ocrstream.upload.options.js"></script>
         <div><h2 class="CollapsibleSectionHead"><?php echo $lang["ocr-upload-options"] ?></h2>
             <div class="CollapsibleSection" id="OCROptionsSection">
                 <div class="Question" id="question_ocr" style="font-weight: normal">

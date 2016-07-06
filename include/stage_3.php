@@ -28,6 +28,9 @@ if ($_SESSION["ocr_stage_" . $ID] !== 2)
     exit(json_encode(array("error" => $lang['ocr_error_stage_2'])));
     }
 
+global $ocr_global_language;
+global $force_on_preview;
+
 # Get number of pages
 $resource = get_resource_data($ID);
 $pg_num = get_page_count($resource, -1);

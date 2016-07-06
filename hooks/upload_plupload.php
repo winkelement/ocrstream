@@ -3,9 +3,9 @@ require_once "../plugins/ocrstream/include/ocrstream_functions.php";
 
 function HookOcrstreamUpload_pluploadUpload_page_top()
     {
-    global $lang;
+    global $lang, $baseurl;
     ?>
-    <link rel="stylesheet" href="../plugins/ocrstream/assets/css/ocrstream.css" type="text/css" />
+    <link rel="stylesheet" href="<?php echo $baseurl;?>/plugins/ocrstream/assets/css/ocrstream.css" type="text/css" />
     <div id="ocr_status_anim"><div><i class="fa fa-spinner fa-pulse fa-2x fa-fw" style="margin-top: 10px;margin-bottom: 10px;"></i><p><?php echo $lang['ocr_in_progress']?></p></div></div>
     <?php
     }

@@ -30,6 +30,9 @@ if ($_SESSION["ocr_stage_" . $ID] !== 1)
     exit(json_encode(array("error" => $lang['ocr_error_stage_1'])));
     }
 
+global $force_on_preview;
+global $retry_on_preview;
+
 $debug = '';
 $_SESSION["retry_on_preview_" . $ID] = false;
 

@@ -40,7 +40,7 @@ $tess_content = trim(file_get_contents($ocr_output_file));
 # Writing Keywords to database can take time so increase PHP timeout
 set_time_limit(1800);
 
-if ($use_ocr_db_filter == true)
+if ($use_ocr_db_filter === true)
     {
     # Filter extracted content using regular expressions by ocrstream
     $tess_content_f1 = preg_replace($ocr_db_filter_1, '$1', $tess_content);
@@ -106,7 +106,7 @@ $debug = ('OCR Stage ' . $_SESSION["ocr_stage_" . $ID] . '/4 completed: ' . $ID 
 echo json_encode(array($end_of_queue, $debug, $tess_content));
 
 # Clear all SESSION Variables for single resource OCR or if all resources in queue are completed
-if ($end_of_queue == true || !isset($_SESSION["ocr_start"]))
+if ($end_of_queue === true || !isset($_SESSION["ocr_start"]))
     {
     session_unset();
     }

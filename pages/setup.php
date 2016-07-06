@@ -68,8 +68,8 @@ config_gen_setup_html($page_def, $plugin_name, $upload_status, $page_heading, $p
 <?php
 include '../../../include/footer.php';
 ?>
-<link rel="stylesheet" href="../vendor/components/jqueryui/themes/base/jquery-ui.css">
-<script src="../vendor/components/jqueryui/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="../lib/jqueryui/jquery-ui.min.css">
+<script src="../lib/jqueryui/jquery-ui.min.js"></script>
 <script>
     jQuery(document).ready(function () {
         if (jQuery('#tesseract_version').length === 0) {

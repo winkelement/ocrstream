@@ -64,3 +64,6 @@ $ocr_cronjob_enabled = false;
 
 ## Max time for a resource to be locked (default: 10 minutes)
 $ocr_locks_max_seconds = 60*10;
+
+## Toggle OCR Option in view.php while still under development
+$ocr_dev = false;
